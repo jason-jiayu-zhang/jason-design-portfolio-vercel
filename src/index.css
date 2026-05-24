@@ -13,19 +13,19 @@
     --color-accent: #38406a;
     --color-parchment: #cfccbb;
     --color-gold: #a39d7b;
-    --wheel-size: min(72vw, 360px); /* Mobile-first default size */
+    --wheel-size: min(calc(100vw - 120px), calc(100vh - 300px)); /* Mobile-first default size */
     --header-h: 48px;
   }
 
   @media (min-width: 768px) {
     :root {
-      --wheel-size: min(75vw, 420px); /* Tablet size */
+      --wheel-size: min(calc(100vw - 160px), calc(100vh - 300px)); /* Tablet size */
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --wheel-size: min(42vw, 550px); /* Desktop split-panel size */
+      --wheel-size: min(calc(55vw - 200px), calc(100vh - 120px)); /* Desktop split-panel size */
     }
   }
 
