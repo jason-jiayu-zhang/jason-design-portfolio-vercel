@@ -22,7 +22,7 @@ interface WheelSelectorProps {
 }
 
 const FRICTION = 0.94
-const SPRING_STIFFNESS = 0.06
+const SPRING_STIFFNESS = 0.10
 const SNAP_THRESHOLD = 0.4 // deg/frame
 
 export default function WheelSelector({ onProjectChange, activeIndex }: WheelSelectorProps) {
