@@ -87,7 +87,7 @@ export default function HeroSection() {
   const [isFadingOut, setIsFadingOut] = useState(false)
   const [projKey, setProjKey] = useState('proj-0')
   const keyRef = useRef(0)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleProjectChange = useCallback((index: number) => {
     if (index === activeIndex) return;
