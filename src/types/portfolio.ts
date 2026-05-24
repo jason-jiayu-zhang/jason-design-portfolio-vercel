@@ -59,7 +59,7 @@ export interface Project {
   url?: string
   /** Award labels e.g. "1st Place", "Honorable Mention" */
   awards?: string[]
-  status: 'live' | 'coming-soon' | 'archived'
+  status: 'live' | 'offline' | 'archived'
   /** Optional deep-dive case study content (Archetype A) */
   caseStudy?: CaseStudyContent
 }

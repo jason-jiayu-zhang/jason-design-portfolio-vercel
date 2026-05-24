@@ -3,10 +3,10 @@ import { EXPERIMENTS } from '../data/portfolio'
 
 export default function StudioSection() {
   return (
-    <section id="studio" className="relative py-24 px-8 lg:px-12">
+    <section id="studio" className="relative bg-primary py-16 md:py-24 px-4 sm:px-6 lg:px-12">
       {/* Section header */}
-      <div className="flex items-center justify-between mb-12 pb-4 border-b border-accent/30">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 pb-4 border-b border-accent/30">
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <span className="label-caps text-gold">STUDIO /</span>
           <div className="w-px h-4 bg-accent/50" />
           <span className="font-mono text-2xs text-parchment/30 tracking-wide">

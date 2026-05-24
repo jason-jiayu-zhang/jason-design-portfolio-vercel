@@ -35,7 +35,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative mt-auto"
+      className="relative mt-auto bg-primary"
       style={{ borderTop: '1px solid rgba(56,64,106,0.4)' }}
     >
       {/* Tagline strip */}
@@ -46,15 +46,14 @@ export default function Footer() {
       </div>
 
       {/* Main row */}
-      <div className="flex items-center justify-between px-8 lg:px-10 py-5">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 px-6 lg:px-10 py-6 md:py-5">
         {/* Left — identity */}
         <div className="flex items-center gap-3">
-          <span
-            className="font-sans font-black text-parchment"
-            style={{ fontSize: '16px', letterSpacing: '-0.05em' }}
-          >
-            JJZ
-          </span>
+          <img
+            src="/favicon.svg"
+            className="w-[18px] h-[18px] object-contain"
+            alt="Logo"
+          />
           <div className="w-px h-3 bg-accent/50" />
           <span className="font-mono text-2xs text-parchment/25 tracking-label uppercase">
             {BIO.roles[0]}
@@ -62,7 +61,7 @@ export default function Footer() {
         </div>
 
         {/* Center — social links with center-out underlines */}
-        <nav className="flex items-start gap-8">
+        <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 md:gap-8">
           {BIO.socials.map((social) => (
             <SocialLink
               key={social.platform}
@@ -81,7 +80,7 @@ export default function Footer() {
 
       {/* Baseline strip */}
       <div
-        className="flex items-center justify-between px-8 lg:px-10 py-2"
+        className="flex flex-col sm:flex-row items-center justify-between gap-2 px-8 lg:px-10 py-3 sm:py-2 text-center"
         style={{ borderTop: '1px solid rgba(56,64,106,0.15)' }}
       >
         <span className="font-mono text-2xs text-parchment/10 tracking-label">

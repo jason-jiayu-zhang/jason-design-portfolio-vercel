@@ -74,8 +74,8 @@ function CaseStudyCard({ project }: { project: Project }) {
         />
 
         {/* Index + category header strip */}
-        <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-[rgba(255,255,255,0.05)]">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-[rgba(255,255,255,0.05)]">
+          <div className="flex items-center gap-3 flex-wrap">
             <span className="font-mono text-2xs tracking-label text-[#cfccbb40]">
               {String(project.wheelIndex + 1).padStart(2, '0')}
             </span>
@@ -96,13 +96,13 @@ function CaseStudyCard({ project }: { project: Project }) {
               <span className="font-mono text-2xs tracking-label text-[#cfccbb4d]">Live</span>
             </div>
           )}
-          {project.status === 'coming-soon' && (
-            <span className="font-mono text-2xs tracking-label text-[#e8c37d80]">Coming Soon</span>
+          {project.status === 'offline' && (
+            <span className="font-mono text-2xs tracking-label text-[#e8c37d80]">Offline</span>
           )}
         </div>
 
         {/* Main body */}
-        <div className="flex-1 flex flex-col gap-4 p-6">
+        <div className="flex-1 flex flex-col gap-4 p-4 sm:p-6">
 
           {/* Title block */}
           <div>
@@ -287,11 +287,11 @@ export default function ProjectsGrid() {
   const conceptualCount = EXPERIMENTS.filter((e) => e.category === 'conceptual').length
 
   return (
-    <section id="work" className="relative py-20 px-6 lg:px-10">
+    <section id="work" className="relative py-12 md:py-20 px-4 sm:px-6 lg:px-10">
 
       {/* Section label */}
-      <div className="flex items-center justify-between mb-10 pb-4 border-b border-accent/25">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-4 border-b border-accent/25">
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <span className="label-caps">WORK</span>
           <div className="w-px h-4 bg-accent/40" />
           <span className="font-mono text-2xs text-parchment/25">CASE STUDIES + EXPERIMENTS</span>
@@ -308,29 +308,40 @@ export default function ProjectsGrid() {
             <CaseStudyCard project={PROJECTS[0]} />
           </Link>
         </div>
-        {/* Experiments 0-3 */}
+        {/* Experiments 0-1 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
           <Link to={`/studio/${EXPERIMENTS[0].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[0]} index={0} /></Link>
           <Link to={`/studio/${EXPERIMENTS[1].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[1]} index={1} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
         </div>
         <div className="w-full">
           <Link to={`/work/${PROJECTS[1].id}`} className="block h-full">
             <CaseStudyCard project={PROJECTS[1]} />
           </Link>
         </div>
-        {/* Experiments 4-7 */}
+        {/* Experiments 2-3 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-          <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
+          <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
+          <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
         </div>
         <div className="w-full">
           <Link to={`/work/${PROJECTS[2].id}`} className="block h-full">
             <CaseStudyCard project={PROJECTS[2]} />
           </Link>
+        </div>
+        {/* Experiments 4-5 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+          <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
+          <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
+        </div>
+        <div className="w-full">
+          <Link to={`/work/${PROJECTS[3].id}`} className="block h-full">
+            <CaseStudyCard project={PROJECTS[3]} />
+          </Link>
+        </div>
+        {/* Experiments 6-7 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+          <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
+          <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
         </div>
       </div>
 
@@ -344,15 +355,17 @@ export default function ProjectsGrid() {
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3 w-full">
-            <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
+            <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
+            <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
           </div>
           <div className="w-full">
             <Link to={`/work/${PROJECTS[2].id}`} className="block h-full">
               <CaseStudyCard project={PROJECTS[2]} />
             </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 w-full">
+            <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
+            <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
           </div>
         </div>
 
@@ -361,12 +374,19 @@ export default function ProjectsGrid() {
           <div className="grid grid-cols-2 gap-3 w-full">
             <Link to={`/studio/${EXPERIMENTS[0].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[0]} index={0} /></Link>
             <Link to={`/studio/${EXPERIMENTS[1].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[1]} index={1} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
           </div>
           <div className="w-full">
             <Link to={`/work/${PROJECTS[1].id}`} className="block h-full">
               <CaseStudyCard project={PROJECTS[1]} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 w-full">
+            <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
+            <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
+          </div>
+          <div className="w-full">
+            <Link to={`/work/${PROJECTS[3].id}`} className="block h-full">
+              <CaseStudyCard project={PROJECTS[3]} />
             </Link>
           </div>
         </div>

@@ -283,12 +283,12 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
             <g key={`proj-label-${i}`} transform={`rotate(${angleDeg} ${pos.x} ${pos.y})`}>
               {/* Outer bracket arc segments */}
               <text
+                className={isActive ? 'wheel-label-active' : 'wheel-label'}
                 x={pos.x}
                 y={pos.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fontFamily='"IBM Plex Mono", monospace'
-                fontSize={isActive ? 11 : 9}
                 fontWeight={isActive ? 500 : 400}
                 fill={isActive ? proj.accentColor : PARCHMENT}
                 opacity={isPhase2 ? baseTextOpacity : 0}

@@ -51,24 +51,26 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        {/* Left — number + period */}
-        <div className="flex items-center gap-3 flex-shrink-0 w-36">
-          <span className="font-mono text-2xs text-parchment/20 w-5 text-right">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          <span
-            className="font-mono text-2xs tracking-label text-parchment/30 whitespace-nowrap"
-          >
-            {entry.period}
-          </span>
-        </div>
+        <div className="flex flex-col lg:flex-row lg:items-start gap-1 lg:gap-4 flex-1 min-w-0">
+          {/* Left — number + period */}
+          <div className="flex items-center gap-3 flex-shrink-0 lg:w-36">
+            <span className="font-mono text-2xs text-parchment/20 w-5 text-right">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <span
+              className="font-mono text-2xs tracking-label text-parchment/30 whitespace-nowrap"
+            >
+              {entry.period}
+            </span>
+          </div>
 
-        {/* Center — role + org */}
-        <div className="flex-1 min-w-0">
-          <p className="font-sans font-semibold text-sm text-parchment leading-snug" style={{ letterSpacing: '-0.02em' }}>
-            {entry.role}
-          </p>
-          <p className="font-mono text-2xs text-gold/70 mt-0.5">{entry.org}</p>
+          {/* Center — role + org */}
+          <div className="flex-1 min-w-0">
+            <p className="font-sans font-semibold text-sm text-parchment leading-snug" style={{ letterSpacing: '-0.02em' }}>
+              {entry.role}
+            </p>
+            <p className="font-mono text-2xs text-gold/70 mt-0.5">{entry.org}</p>
+          </div>
         </div>
 
         {/* Right — expand toggle */}
@@ -82,23 +84,25 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
 
       {/* Expandable detail */}
       <div
+        className="grid"
         style={{
-          maxHeight: open ? '200px' : '0px',
-          overflow: 'hidden',
-          transition: 'max-height 0.45s cubic-bezier(0.22,1,0.36,1)',
+          gridTemplateRows: open ? '1fr' : '0fr',
+          transition: 'grid-template-rows 0.45s cubic-bezier(0.22,1,0.36,1)',
         }}
       >
-        <div className="pt-3 pl-10 space-y-2">
-          <p className="font-mono text-xs text-parchment/45 leading-relaxed">{entry.detail}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {entry.tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-mono text-2xs tracking-label px-1.5 py-0.5 border border-accent/30 text-parchment/35 rounded-sm"
-              >
-                {tag}
-              </span>
-            ))}
+        <div className="overflow-hidden">
+          <div className="pt-3 pl-0 lg:pl-10 space-y-2 pb-2">
+            <p className="font-mono text-xs text-parchment/45 leading-relaxed">{entry.detail}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {entry.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="font-mono text-2xs tracking-label px-1.5 py-0.5 border border-accent/30 text-parchment/35 rounded-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -205,15 +209,15 @@ export default function AboutSection() {
   const [activeGameId, setActiveGameId] = useState<string>('01')
 
   return (
-    <section id="about" className="relative py-20 border-t border-accent/25">
+    <section id="about" className="relative py-12 md:py-20 border-t border-accent/25">
       {/* Section header */}
-      <div className="flex items-center justify-between mb-12 px-6 lg:px-10 pb-4 border-b border-accent/20">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 px-6 lg:px-10 pb-4 border-b border-accent/20">
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <span className="label-caps">FOUNDATIONS /</span>
           <div className="w-px h-4 bg-accent/40" />
           <span className="font-mono text-2xs text-parchment/25">ABOUT + BELIEFS + CATALOG</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="font-mono text-2xs text-parchment/20">{EDUCATION.institution}</span>
           <div className="w-px h-3 bg-accent/30" />
           {EDUCATION.degrees.map((d, i) => (
@@ -224,18 +228,13 @@ export default function AboutSection() {
 
       {/* ── Three-column layout ───────────────────────────────────────────── */}
       <div
-        className="grid gap-px border-l border-r border-accent/15"
-        style={{
-          gridTemplateColumns: '1fr 1fr 1fr',
-          marginLeft: '1.5rem',
-          marginRight: '1.5rem',
-        }}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-px border-l border-r border-accent/15 mx-4 sm:mx-6 lg:mx-10"
       >
 
         {/* ═══════════════════════════════════════════════════════════════════
             COLUMN 1 — Professional Foundations & Timeline
         ══════════════════════════════════════════════════════════════════════ */}
-        <div className="px-6 lg:px-8 py-8 border-r border-accent/20">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b lg:border-b-0 lg:border-r border-accent/20">
 
           {/* Identity header */}
           <div className="mb-8">
@@ -302,7 +301,7 @@ export default function AboutSection() {
         {/* ═══════════════════════════════════════════════════════════════════
             COLUMN 2 — Human-First Beliefs
         ══════════════════════════════════════════════════════════════════════ */}
-        <div className="px-6 lg:px-8 py-8 border-r border-accent/20">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b lg:border-b-0 lg:border-r border-accent/20">
           <div className="mb-8">
             <div className="label-caps mb-2">PHILOSOPHY</div>
             <h2
@@ -337,7 +336,7 @@ export default function AboutSection() {
         {/* ═══════════════════════════════════════════════════════════════════
             COLUMN 3 — Personal Catalog (Terminal Interface)
         ══════════════════════════════════════════════════════════════════════ */}
-        <div className="px-6 lg:px-8 py-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
           {/* Terminal header bar */}
           <div className="mb-6">
             <div className="label-caps mb-2">PERSONAL CATALOG</div>

@@ -13,8 +13,20 @@
     --color-accent: #38406a;
     --color-parchment: #cfccbb;
     --color-gold: #a39d7b;
-    --wheel-size: min(52vw, 680px);
+    --wheel-size: min(72vw, 360px); /* Mobile-first default size */
     --header-h: 48px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --wheel-size: min(75vw, 420px); /* Tablet size */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --wheel-size: min(42vw, 550px); /* Desktop split-panel size */
+    }
   }
 
   *, *::before, *::after {
@@ -205,5 +217,50 @@
   @keyframes fade-down {
     from { transform: translateY(-10px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-arrow-left-in {
+    animation: arrow-left-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes arrow-left-in {
+    from { transform: translateX(-10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .animate-arrow-right-in {
+    animation: arrow-right-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes arrow-right-in {
+    from { transform: translateX(10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}
+
+/* ─── WHEEL RESPONSIVE TYPOGRAPHY ────────────────────────────────────────── */
+.wheel-label {
+  font-size: 9px;
+}
+.wheel-label-active {
+  font-size: 11px;
+}
+
+@media (max-width: 1024px) {
+  /* On tablets/smaller screens where wheel size is reduced */
+  .wheel-label {
+    font-size: 14px;
+  }
+  .wheel-label-active {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* On mobile where wheel size is further reduced (var(--wheel-size) shrinks SVG) */
+  /* We scale up the SVG user units to maintain legible screen pixels */
+  .wheel-label {
+    font-size: 22px;
+  }
+  .wheel-label-active {
+    font-size: 28px;
   }
 }

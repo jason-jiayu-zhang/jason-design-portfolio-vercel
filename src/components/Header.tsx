@@ -106,18 +106,17 @@ export default function Header() {
       <div className="absolute inset-0 bg-primary/80 backdrop-blur-md" />
 
       {/* Content */}
-      <div className="relative w-full flex items-center justify-between px-6">
+      <div className="relative w-full flex items-center justify-between px-4 sm:px-6">
         {/* ── Left: Branding & Status ── */}
         {isPhase2 && (
         <div className={`flex items-center gap-3 ${!hasLoaded ? 'animate-mask-right' : ''}`}>
           {/* JJZ monogram — routes home */}
-          <Link to="/" className="flex items-end gap-0.5">
-            <span
-              className="font-sans font-black text-parchment leading-none hover:text-parchment/80 transition-colors"
-              style={{ fontSize: '18px', letterSpacing: '-0.05em' }}
-            >
-              JJZ
-            </span>
+          <Link to="/" className="flex items-center gap-1.5 group">
+            <img
+              src="/favicon.svg"
+              className="w-[18px] h-[18px] transition-transform duration-300 group-hover:scale-110 object-contain"
+              alt="Logo"
+            />
             <span
               className="font-mono text-gold leading-none mb-[1px]"
               style={{ fontSize: '9px', letterSpacing: '0.05em' }}
@@ -146,28 +145,22 @@ export default function Header() {
 
         {/* ── Right: Nav links ── */}
         {isPhase3 && (
-        <nav className={`flex items-center gap-4 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-          <a
-            href="#featured"
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
-          >
-            Featured
-          </a>
+        <nav className={`flex items-center gap-4 overflow-x-auto no-scrollbar flex-1 sm:flex-initial min-w-0 ml-4 sm:ml-0 justify-start sm:justify-end ${!hasLoaded ? 'animate-fade-down' : ''}`}>
           <a
             href="#work"
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Work
           </a>
           <a
             href="#studio"
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Studio
           </a>
           <a
             href="#about"
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             About
           </a>
@@ -175,7 +168,7 @@ export default function Header() {
             href={BIO.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1 border border-parchment/20 rounded-sm hover:border-parchment/60 hover:bg-parchment/5 transition-all duration-200 group"
+            className="flex items-center gap-1.5 px-3 py-1 border border-parchment/20 rounded-sm hover:border-parchment/60 hover:bg-parchment/5 transition-all duration-200 group flex-shrink-0"
           >
             <span className="font-mono text-2xs tracking-label text-parchment/60 group-hover:text-parchment uppercase transition-colors duration-200">
               Resume

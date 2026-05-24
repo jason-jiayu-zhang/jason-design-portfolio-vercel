@@ -343,7 +343,7 @@ function MetadataSidebar({
               }}
             />
             <span className="font-mono text-2xs tracking-label text-parchment/35 uppercase">
-              {project.status === 'live' ? 'Live Product' : project.status === 'coming-soon' ? 'Coming Soon' : 'Archived'}
+              {project.status === 'live' ? 'Live Product' : project.status === 'offline' ? 'Offline' : 'Archived'}
             </span>
           </div>
 
