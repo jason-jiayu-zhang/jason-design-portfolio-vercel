@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── GLOBAL RESET & BASE ────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    --color-primary: #1c2035;
+    --color-surface: #252a44;
+    --color-accent: #38406a;
+    --color-parchment: #cfccbb;
+    --color-gold: #a39d7b;
+    --wheel-size: min(52vw, 680px);
+    --header-h: 48px;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #1c2035;
+    color: #cfccbb;
+    font-family: 'Inter', 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
+    height: 100%;
+    overflow-x: hidden;
+    /* Subtle grid overlay */
+    background-image:
+      linear-gradient(rgba(163, 157, 123, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(163, 157, 123, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  #root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background: rgba(163, 157, 123, 0.25);
+    color: #cfccbb;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #1c2035; }
+  ::-webkit-scrollbar-thumb { background: #38406a; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a39d7b; }
+}
+
+/* ─── COMPONENT UTILITIES ────────────────────────────────────────────────── */
+
+@layer components {
+  /* Label caps — Swiss editorial small caps */
+  .label-caps {
+    @apply font-mono text-2xs tracking-label uppercase text-gold;
+  }
+
+  /* Hairline separator */
+  .hairline {
+    @apply border-t border-accent/40;
+  }
+
+  /* Mono code block style text */
+  .mono-data {
+    @apply font-mono text-xs text-parchment/60 tracking-tight;
+  }
+
+  /* Editorial headline */
+  .headline-xl {
+    @apply font-sans font-black text-parchment leading-none tracking-ultra-tight;
+  }
+
+  /* Project index badge */
+  .project-badge {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm
+           border border-accent/50 bg-surface/60
+           font-mono text-2xs tracking-label uppercase text-gold;
+  }
+
+  /* Subtle glass panel */
+  .glass-panel {
+    @apply bg-surface/30 border border-accent/30 backdrop-blur-sm;
+  }
+}
+
+/* ─── WHEEL INTERACTION ──────────────────────────────────────────────────── */
+
+@layer utilities {
+  .wheel-cursor {
+    cursor: grab;
+  }
+  .wheel-cursor:active {
+    cursor: grabbing;
+  }
+
+  /* No text select during drag */
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Status flip animation container */
+  .flip-container {
+    perspective: 600px;
+    overflow: hidden;
+    height: 1.2em;
+  }
+
+  /* Clip for text flip in/out */
+  .clip-text {
+    overflow: hidden;
+    display: inline-block;
+  }
+}
+
+/* ─── SCAN-LINE EFFECT ────────────────────────────────────────────────────── */
+
+.scanline-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(28, 32, 53, 0.04) 3px,
+    rgba(28, 32, 53, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}

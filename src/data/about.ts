@@ -1,0 +1,181 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// ABOUT SECTION DATA
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface TimelineEntry {
+  period: string
+  role: string
+  org: string
+  tags: string[]
+  detail: string
+}
+
+export interface Belief {
+  index: string
+  headline: string
+  body: string
+}
+
+export interface BookEntry {
+  title: string
+  author: string
+  category: string
+  status: 'reading' | 'done' | 'queued'
+}
+
+export interface RotationEntry {
+  artist: string
+  note: string
+}
+
+// ─── PROFESSIONAL TIMELINE ────────────────────────────────────────────────────
+
+export const TIMELINE: TimelineEntry[] = [
+  {
+    period: 'Jul 2025 – Present',
+    role: 'Figma Campus Leader',
+    org: 'Figma @ UC Davis',
+    tags: ['Community', 'Design Education', 'Workshop Facilitation'],
+    detail:
+      'Selected as one of Figma\'s global Campus Leaders — hosting workshops, Tech Mixer events, and Sticker Café drops. Bridges the gap between professional-grade tooling and student design culture.',
+  },
+  {
+    period: 'Mar 2025 – Present',
+    role: 'Vice President of Design',
+    org: 'Product Space @ UC Davis',
+    tags: ['Leadership', 'Mentorship', 'UI/UX'],
+    detail:
+      'Leads the design vertical of UC Davis\'s premier product organization. Responsible for brand cohesion, design mentorship pipeline, and establishing a human-first design culture across 100+ members.',
+  },
+  {
+    period: 'Feb 2025 – Dec 2025',
+    role: 'Lead Product Designer & UI Engineer',
+    org: 'Cattlelog (AggieWorks)',
+    tags: ['Full-Stack Engineering', 'UI/UX Design', 'Product'],
+    detail:
+      'Architected the full design system and UI engineering layer for Cattlelog — a course discovery platform serving 30,000+ active UC Davis students. Drove 1:1 Figma-to-code component parity using React, TypeScript, Tailwind CSS, Vite, and Supabase.',
+  },
+  {
+    period: 'Jan 2026 – Present',
+    role: 'UI/UX Designer & Full-Stack Engineer',
+    org: 'Fimanu / Sync',
+    tags: ['Hackathon', '1st Place', 'Rapid Prototyping'],
+    detail:
+      'Built Sync — a study spot discovery application — from zero to deployed in 24 hours. 1st Place finish. Handled full-stack: React front-end, TypeScript interfaces, and Figma design system in parallel.',
+  },
+]
+
+// ─── DOUBLE MAJOR CALLOUT ────────────────────────────────────────────────────
+
+export const EDUCATION = {
+  institution: 'UC Davis',
+  degrees: ['B.A. Design', 'B.S. Computer Engineering'],
+  note: 'Dual-discipline training anchoring design decisions in both systems thinking and human cognition.',
+  tools: ['Figma', 'Figma Make', 'Google Stitch', 'React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase'],
+}
+
+// ─── CORE BELIEFS ────────────────────────────────────────────────────────────
+
+export const BELIEFS: Belief[] = [
+  {
+    index: '01',
+    headline: 'Design is a verb, not a noun.',
+    body: 'Design isn\'t a deliverable. It\'s a continuous act of listening, challenging assumptions, and rebuilding until the solution is invisible to the user. The artifact is secondary to the process.',
+  },
+  {
+    index: '02',
+    headline: 'Empathy without action is decoration.',
+    body: 'Human-first means nothing if it stops at the research phase. I hold myself accountable to translating genuine empathy into functional decisions — in the interface, in the codebase, in the room.',
+  },
+  {
+    index: '03',
+    headline: 'Community is the product.',
+    body: 'The best design work I\'ve done has happened alongside others — not in isolation. Environments where people feel safe to critique, build, and fail together produce the strongest outcomes.',
+  },
+  {
+    index: '04',
+    headline: 'Alignment > Agreement.',
+    body: 'I\'d rather have a team that disagrees but moves in the same direction than one that nods along without conviction. Productive friction is a feature, not a bug.',
+  },
+  {
+    index: '05',
+    headline: 'A product without users is merely a project.',
+    body: 'Distribution is part of the design. If it doesn\'t reach people, it doesn\'t exist. Every design decision must trace back to a human consequence.',
+  },
+]
+
+// ─── BOOKSHELF ────────────────────────────────────────────────────────────────
+
+export const BOOKSHELF: BookEntry[] = [
+  { title: 'Dune', author: 'Frank Herbert', category: 'Science Fiction', status: 'done' },
+  { title: 'The Three-Body Problem', author: 'Liu Cixin', category: 'Science Fiction', status: 'done' },
+  { title: 'The Da Vinci Code', author: 'Dan Brown', category: 'Mystery Thriller', status: 'done' },
+  { title: 'The Adventures of Tintin', author: 'Hergé', category: 'Graphic Novel', status: 'done' },
+  { title: 'What If?', author: 'Randall Munroe', category: 'Science / Humor', status: 'done' },
+  { title: 'Thank You for Arguing', author: 'Jay Heinrichs', category: 'Communication', status: 'reading' },
+  { title: 'Sea of Thunder', author: 'Evan Thomas', category: 'Military History', status: 'done' },
+  { title: 'The Epic of Flight', author: 'Time-Life Books', category: 'Aviation History', status: 'done' },
+]
+
+// ─── CURRENT ROTATIONS ────────────────────────────────────────────────────────
+
+export const ROTATIONS: RotationEntry[] = [
+  { artist: 'The Marías', note: 'All I Really Want Is You' },
+  { artist: 'Imagine Dragons', note: 'Amsterdam' },
+  { artist: 'Ado', note: 'Aishite Aishite Aishite' },
+  { artist: 'Lewis Capaldi', note: 'Bruises' },
+  { artist: '秋野樱', note: '破旧世界 (Broken World)' },
+  { artist: 'Arknights: Endfield', note: 'Rewrite the Prophecy' },
+  { artist: 'Eve', note: 'Underdog' },
+  { artist: 'ENHYPEN', note: 'Given-Taken' },
+]
+
+export interface PlaygroundEntry {
+  label: string
+  value: string
+  sublabel?: string
+}
+
+export interface GameEntry {
+  id: string
+  title: string
+  specs: PlaygroundEntry[]
+}
+
+// ─── PLAYGROUND ───────────────────────────────────────────────────────────────
+
+export const PLAYGROUND: GameEntry[] = [
+  {
+    id: '01',
+    title: 'Valorant',
+    specs: [
+      { label: 'Game', value: 'Valorant', sublabel: 'Competitive Ranked' },
+      { label: 'Main Agents', value: 'Fade / Sova / Skye', sublabel: 'In-Game Leader' },
+      { label: 'Rank', value: 'Ascendant I', sublabel: 'NA Server' },
+      { label: 'Sensitivity', value: '.2 x 800', sublabel: 'E-DPI: 160' },
+      { label: 'Peripherals', value: 'Razer Basilisk v3 / MelGeek MADE68 Pro', sublabel: 'Keyboard & Mouse' },
+    ],
+  },
+  {
+    id: '02',
+    title: 'Arknights: Endfield',
+    specs: [
+      { label: 'Mode', value: 'Open-World RPG' },
+      { label: 'Characters', value: 'Zhuang Fangyi / Arclight / Arcane' },
+      { label: 'Progression', value: 'NA Server // Lv. 56' },
+      { label: 'PLATFORM / DEVICE', value: 'Desktop / Mobile', sublabel: 'Cross-Play Sync' },
+      { label: 'Peripherals', value: 'Razer Basilisk v3 / MelGeek MADE68 Pro', sublabel: 'Keyboard & Mouse' },
+    ],
+  },
+  {
+    id: '03',
+    title: "Soul's Remnant",
+    specs: [
+      { label: 'Category', value: 'MMORPG' },
+      { label: 'Classes', value: 'Archer / Mage / Kunai' },
+      { label: 'Ranking', value: 'Top 1%', sublabel: 'Leaderboard Tier' },
+      { label: 'Sensitivity', value: '.2 x 800', sublabel: 'E-DPI: 160' },
+      { label: 'Peripherals', value: 'Razer Basilisk v3 / MelGeek MADE68 Pro', sublabel: 'Keyboard & Mouse' },
+    ],
+  },
+]

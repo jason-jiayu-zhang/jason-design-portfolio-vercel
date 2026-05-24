@@ -1,0 +1,177 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { STATUS_CYCLE, BIO } from '../data/portfolio'
+
+// ── Hardware-style pulsing dot ──────────────────────────────────────────────
+function PulseDot() {
+  return (
+    <span className="relative inline-flex items-center justify-center w-2 h-2 mr-2 flex-shrink-0">
+      {/* Ripple */}
+      <span className="absolute inline-flex h-full w-full rounded-full bg-[#10b981]/30 animate-ping" style={{ animationDuration: '2s' }} />
+      {/* Core dot */}
+      <svg viewBox="0 0 8 8" className="relative w-2 h-2">
+        <circle cx="4" cy="4" r="3" fill="#10b981" />
+        <circle cx="4" cy="4" r="1.5" fill="#064e3b" />
+      </svg>
+    </span>
+  )
+}
+
+// ── Animated Status Bar ────────────────────────────────────────────────────
+function StatusBar() {
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [animState, setAnimState] = useState<'idle' | 'exit' | 'enter'>('idle')
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
+  const textRef = useRef<HTMLSpanElement>(null)
+  const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (textRef.current) {
+      setContainerWidth(textRef.current.offsetWidth)
+    }
+  }, [currentIdx])
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      // Trigger exit
+      setAnimState('exit')
+      setTimeout(() => {
+        setCurrentIdx((prev) => (prev + 1) % STATUS_CYCLE.length)
+        setAnimState('enter')
+        setTimeout(() => setAnimState('idle'), 200)
+      }, 350)
+    }, 6000)
+
+    return () => clearInterval(intervalRef.current)
+  }, [])
+
+  const status = STATUS_CYCLE[currentIdx]
+
+  const textStyle: React.CSSProperties = {
+    transform:
+      animState === 'exit'
+        ? 'translateY(-100%)'
+        : animState === 'enter'
+          ? 'translateY(4px)'
+          : 'translateY(0)',
+    opacity: animState === 'enter' ? 0 : 1,
+    transition:
+      animState === 'exit'
+        ? 'transform 0.32s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.25s ease'
+        : animState === 'enter'
+          ? 'none'
+          : 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease',
+    willChange: 'transform, opacity',
+  }
+
+  return (
+    <div className="flex items-center gap-0 px-3 py-1 border border-accent/40 rounded-sm bg-surface/20 backdrop-blur-sm transition-all duration-300 ease-in-out">
+      <PulseDot />
+      <div 
+        className="overflow-hidden flex items-center transition-all duration-300 ease-in-out"
+        style={{ width: containerWidth ? `${containerWidth}px` : 'auto', height: '1.1em' }}
+      >
+        <span
+          ref={textRef}
+          className="font-mono text-2xs tracking-label text-parchment/70 whitespace-nowrap block"
+          style={textStyle}
+        >
+          {status.text}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// ── Header ─────────────────────────────────────────────────────────────────
+export default function Header() {
+  return (
+    <header
+      className="fixed top-0 left-0 right-0 z-50 h-12 flex items-center"
+      style={{ borderBottom: '1px solid rgba(56, 64, 106, 0.5)' }}
+    >
+      {/* Subtle blur backdrop */}
+      <div className="absolute inset-0 bg-primary/80 backdrop-blur-md" />
+
+      {/* Content */}
+      <div className="relative w-full flex items-center justify-between px-6">
+        {/* ── Left: Branding & Status ── */}
+        <div className="flex items-center gap-3">
+          {/* JJZ monogram — routes home */}
+          <Link to="/" className="flex items-end gap-0.5">
+            <span
+              className="font-sans font-black text-parchment leading-none hover:text-parchment/80 transition-colors"
+              style={{ fontSize: '18px', letterSpacing: '-0.05em' }}
+            >
+              JJZ
+            </span>
+            <span
+              className="font-mono text-gold leading-none mb-[1px]"
+              style={{ fontSize: '9px', letterSpacing: '0.05em' }}
+            >
+              ©25
+            </span>
+          </Link>
+
+          {/* Vertical separator */}
+          <div className="w-px h-4 bg-accent/50" />
+
+          <span className="label-caps hidden sm:block">Portfolio</span>
+
+          {/* Vertical separator & Status Bar */}
+          <div className="w-px h-4 bg-accent/50 hidden sm:block" />
+
+          <div className="hidden sm:block">
+            <StatusBar />
+          </div>
+        </div>
+
+        {/* ── Center: Empty (for layout balance) ── */}
+        <div className="absolute left-1/2 -translate-x-1/2">
+        </div>
+
+        {/* ── Right: Nav links ── */}
+        <nav className="flex items-center gap-4">
+          <a
+            href="#work"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+          >
+            Work
+          </a>
+          <a
+            href="#studio"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+          >
+            Studio
+          </a>
+          <a
+            href="#about"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+          >
+            About
+          </a>
+          <a
+            href={BIO.resumeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1 border border-parchment/20 rounded-sm hover:border-parchment/60 hover:bg-parchment/5 transition-all duration-200 group"
+          >
+            <span className="font-mono text-2xs tracking-label text-parchment/60 group-hover:text-parchment uppercase transition-colors duration-200">
+              Resume
+            </span>
+            <svg viewBox="0 0 10 10" className="w-2 h-2 text-gold/60 group-hover:text-gold transition-colors">
+              <path
+                d="M2 8 L8 2 M4 2 L8 2 L8 6"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </header>
+  )
+}
