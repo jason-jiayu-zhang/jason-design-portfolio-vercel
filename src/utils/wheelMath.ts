@@ -15,8 +15,10 @@ export const safeMod = (n: number, m: number): number => ((n % m) + m) % m
 export const normalizeAngle = (angle: number): number => safeMod(angle, 360)
 
 export const snapAngle = (angle: number): number => {
-  const index = angleToProjectIndex(angle)
-  return projectIndexToAngle(index, angle)
+  // Directly clamp to the nearest continuous quadrant boundary without modulo-360 inversion
+  const exactIndex = (270 - angle) / SNAP_INTERVAL
+  const roundedIndex = Math.round(exactIndex)
+  return 270 - roundedIndex * SNAP_INTERVAL
 }
 
 export const angleToProjectIndex = (angle: number): number => {
@@ -25,8 +27,13 @@ export const angleToProjectIndex = (angle: number): number => {
 }
 
 export const projectIndexToAngle = (index: number, currentAngle: number = 270): number => {
+  // Find the closest target angle for the given index in continuous space
   const targetBase = 270 - index * SNAP_INTERVAL
-  const delta = angularDelta(currentAngle, targetBase)
+  const diff = (targetBase - currentAngle) % 360
+  // Normalize delta to [-180, 180], prioritizing positive direction on exact 180 tie
+  let delta = (diff + 540) % 360 - 180
+  if (delta === -180) delta = 180
+  
   return currentAngle + delta
 }
 

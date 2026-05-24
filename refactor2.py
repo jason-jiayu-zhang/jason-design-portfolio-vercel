@@ -1,49 +1,11 @@
-import { Link } from 'react-router-dom'
-import { PROJECTS, EXPERIMENTS } from '../data/portfolio'
-import type { Project, Experiment } from '../types/portfolio'
+import re
 
-// ─── SVG border-draw component ────────────────────────────────────────────────
-// Animates a fine perimeter line on hover using stroke-dashoffset
-function DrawBorder() {
-  // Total perimeter of a rect is 2*(w+h) — we use 100% via viewBox so ~400 units
-  const PERIM = 400
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      aria-hidden="true"
-    >
-      <rect
-        x="0.5" y="0.5" width="99" height="99"
-        fill="none"
-        stroke="#38406a"
-        strokeWidth="0.8"
-        strokeDasharray={PERIM}
-        className="[stroke-dashoffset:400] group-hover:[stroke-dashoffset:0] transition-[stroke-dashoffset] duration-[350ms] ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:duration-[550ms] group-hover:ease-[cubic-bezier(0.22,1,0.36,1)]"
-      />
-    </svg>
-  )
-}
+with open('src/components/ProjectsGrid.tsx', 'r') as f:
+    content = f.read()
 
-// ─── Tech tag chip ────────────────────────────────────────────────────────────
-function TechTag({ label, accentColor, delay }: { label: string; accentColor: string; delay: number }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 text-2xs font-mono tracking-label rounded-sm border cursor-default transition-all duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] border-[#38406a80] text-[#cfccbb8c] bg-transparent group-hover:border-[var(--accent)] group-hover:text-[var(--accent)] group-hover:bg-[var(--accent-bg)]"
-      style={{
-        '--accent': accentColor,
-        '--accent-bg': `${accentColor}10`,
-        transitionDelay: `${delay}ms`,
-        textBox: 'trim-both cap alphabetic',
-      } as React.CSSProperties}
-    >
-      {label}
-    </span>
-  )
-}
-
-// ─── Case Study Card (Template Unit A) ────────────────────────────────────────
+# Replace CaseStudyCard
+card_old = r"// ─── Case Study Card.*?// ─── Experiment Cell"
+card_new = """// ─── Case Study Card (Template Unit A) ────────────────────────────────────────
 function CaseStudyCard({ project }: { project: Project }) {
   const engineering = project.categories.includes('Full-Stack Engineering')
   const isDesignSystem = project.tools.length >= 4
@@ -223,7 +185,13 @@ function CaseStudyCard({ project }: { project: Project }) {
   )
 }
 
-// ─── Experiment Cell (Template Unit B) ────────────────────────────────────────
+// ─── Experiment Cell"""
+
+content = re.sub(card_old, card_new, content, flags=re.DOTALL)
+
+# Replace ExperimentCell
+cell_old = r"// ─── Experiment Cell.*?export default function ProjectsGrid"
+cell_new = """// ─── Experiment Cell (Template Unit B) ────────────────────────────────────────
 const EXPERIMENT_GLYPHS = ['◈', '⬡', '◉', '⬢', '◎', '⬟', '◐']
 
 function ExperimentCell({ exp, index }: { exp: Experiment; index: number }) {
@@ -282,96 +250,9 @@ function ExperimentCell({ exp, index }: { exp: Experiment; index: number }) {
     </div>
   )
 }
-export default function ProjectsGrid() {
-  const publishedCount = EXPERIMENTS.filter((e) => e.category === 'published').length
-  const conceptualCount = EXPERIMENTS.filter((e) => e.category === 'conceptual').length
+export default function ProjectsGrid"""
 
-  return (
-    <section id="work" className="relative py-20 px-6 lg:px-10">
+content = re.sub(cell_old, cell_new, content, flags=re.DOTALL)
 
-      {/* Section label */}
-      <div className="flex items-center justify-between mb-10 pb-4 border-b border-accent/25">
-        <div className="flex items-center gap-4">
-          <span className="label-caps">WORK</span>
-          <div className="w-px h-4 bg-accent/40" />
-          <span className="font-mono text-2xs text-parchment/25">CASE STUDIES + EXPERIMENTS</span>
-        </div>
-        <span className="label-caps opacity-30">
-          {PROJECTS.length} PRODUCTS / {publishedCount} PUBLISHED / {conceptualCount} CONCEPTUAL
-        </span>
-      </div>
-
-      {/* ── Mobile Layout (Single Column) ─────────────────────────────────────────── */}
-      <div className="flex flex-col lg:hidden w-full gap-3">
-        <div className="w-full">
-          <Link to={`/work/${PROJECTS[0].id}`} className="block h-full">
-            <CaseStudyCard project={PROJECTS[0]} />
-          </Link>
-        </div>
-        {/* Experiments 0-3 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-          <Link to={`/studio/${EXPERIMENTS[0].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[0]} index={0} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[1].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[1]} index={1} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
-        </div>
-        <div className="w-full">
-          <Link to={`/work/${PROJECTS[1].id}`} className="block h-full">
-            <CaseStudyCard project={PROJECTS[1]} />
-          </Link>
-        </div>
-        {/* Experiments 4-7 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-          <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
-          <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
-        </div>
-        <div className="w-full">
-          <Link to={`/work/${PROJECTS[2].id}`} className="block h-full">
-            <CaseStudyCard project={PROJECTS[2]} />
-          </Link>
-        </div>
-      </div>
-
-      {/* ── Desktop Layout (Masonry-style Flex) ────────────────────── */}
-      <div className="hidden lg:flex flex-row w-full gap-3">
-        {/* Left Column */}
-        <div className="flex flex-col w-1/2 gap-3">
-          <div className="w-full">
-            <Link to={`/work/${PROJECTS[0].id}`} className="block h-full">
-              <CaseStudyCard project={PROJECTS[0]} />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-3 w-full">
-            <Link to={`/studio/${EXPERIMENTS[4].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[4]} index={4} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[5].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[5]} index={5} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[6].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[6]} index={6} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[7].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[7]} index={7} /></Link>
-          </div>
-          <div className="w-full">
-            <Link to={`/work/${PROJECTS[2].id}`} className="block h-full">
-              <CaseStudyCard project={PROJECTS[2]} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="flex flex-col w-1/2 gap-3">
-          <div className="grid grid-cols-2 gap-3 w-full">
-            <Link to={`/studio/${EXPERIMENTS[0].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[0]} index={0} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[1].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[1]} index={1} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[2].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[2]} index={2} /></Link>
-            <Link to={`/studio/${EXPERIMENTS[3].id}`} className="block h-full"><ExperimentCell exp={EXPERIMENTS[3]} index={3} /></Link>
-          </div>
-          <div className="w-full">
-            <Link to={`/work/${PROJECTS[1].id}`} className="block h-full">
-              <CaseStudyCard project={PROJECTS[1]} />
-            </Link>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  )
-}
+with open('src/components/ProjectsGrid.tsx', 'w') as f:
+    f.write(content)

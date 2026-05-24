@@ -6,6 +6,7 @@ import {
   normalizeAngle,
 } from '../utils/wheelMath'
 import type { Project, WheelRing } from '../types/portfolio'
+import { useIntro } from './IntroContext'
 
 export interface WheelHandle {
   setRotation: (angle: number) => void
@@ -45,7 +46,10 @@ const GOLD = '#a39d7b'
 // ── PROJECT LABEL POSITIONS (4 compass points on main ring) ─────────────────
 const LABEL_RADIUS = 222
 
-const StaticBackground = memo(() => (
+const StaticBackground = memo(() => {
+  const { hasLoaded } = useIntro()
+  
+  return (
   <g>
     <defs>
       <radialGradient id="wheelGlow" cx="50%" cy="50%" r="50%">
@@ -64,12 +68,12 @@ const StaticBackground = memo(() => (
     
     <style>{`
       @keyframes spin-cw {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+        from { transform: rotate(0deg) translateZ(0); }
+        to { transform: rotate(360deg) translateZ(0); }
       }
       @keyframes spin-ccw {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(-360deg); }
+        from { transform: rotate(0deg) translateZ(0); }
+        to { transform: rotate(-360deg) translateZ(0); }
       }
       @keyframes pulse-opacity {
         0%, 100% { opacity: 0.7; }
@@ -78,17 +82,22 @@ const StaticBackground = memo(() => (
       .ambient-ring-cw {
         transform-origin: ${CX}px ${CY}px;
         animation: spin-cw 120s linear infinite;
+        will-change: transform;
       }
       .ambient-ring-ccw {
         transform-origin: ${CX}px ${CY}px;
         animation: spin-ccw 90s linear infinite;
+        will-change: transform;
       }
       .pulse-active {
-        animation: pulse-opacity 2.5s ease-in-out infinite;
+        animation: pulse-opacity 2.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+        will-change: opacity;
       }
     `}</style>
 
-    <circle cx={CX} cy={CY} r={280} fill="url(#wheelGlow)" />
+    <g className={!hasLoaded ? "animate-vector-draw" : ""} style={{ animationDuration: '3.2s', animationDelay: !hasLoaded ? '450ms' : '0ms' }}>
+      <circle cx={CX} cy={CY} r={280} fill="url(#wheelGlow)" />
+    </g>
 
     {RINGS.map((ring, i) => {
       let ambientClass = ""
@@ -96,22 +105,25 @@ const StaticBackground = memo(() => (
         ambientClass = i % 2 === 0 ? "ambient-ring-cw" : "ambient-ring-ccw"
       }
       return (
-        <g key={`ring-static-${i}`} className={ambientClass}>
-          <circle
-            cx={CX}
-            cy={CY}
-            r={ring.radius}
-            fill="none"
-            stroke={PARCHMENT}
-            strokeWidth={ring.strokeWidth}
-            opacity={ring.opacity}
-            strokeDasharray={ring.dashed ? ring.dashArray : undefined}
-          />
+        <g key={`ring-static-${i}`} className={!hasLoaded ? "animate-vector-draw" : ""} style={{ animationDuration: '3.2s', animationDelay: !hasLoaded ? `${(RINGS.length - 1 - i) * 30}ms` : '0ms' }}>
+          <g className={ambientClass}>
+            <circle
+              cx={CX}
+              cy={CY}
+              r={ring.radius}
+              fill="none"
+              stroke={PARCHMENT}
+              strokeWidth={ring.strokeWidth}
+              opacity={ring.opacity}
+              strokeDasharray={ring.dashed ? ring.dashArray : undefined}
+            />
+          </g>
         </g>
       )
     })}
   </g>
-))
+  )
+})
 StaticBackground.displayName = 'StaticBackground'
 
 const StaticRotatingMandalas = memo(() => {
@@ -154,8 +166,10 @@ const StaticRotatingMandalas = memo(() => {
     spiralPath += `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} `
   }
 
+  const { hasLoaded } = useIntro()
+
   return (
-    <g>
+    <g className={!hasLoaded ? "animate-vector-draw" : ""} style={{ animationDuration: '3.2s' }}>
       {RINGS.map((ring, ri) =>
         ring.ticks ? (
           <path
@@ -182,6 +196,8 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
   const rot = rotationAngle
   const rotatingGroupRef = useRef<SVGGElement>(null)
   const degreeTextRef = useRef<SVGTextElement>(null)
+
+  const { hasLoaded, phase } = useIntro()
 
   useImperativeHandle(ref, () => ({
     setRotation: (angle: number) => {
@@ -215,6 +231,10 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
           const dotPos = polarToCartesian(CX, CY, 246, deg)
           const isActive = i === activeIndex
           const projColor = projects[i]?.accentColor ?? PARCHMENT
+          
+          const isPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
+          const baseLineOpacity = isActive ? 0.9 : 0.25
+          const baseDotOpacity = isActive ? 1 : 0.3
 
           return (
             <g key={`cardinal-${deg}`}>
@@ -224,8 +244,13 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
                 x2={inner.x} y2={inner.y}
                 stroke={isActive ? projColor : PARCHMENT}
                 strokeWidth={isActive ? 1.5 : 0.5}
-                opacity={isActive ? 0.9 : 0.25}
-                style={{ filter: isActive ? `drop-shadow(0px 0px 3px ${projColor})` : 'none', willChange: 'filter' }}
+                opacity={isPhase2 ? baseLineOpacity : 0}
+                style={{ 
+                  filter: isActive ? `drop-shadow(0px 0px 3px ${projColor})` : 'none', 
+                  transition: 'opacity 1s cubic-bezier(0.22, 1, 0.36, 1)',
+                  transitionDelay: hasLoaded ? '0ms' : `${200 + i * 80}ms`,
+                  willChange: 'filter, opacity' 
+                }}
               />
               {/* Cardinal dot */}
               <circle
@@ -233,8 +258,13 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
                 cy={dotPos.y}
                 r={isActive ? 3.5 : 1.5}
                 fill={isActive ? projColor : PARCHMENT}
-                opacity={isActive ? 1 : 0.3}
-                style={{ filter: isActive ? `drop-shadow(0px 0px 3px ${projColor})` : 'none', willChange: 'filter' }}
+                opacity={isPhase2 ? baseDotOpacity : 0}
+                style={{ 
+                  filter: isActive ? `drop-shadow(0px 0px 3px ${projColor})` : 'none', 
+                  transition: 'opacity 1s cubic-bezier(0.22, 1, 0.36, 1)',
+                  transitionDelay: hasLoaded ? '0ms' : `${200 + i * 80}ms`,
+                  willChange: 'filter, opacity' 
+                }}
               />
             </g>
           )
@@ -245,6 +275,9 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
           const angleDeg = i * SNAP_INTERVAL
           const pos = polarToCartesian(CX, CY, LABEL_RADIUS, angleDeg)
           const isActive = i === activeIndex
+          
+          const isPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
+          const baseTextOpacity = isActive ? 1 : 0.3
 
           return (
             <g key={`proj-label-${i}`} transform={`rotate(${angleDeg} ${pos.x} ${pos.y})`}>
@@ -258,12 +291,14 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
                 fontSize={isActive ? 11 : 9}
                 fontWeight={isActive ? 500 : 400}
                 fill={isActive ? proj.accentColor : PARCHMENT}
-                opacity={isActive ? 1 : 0.3}
+                opacity={isPhase2 ? baseTextOpacity : 0}
                 letterSpacing="0.1em"
                 style={{ 
                   textTransform: 'uppercase',
                   filter: isActive ? `drop-shadow(0px 0px 3px ${proj.accentColor})` : 'none', 
-                  willChange: 'filter'
+                  transition: 'opacity 1s cubic-bezier(0.22, 1, 0.36, 1)',
+                  transitionDelay: hasLoaded ? '0ms' : `${250 + i * 80}ms`,
+                  willChange: 'filter, opacity'
                 }}
               >
                 {proj.slug}
@@ -298,6 +333,11 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
 
       {/* Center glow on active snap */}
       <circle cx={CX} cy={CY} r={18} fill="url(#centerGlow)" opacity={0.6} />
+
+      {/* Phase 01: Singular Vector Dot at center */}
+      {!hasLoaded && (
+        <circle cx={CX} cy={CY} r={2} fill={GOLD} className="animate-scale-dot" style={{ transformOrigin: `${CX}px ${CY}px` }} />
+      )}
 
       {/* Center crosshair — static (rendered on top) */}
       <line x1={CX - 12} y1={CY} x2={CX + 12} y2={CY} stroke={PARCHMENT} strokeWidth={0.5} opacity={0.4} />

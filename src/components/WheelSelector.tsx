@@ -14,20 +14,24 @@ import {
 import type { WheelState } from '../types/portfolio'
 import { PROJECTS } from '../data/portfolio'
 import GeometricWheel, { type WheelHandle } from './GeometricWheel'
+import { useIntro } from './IntroContext'
 
 interface WheelSelectorProps {
   onProjectChange: (index: number) => void
   activeIndex: number
 }
 
-const FRICTION = 0.88
-const SPRING_STIFFNESS = 0.12
+const FRICTION = 0.94
+const SPRING_STIFFNESS = 0.06
 const SNAP_THRESHOLD = 0.4 // deg/frame
 
 export default function WheelSelector({ onProjectChange, activeIndex }: WheelSelectorProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   const rafRef = useRef<number>(0)
   const wheelHandleRef = useRef<WheelHandle>(null)
+
+  const { hasLoaded, phase } = useIntro()
+  const isPhase3 = hasLoaded || phase === 'phase03'
 
   const wheelRef = useRef<WheelState>({
     angle: projectIndexToAngle(0),
@@ -41,7 +45,6 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_renderIndex, setRenderIndex] = useState(0)
   const wheelAccumulator = useRef(0)
-  const hasScrolledThisGesture = useRef(false)
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── ANIMATION LOOP ────────────────────────────────────────────────────────
@@ -91,6 +94,7 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
   const dragLastTime = useRef(0)
 
   const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!isPhase3) return;
     e.currentTarget.setPointerCapture(e.pointerId)
     const rect = svgRef.current!.getBoundingClientRect()
     const cx = rect.width / 2
@@ -135,42 +139,39 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
 
   // ── SCROLL WHEEL HANDLER ─────────────────────────────────────────────────
 
+  const scrollLockUntil = useRef(0)
+
   useEffect(() => {
     const el = svgRef.current
     if (!el) return
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault()
+
+      if (!isPhase3) return;
       
-      // Reset the "stop scrolling" timer on every wheel event
+      const now = performance.now()
+      
+      if (wheelRef.current.isDragging) return
+
+      // Strict delta-gate scroll lock: ignore all scroll events while locked
+      if (now < scrollLockUntil.current) {
+        return
+      }
+
+      // Reset the accumulator if the user stops scrolling for a short period
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current)
       scrollTimeout.current = setTimeout(() => {
-        hasScrolledThisGesture.current = false
         wheelAccumulator.current = 0
-      }, 75)
-
-      if (wheelRef.current.isDragging) return
-      
-      // Provide a max cooldown to prevent long trackpad momentum from permanently locking the wheel
-      const now = Date.now()
-      // We assume lastScrollTime is stored in a ref (we'll add it above)
-      if (hasScrolledThisGesture.current) {
-        if (now - (wheelRef.current as any).lastScrollTime < 800) {
-          return
-        } else {
-          // It's been 800ms since the last scroll triggered, allow another one despite momentum
-          hasScrolledThisGesture.current = false
-          wheelAccumulator.current = 0
-        }
-      }
+      }, 150)
       
       wheelAccumulator.current += e.deltaY
 
-      if (Math.abs(wheelAccumulator.current) > 30) {
+      // Delta-gate threshold required to actuate a turn
+      if (Math.abs(wheelAccumulator.current) > 60) {
         const direction = Math.sign(wheelAccumulator.current)
         wheelAccumulator.current = 0
-        hasScrolledThisGesture.current = true
-        ;(wheelRef.current as any).lastScrollTime = now
+        scrollLockUntil.current = performance.now() + 650 // 650ms physical scroll lock
         
         const currentIndex = wheelRef.current.activeIndex
         // scroll down (positive delta) -> next index, scroll up -> prev index
@@ -185,7 +186,7 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
       el.removeEventListener('wheel', handleWheel)
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current)
     }
-  }, [onProjectChange])
+  }, [onProjectChange, isPhase3])
 
   // ── PROGRAMMATIC SNAP (from external activeIndex change) ─────────────────
 

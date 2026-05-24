@@ -117,7 +117,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Designing for the Next Generation of Product Leaders',
     metrics: [
       { label: 'Role', value: 'VP of Design' },
-      { label: 'Focus', value: 'Mentorship & Leadership' },
+      { label: 'Focus', value: 'Mentorship' },
     ],
     awards: ['1st Place', 'Honorable Mention'],
     narrative: [
@@ -151,44 +151,43 @@ export const PROJECTS: Project[] = [
     id: 'fimanu',
     slug: 'Fimanu',
     title: 'Fimanu',
-    subtitle: 'Sync — Optimizing Study Spot Discovery for Students',
+    subtitle: 'Visualizing Design Output and Assets via Figma REST API',
     role: 'UI/UX Designer & Full-Stack Engineer',
-    tools: ['React', 'TypeScript', 'Figma'],
-    categories: ['UI/UX', 'Full-Stack Engineering', 'Product'],
+    tools: ['React', 'TypeScript', 'Figma REST API', 'Figma'],
+    categories: ['Product', 'Full-Stack Engineering', 'UI/UX'],
     wheelIndex: 2,
     accentColor: '#feb34f',
-    tagline: 'Optimizing Study Spot Discovery for Students',
+    tagline: 'Visualizing design output and assets through the Figma REST API',
     metrics: [
-      { label: 'Award', value: '1st Place' },
-      { label: 'Category', value: 'UI/UX' },
+      { label: 'Role', value: 'Lead Dev & Designer' },
+      { label: 'Focus', value: 'Figma REST API Integration' },
     ],
-    awards: ['1st Place', 'Honorable Mention'],
     narrative: [
-      'Streamlining and optimizing study spot discovery for students.',
-      'Designing experiences to help students find optimal study environments effectively.',
-      'Sync — coming soon.',
+      'A design-engineering tool that allows users to visualize and inspect their design output directly through the Figma REST API.',
+      'Bridging the gap between Figma design files and live codebases by translating design tokens and assets in real time.',
+      'Streamlining developer handoff and asset pipeline automation for product teams.',
     ],
     url: 'https://figma-tracker.up.railway.app',
     status: 'live',
     caseStudy: {
       executiveSummary:
-        'Fimanu (evolving into Sync) is a study spot discovery app designed and engineered as a dual-track project — simultaneously a competition entry and a live production experiment. As UI/UX Designer & Full-Stack Engineer, I owned the entire design-to-code pipeline, from initial wireframes through a deployed React application. The project won 1st Place in UI/UX, validating the hypothesis that utility apps don\'t have to sacrifice visual craft for function.',
+        'Fimanu is a design-engineering tool that allows product teams to visualize, query, and inspect their design output and assets directly through the Figma REST API. As UI/UX Designer & Full-Stack Engineer, I architected the platform to close the gap between static design specs and dynamic development environments, enabling real-time asset rendering and design token visualization.',
       problemSpace: [
-        'Students at UC Davis lose significant time wandering between libraries, coffee shops, and study lounges without reliable real-time information on noise level, available seating, or amenity access.',
-        'Existing solutions — Google Maps, campus apps — were designed for navigation, not ambient environment discovery. The key design challenge was surfacing "right now" contextual data (noise, crowding, outlets, Wi-Fi quality) without overwhelming the primary find-a-spot task flow.',
-        'The technical challenge mirrored the design one: building a map-based interface on mobile that balanced dense environmental data with a clean, visually premium aesthetic at a hackathon pace.',
+        'Design handoff processes frequently suffer from visual drift, outdated local assets, and manual specification extraction.',
+        'Existing tools are often black boxes, making it difficult for developers to query specific canvas structures or inspect live node properties without loading the heavy Figma editor UI.',
+        'Traversing Figma\'s nested document tree via the REST API at scale requires clean recursive parsing and robust caching to avoid API rate limits.',
       ],
       systemArchitecture: [
-        'I opened Figma before writing a single line of code — defining a component library that prioritized map-overlay clarity: card components, status badges, and filter chips all designed to sit legibly on top of a map background without visual noise.',
-        'The React + TypeScript frontend was structured around a single-page layout with a persistent bottom sheet (inspired by Apple Maps) that reveals spot details without navigating away from the map context.',
-        'Color and typography were used functionally: green/amber/red status indicators for crowd levels were baked into the design tokens, ensuring accessibility contrast ratios were met while maintaining the warm, premium palette.',
+        'Built a custom JSON node-parser that recursively processes Figma REST API document payloads, mapping canvas nodes to lightweight interactive UI trees.',
+        'Developed a React-based visual inspector that renders frames, shapes, and text layers as live DOM preview elements, enabling developers to inspect layout properties on the fly.',
+        'Integrated design token export pipelines, letting developers extract JSON variables directly from Figma styles for automated use in front-end projects.',
       ],
       validation: [
-        '1st Place, UI/UX Category — judges specifically cited the visual coherence between the map interface and the detail sheet as a differentiator.',
-        'The bottom-sheet interaction pattern, prototyped in Figma and then implemented in React with a spring-physics animation, was noted as the most polished micro-interaction in the competition.',
+        'Successfully reduced visual QA iteration loops for engineering teams by enabling direct URL access to isolated canvas components.',
+        'The responsive visual inspector engine proved to render nested auto-layout frames with high fidelity, verifying that layout logic translates correctly to CSS grid and flexbox.',
       ],
       roadmap:
-        'Sync (the evolved version) adds crowdsourced real-time noise and crowd data, saved favorites, and a "study session" mode that locks focus and tracks productive time — bridging spot discovery with actual study behavior.',
+        'Next: Adding webhook integrations to automatically trigger codebase pull requests when Figma design styles or tokens are updated by the design team, making the pipeline completely automated.',
     },
   },
 ]
@@ -202,6 +201,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Conceptual // Graphic Design',
     visualAssetType: 'Ad Poster Graphic',
     description: 'Campus Recreation Ad',
+    imageUrl: '/images/experiments/campus-rec-ad.webp',
     year: 2025,
     category: 'conceptual',
     log: {
@@ -219,6 +219,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Published // Promotional Graphic',
     visualAssetType: 'Social Media Asset',
     description: 'Applications Open for CS Tutors. Hybrid or Online. 1-2 Unit Tutor.',
+    imageUrl: '/images/experiments/cs-tutoring-graphics.webp',
     year: 2025,
     category: 'published',
     log: {
@@ -236,6 +237,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Published // Branding & Social',
     visualAssetType: 'Branding',
     description: 'Product Space promotional graphics series.',
+    imageUrl: '/images/experiments/product-space-graphics.webp',
     year: 2025,
     category: 'published',
     log: {
@@ -253,6 +255,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Published // Promotional Campaign',
     visualAssetType: 'Launch Graphic',
     description: 'Cattlelog Beta (02/04); Instagram Launch (02/25); Grade Distribution Launch (03/04).',
+    imageUrl: '/images/experiments/cattlelog-graphics.webp',
     year: 2025,
     category: 'published',
     log: {
@@ -270,6 +273,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Published // Event Marketing',
     visualAssetType: 'Event Banner',
     description: 'Figma @ UCD Tech Mixer & Sticker Café event marketing assets.',
+    imageUrl: '/images/experiments/figma-cl-graphics.webp',
     year: 2025,
     category: 'published',
     log: {
@@ -287,6 +291,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Conceptual // UI Exploration',
     visualAssetType: 'UI Exploration',
     description: 'A curated collection of daily UI design challenges and visual layouts.',
+    imageUrl: '/images/experiments/collection-52.webp',
     year: 2025,
     category: 'conceptual',
     log: {
@@ -298,29 +303,14 @@ export const EXPERIMENTS: Experiment[] = [
         'The days where I had the least inspiration produced the most interesting constraints. Running out of "ideas" forced me toward systems thinking — which is where the real design education happened.',
     },
   },
-  {
-    id: 'sync-experiment',
-    title: 'Sync',
-    contextLabel: 'Conceptual // UI Exploration',
-    visualAssetType: 'UI Exploration',
-    description: 'Study spot discovery application layout and interface design flow.',
-    year: 2024,
-    category: 'conceptual',
-    log: {
-      spark:
-        'Started as a sketch after spending 20 minutes wandering campus looking for a quiet place to study. I pulled out Figma and started mapping the flow I wished existed.',
-      output:
-        'A UI exploration defining the application layout and end-to-end interface design flow for a study spot discovery app.',
-      sandbox:
-        'Map-based mobile interfaces are deceptively complex — layering environmental data on a spatial medium without creating visual chaos taught me a huge amount about information hierarchy at small screen sizes.',
-    },
-  },
+
   {
     id: 'linkedin-graphics',
     title: 'LinkedIn Graphics',
     contextLabel: 'Published // Branding & Social',
     visualAssetType: 'Social Media Asset',
     description: 'Social graphics for personal branding and internship announcements.',
+    imageUrl: '/images/experiments/linkedin-graphics.webp',
     year: 2025,
     category: 'published',
     log: {
@@ -338,6 +328,7 @@ export const EXPERIMENTS: Experiment[] = [
     contextLabel: 'Published // Event Marketing',
     visualAssetType: 'Event Banner',
     description: 'Promotional banner designs and marketing assets for UC Davis Formula Racing.',
+    imageUrl: '/images/experiments/formula-ucd.webp',
     year: 2025,
     category: 'published',
     log: {

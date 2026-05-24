@@ -144,3 +144,66 @@
   pointer-events: none;
   z-index: 9999;
 }
+
+/* ─── CINEMATIC INTRO SEQUENCE ────────────────────────────────────────────── */
+
+@layer utilities {
+  .animate-vector-draw {
+    stroke-dasharray: 2000;
+    animation: vector-draw 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes vector-draw {
+    from { stroke-dashoffset: 2000; opacity: 0; }
+    to { stroke-dashoffset: 0; opacity: 1; }
+  }
+
+  .animate-scale-dot {
+    animation: scale-dot 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes scale-dot {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .animate-slice-x {
+    transform-origin: left center;
+    animation: slice-x 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes slice-x {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .animate-slice-y {
+    transform-origin: top center;
+    animation: slice-y 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes slice-y {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  .animate-mask-up {
+    animation: mask-up 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes mask-up {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-mask-right {
+    animation: mask-right 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes mask-right {
+    from { transform: translateX(-15px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .animate-fade-down {
+    animation: fade-down 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes fade-down {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}

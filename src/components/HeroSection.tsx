@@ -3,6 +3,7 @@ import { PROJECTS } from '../data/portfolio'
 import type { Project } from '../types/portfolio'
 import WheelSelector from './WheelSelector'
 import { SNAP_INTERVAL } from '../utils/wheelMath'
+import { useIntro } from './IntroContext'
 
 // ── Staggered text cascade on project change ───────────────────────────────
 interface MetadataLine {
@@ -15,17 +16,17 @@ interface MetadataLine {
 function buildMetadataLines(proj: Project): MetadataLine[] {
   return [
     { text: `0${proj.wheelIndex + 1} / 0${PROJECTS.length}`, delay: 0, size: 'label' },
-    { text: proj.categories[0].toUpperCase(), delay: 40, size: 'label', color: proj.accentColor },
-    { text: proj.title, delay: 80, size: 'body' },
-    { text: proj.subtitle, delay: 120, size: 'meta' },
-    { text: '', delay: 150, size: 'meta' },
-    { text: proj.role, delay: 190, size: 'meta' },
+    { text: proj.categories[0].toUpperCase(), delay: 60, size: 'label', color: proj.accentColor },
+    { text: proj.title, delay: 120, size: 'body' },
+    { text: proj.subtitle, delay: 180, size: 'meta' },
     { text: '', delay: 220, size: 'meta' },
-    ...proj.tools.map((t, i) => ({ text: t, delay: 260 + i * 20, size: 'meta' as const })),
-    { text: '', delay: 320, size: 'meta' },
+    { text: proj.role, delay: 280, size: 'meta' },
+    { text: '', delay: 330, size: 'meta' },
+    ...proj.tools.map((t, i) => ({ text: t, delay: 380 + i * 30, size: 'meta' as const })),
+    { text: '', delay: 460, size: 'meta' },
     ...proj.metrics.map((m, i) => ({
       text: `${m.label}: ${m.value}`,
-      delay: 360 + i * 25,
+      delay: 520 + i * 40,
       size: 'metric' as const,
       color: proj.accentColor,
     })),
@@ -53,7 +54,7 @@ function AnimatedLine({ line, projKey }: AnimatedLineProps) {
   const baseStyle: React.CSSProperties = {
     transform: show ? 'translateY(0)' : 'translateY(10px)',
     opacity: show ? 1 : 0,
-    transition: `transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease`,
+    transition: `transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease`,
     willChange: 'transform, opacity',
   }
 
@@ -119,7 +120,7 @@ function NarrativePanel({ project, projKey }: NarrativePanelProps) {
           next[i] = true
           return next
         })
-      }, 600 + i * 80)
+      }, 800 + i * 120)
       return () => clearTimeout(t)
     })
   }, [projKey, project.narrative.length])
@@ -133,7 +134,7 @@ function NarrativePanel({ project, projKey }: NarrativePanelProps) {
             style={{
               transform: lines[i] ? 'translateY(0)' : 'translateY(8px)',
               opacity: lines[i] ? 1 : 0,
-              transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease',
+              transition: 'transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease',
               willChange: 'transform, opacity',
             }}
           >
@@ -159,30 +160,44 @@ export default function HeroSection() {
 
   const project = PROJECTS[activeIndex]
   const metaLines = buildMetadataLines(project)
+  const { hasLoaded, phase } = useIntro()
+  const showPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
 
   return (
     <section
-      id="hero"
+      id="featured"
       className="relative w-full overflow-hidden"
       style={{ height: '100vh', marginTop: 0, paddingTop: '48px' }}
     >
       {/* ── Horizontal hairline accent ── */}
-      <div
-        className="absolute left-0 right-0 top-[48px] border-t"
-        style={{ borderColor: 'rgba(56, 64, 106, 0.4)' }}
-      />
+      {showPhase2 && (
+        <div
+          className={`absolute left-0 right-0 top-[48px] border-t ${!hasLoaded ? 'animate-slice-x' : ''}`}
+          style={{ borderColor: 'rgba(56, 64, 106, 0.4)' }}
+        />
+      )}
 
       {/* ── SPLIT LAYOUT ── */}
-      <div className="flex h-full">
+      <div className="flex h-full relative">
+        
+        {/* Vertical split line */}
+        {showPhase2 && (
+          <div 
+            className={`absolute left-[45%] top-0 bottom-0 border-l ${!hasLoaded ? 'animate-slice-y' : ''}`}
+            style={{ borderColor: 'rgba(56, 64, 106, 0.35)' }}
+          />
+        )}
 
         {/* ── LEFT 45% — Project Metadata Panel ── */}
         <div
           className="relative flex flex-col justify-center px-8 lg:px-12"
-          style={{ width: '45%', borderRight: '1px solid rgba(56, 64, 106, 0.35)' }}
+          style={{ width: '45%' }}
         >
+          {showPhase2 && (
+            <>
           {/* Top label */}
           <div className="absolute top-6 left-8 lg:left-12">
-            <span className="label-caps">WORK /</span>
+            <span className="label-caps">FEATURED /</span>
           </div>
 
           {/* Project navigation dots */}
@@ -207,14 +222,16 @@ export default function HeroSection() {
           </div>
 
           {/* ── Animated metadata cascade ── */}
-          <div className="space-y-1 mb-6">
+          <div className="space-y-1 mb-6 min-h-[240px]">
             {metaLines.map((line, i) => (
               <AnimatedLine key={`${projKey}-line-${i}`} line={line} projKey={projKey} />
             ))}
           </div>
 
           {/* ── Narrative text ── */}
-          <NarrativePanel key={`${projKey}-narrative`} project={project} projKey={projKey} />
+          <div className="min-h-[160px]">
+            <NarrativePanel key={`${projKey}-narrative`} project={project} projKey={projKey} />
+          </div>
 
           {/* ── Tags (Awards & Classifications) ── */}
           {(project.tools.length >= 4 || project.categories.includes('Full-Stack Engineering') || (project.awards && project.awards.length > 0)) && (
@@ -277,10 +294,12 @@ export default function HeroSection() {
           {/* Left edge index line */}
           <div className="absolute left-0 top-1/2 -translate-y-1/2 h-32 flex items-center">
             <div
-              className="w-px h-full transition-all duration-700"
+              className={`w-px h-full transition-all duration-700 ${!hasLoaded ? 'animate-slice-y' : ''}`}
               style={{ backgroundColor: project.accentColor, opacity: 0.6 }}
             />
           </div>
+          </>
+          )}
         </div>
 
         {/* ── RIGHT 55% — Interactive Wheel ── */}
@@ -288,19 +307,23 @@ export default function HeroSection() {
           className="relative flex items-center justify-center"
           style={{ width: '55%', background: 'radial-gradient(ellipse at center, rgba(56,64,106,0.1) 0%, transparent 70%)' }}
         >
+          {showPhase2 && (
+            <>
           {/* Corner coordinate labels */}
-          <div className="absolute top-6 left-6 label-caps opacity-40">
+          <div className={`absolute top-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
             X:{Math.round(300 + Math.cos(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
           </div>
-          <div className="absolute top-6 right-6 label-caps opacity-40 text-right">
+          <div className={`absolute top-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
             Y:{Math.round(300 + Math.sin(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
           </div>
-          <div className="absolute bottom-6 left-6 label-caps opacity-40">
+          <div className={`absolute bottom-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
             θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°
           </div>
-          <div className="absolute bottom-6 right-6 label-caps opacity-40 text-right">
+          <div className={`absolute bottom-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
             R:276
           </div>
+          </>
+          )}
 
           {/* Wheel SVG container */}
           <div

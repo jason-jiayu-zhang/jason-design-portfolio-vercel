@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { STATUS_CYCLE, BIO } from '../data/portfolio'
+import { useIntro } from './IntroContext'
 
 // ── Hardware-style pulsing dot ──────────────────────────────────────────────
 function PulseDot() {
@@ -31,7 +32,12 @@ function StatusBar() {
     }
   }, [currentIdx])
 
+  const { hasLoaded, phase } = useIntro()
+  const isPhase3 = hasLoaded || phase === 'phase03'
+
   useEffect(() => {
+    if (!isPhase3) return;
+    
     intervalRef.current = setInterval(() => {
       // Trigger exit
       setAnimState('exit')
@@ -43,7 +49,7 @@ function StatusBar() {
     }, 6000)
 
     return () => clearInterval(intervalRef.current)
-  }, [])
+  }, [isPhase3])
 
   const status = STATUS_CYCLE[currentIdx]
 
@@ -64,8 +70,10 @@ function StatusBar() {
     willChange: 'transform, opacity',
   }
 
+  if (!isPhase3) return null;
+
   return (
-    <div className="flex items-center gap-0 px-3 py-1 border border-accent/40 rounded-sm bg-surface/20 backdrop-blur-sm transition-all duration-300 ease-in-out">
+    <div className={`flex items-center gap-0 px-3 py-1 border border-accent/40 rounded-sm bg-surface/20 backdrop-blur-sm transition-all duration-300 ease-in-out ${!hasLoaded ? 'animate-mask-right' : ''}`}>
       <PulseDot />
       <div 
         className="overflow-hidden flex items-center transition-all duration-300 ease-in-out"
@@ -85,6 +93,10 @@ function StatusBar() {
 
 // ── Header ─────────────────────────────────────────────────────────────────
 export default function Header() {
+  const { hasLoaded, phase } = useIntro()
+  const isPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
+  const isPhase3 = hasLoaded || phase === 'phase03'
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 h-12 flex items-center"
@@ -96,7 +108,8 @@ export default function Header() {
       {/* Content */}
       <div className="relative w-full flex items-center justify-between px-6">
         {/* ── Left: Branding & Status ── */}
-        <div className="flex items-center gap-3">
+        {isPhase2 && (
+        <div className={`flex items-center gap-3 ${!hasLoaded ? 'animate-mask-right' : ''}`}>
           {/* JJZ monogram — routes home */}
           <Link to="/" className="flex items-end gap-0.5">
             <span
@@ -125,13 +138,21 @@ export default function Header() {
             <StatusBar />
           </div>
         </div>
+        )}
 
         {/* ── Center: Empty (for layout balance) ── */}
         <div className="absolute left-1/2 -translate-x-1/2">
         </div>
 
         {/* ── Right: Nav links ── */}
-        <nav className="flex items-center gap-4">
+        {isPhase3 && (
+        <nav className={`flex items-center gap-4 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+          <a
+            href="#featured"
+            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
+          >
+            Featured
+          </a>
           <a
             href="#work"
             className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase"
@@ -171,6 +192,7 @@ export default function Header() {
             </svg>
           </a>
         </nav>
+        )}
       </div>
     </header>
   )

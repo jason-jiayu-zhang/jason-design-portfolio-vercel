@@ -25,20 +25,30 @@ export default function StudioSection() {
             className="group relative flex flex-col gap-3 p-5 border-0 bg-surface/10 hover:bg-surface/30 transition-all duration-300 cursor-pointer"
             style={{ borderBottom: i < EXPERIMENTS.length - 4 ? '1px solid rgba(56,64,106,0.2)' : undefined }}
           >
-            {/* Placeholder visual area */}
+            {/* Visual area */}
             <div
-              className="w-full aspect-square bg-accent/10 rounded-sm flex items-center justify-center border border-accent/20 group-hover:border-parchment/20 transition-colors duration-300"
+              className="relative w-full aspect-square bg-accent/10 rounded-sm overflow-hidden flex items-center justify-center border border-accent/20 group-hover:border-parchment/20 transition-colors duration-300"
             >
-              {/* Abstract geometric placeholder per experiment */}
-              <svg viewBox="0 0 100 100" className="w-16 h-16 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#cfccbb" strokeWidth="0.5" />
-                <circle cx="50" cy="50" r="25" fill="none" stroke="#a39d7b" strokeWidth="0.5" strokeDasharray="3 4" />
-                <line x1="10" y1="50" x2="90" y2="50" stroke="#cfccbb" strokeWidth="0.3" opacity="0.5" />
-                <line x1="50" y1="10" x2="50" y2="90" stroke="#cfccbb" strokeWidth="0.3" opacity="0.5" />
-                <text x="50" y="55" textAnchor="middle" fontSize="16" fill="#cfccbb" fontFamily="monospace">
-                  {String.fromCodePoint(0x2460 + i)}
-                </text>
-              </svg>
+              {exp.imageUrl ? (
+                <img
+                  src={exp.imageUrl}
+                  alt={exp.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-[opacity,transform] duration-500 ease-out"
+                />
+              ) : (
+                /* Abstract geometric placeholder per experiment */
+                <svg viewBox="0 0 100 100" className="w-16 h-16 opacity-20 group-hover:opacity-40 transition-opacity duration-300">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="#cfccbb" strokeWidth="0.5" />
+                  <circle cx="50" cy="50" r="25" fill="none" stroke="#a39d7b" strokeWidth="0.5" strokeDasharray="3 4" />
+                  <line x1="10" y1="50" x2="90" y2="50" stroke="#cfccbb" strokeWidth="0.3" opacity="0.5" />
+                  <line x1="50" y1="10" x2="50" y2="90" stroke="#cfccbb" strokeWidth="0.3" opacity="0.5" />
+                  <text x="50" y="55" textAnchor="middle" fontSize="16" fill="#cfccbb" fontFamily="monospace">
+                    {String.fromCodePoint(0x2460 + i)}
+                  </text>
+                </svg>
+              )}
             </div>
 
             {/* Labels */}

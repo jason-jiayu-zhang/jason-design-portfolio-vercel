@@ -229,19 +229,6 @@ export default function ExperimentLogPage() {
   return (
     <div className="min-h-screen" style={{ paddingTop: '48px' }}>
 
-      {/* ── TOP-RIGHT METADATA STAMP (fixed position within page) ─────────────── */}
-      <div
-        className="fixed top-16 right-6 z-40 pointer-events-none"
-        style={{
-          opacity: mounted ? 0.35 : 0,
-          transition: 'opacity 0.6s ease 300ms',
-        }}
-      >
-        <span className="font-mono text-2xs tracking-label" style={{ color: '#a39d7b' }}>
-          [LOG // OFF_A_WHIM_{logNumber}]
-        </span>
-      </div>
-
       {/* ── BREADCRUMB STRIP ──────────────────────────────────────────────────── */}
       <div
         className="px-6 lg:px-16 py-4 flex items-center justify-between"
@@ -268,8 +255,11 @@ export default function ExperimentLogPage() {
           <span className="font-mono text-2xs text-parchment/15">/</span>
           <span className="font-mono text-2xs text-parchment/35">{exp.title}</span>
         </div>
-        <span className="font-mono text-2xs text-parchment/15">
-          [{logNumber}_{exp.year}]
+        <span
+          className="font-mono text-2xs tracking-label"
+          style={{ color: '#a39d7b', opacity: mounted ? 0.4 : 0, transition: 'opacity 0.6s ease 200ms' }}
+        >
+          [LOG // OFF_A_WHIM_{logNumber}]
         </span>
       </div>
 

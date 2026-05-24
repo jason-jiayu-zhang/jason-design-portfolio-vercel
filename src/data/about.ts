@@ -58,10 +58,10 @@ export const TIMELINE: TimelineEntry[] = [
   {
     period: 'Jan 2026 – Present',
     role: 'UI/UX Designer & Full-Stack Engineer',
-    org: 'Fimanu / Sync',
-    tags: ['Hackathon', '1st Place', 'Rapid Prototyping'],
+    org: 'Fimanu',
+    tags: ['Figma REST API', 'Full-Stack Engineering', 'Product Design'],
     detail:
-      'Built Sync — a study spot discovery application — from zero to deployed in 24 hours. 1st Place finish. Handled full-stack: React front-end, TypeScript interfaces, and Figma design system in parallel.',
+      'Architected and built Fimanu, a web-based design inspector and asset visualization platform that leverages the Figma REST API to streamline asset tracking and developer handoff.',
   },
 ]
 
