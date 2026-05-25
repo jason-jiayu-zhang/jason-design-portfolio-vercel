@@ -1,6 +1,6 @@
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
-import ProjectsGrid from './components/ProjectsGrid'
+import ArchiveSection from './components/ArchiveSection'
 import StudioSection from './components/StudioSection'
 import AboutSection from './components/AboutSection'
 import Footer from './components/Footer'
@@ -22,11 +22,11 @@ function AppContent() {
 
         {isPhase3 && (
           <>
-            {/* § 2 — Work section: asymmetric grid */}
-            <ProjectsGrid />
-
-            {/* § 3 — Studio section: off-a-whim experiments */}
+            {/* § 2 — Studio section: off-a-whim experiments */}
             <StudioSection />
+
+            {/* § 3 — Archive section: masterlist of all work */}
+            <ArchiveSection />
 
             {/* § 4 — 3-column About / Foundations */}
             <AboutSection />

@@ -298,7 +298,9 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
                   filter: isActive ? `drop-shadow(0px 0px 3px ${proj.accentColor})` : 'none', 
                   transition: 'opacity 1s cubic-bezier(0.22, 1, 0.36, 1)',
                   transitionDelay: hasLoaded ? '0ms' : `${250 + i * 80}ms`,
-                  willChange: 'filter, opacity'
+                  willChange: 'filter, opacity',
+                  cursor: 'pointer',
+                  pointerEvents: 'auto'
                 }}
               >
                 {proj.slug}

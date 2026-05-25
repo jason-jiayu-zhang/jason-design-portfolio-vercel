@@ -92,6 +92,8 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
   const dragStartAngle = useRef(0)
   const dragLastAngle = useRef(0)
   const dragLastTime = useRef(0)
+  const dragStartMouseAngle = useRef(0)
+  const dragStartTime = useRef(0)
 
   const onPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!isPhase3) return;
@@ -104,6 +106,8 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
     dragStartAngle.current = mouseAngle - wheelRef.current.angle
     dragLastAngle.current = mouseAngle
     dragLastTime.current = performance.now()
+    dragStartMouseAngle.current = mouseAngle
+    dragStartTime.current = performance.now()
     wheelRef.current.isDragging = true
     wheelRef.current.velocity = 0
   }
@@ -130,9 +134,28 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
     dragLastTime.current = now
   }
 
-  const onPointerUp = () => {
+  const onPointerUp = (e: React.PointerEvent<SVGSVGElement>) => {
     if (wheelRef.current.isDragging) {
       wheelRef.current.isDragging = false
+      
+      const rect = svgRef.current!.getBoundingClientRect()
+      const cx = rect.width / 2
+      const cy = rect.height / 2
+      const mouseAngle = getMouseAngle(e, rect, cx, cy)
+      
+      const dt = performance.now() - dragStartTime.current
+      const deltaAngle = Math.abs(angularDelta(dragStartMouseAngle.current, mouseAngle))
+      
+      // Determine if it was a click (short time and little movement)
+      if (dt < 400 && deltaAngle < 5) {
+        const exactIndex = (wheelRef.current.angle - mouseAngle) / (360 / SNAP_COUNT)
+        const clickedIndex = safeMod(Math.round(exactIndex), SNAP_COUNT)
+        
+        if (clickedIndex !== wheelRef.current.activeIndex) {
+          onProjectChange(clickedIndex)
+        }
+      }
+      
       wheelRef.current.targetAngle = snapAngle(wheelRef.current.angle)
     }
   }

@@ -210,7 +210,7 @@ function InteractiveTerminalPrompt({
   handleCommand,
   inputRef
 }: {
-  history: Array<{cmd: string, output: React.ReactNode}>;
+  history: Array<{ cmd: string, output: React.ReactNode }>;
   commandInput: string;
   setCommandInput: (val: string) => void;
   handleCommand: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -231,7 +231,7 @@ function InteractiveTerminalPrompt({
           )}
         </div>
       ))}
-      <div 
+      <div
         className="flex items-center gap-1.5 relative cursor-text min-h-[20px]"
         onClick={() => inputRef.current?.focus()}
       >
@@ -262,7 +262,7 @@ function InteractiveTerminalPrompt({
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'books' | 'music' | 'play'>('books')
   const [activeGameId, setActiveGameId] = useState<string>('01')
-  const [history, setHistory] = useState<Array<{cmd: string, output: React.ReactNode}>>([
+  const [history, setHistory] = useState<Array<{ cmd: string, output: React.ReactNode }>>([
     { cmd: 'sysinfo', output: 'JasonOS v1.0.0\nType "help" for a list of available commands.' }
   ])
   const [commandInput, setCommandInput] = useState('')
@@ -294,10 +294,10 @@ export default function AboutSection() {
     if (e.key === 'Enter') {
       const cmd = commandInput.trim()
       if (!cmd) return
-      
+
       let output: React.ReactNode = ''
       const lowerCmd = cmd.toLowerCase()
-      
+
       if (lowerCmd === 'help') {
         output = 'Available commands: help, clear, cd <tab>, ls, resume, contact, whoami, sudo, echo, ping, coffee, uptime, rm -rf /, flip, unflip, cat'
       } else if (lowerCmd === 'clear') {
@@ -332,7 +332,7 @@ export default function AboutSection() {
       } else if (lowerCmd === 'ping') {
         output = 'PONG'
       } else if (lowerCmd === 'coffee') {
-        output = <span>Let's chat! Schedule a time here: <br/><a href="https://calendar.app.google/Vp2ioxnPTR66xhUo6" target="_blank" rel="noreferrer" className="text-gold hover:underline">https://calendar.app.google/Vp2ioxnPTR66xhUo6</a></span>
+        output = <span>Let's chat! Schedule a time here: <br /><a href="https://calendar.app.google/Vp2ioxnPTR66xhUo6" target="_blank" rel="noreferrer" className="text-gold hover:underline">https://calendar.app.google/Vp2ioxnPTR66xhUo6</a></span>
       } else if (lowerCmd === 'uptime') {
         const secs = Math.floor((Date.now() - uptimeStart) / 1000)
         output = `up ${secs} seconds`
@@ -356,7 +356,7 @@ export default function AboutSection() {
       } else {
         output = `command not found: ${cmd}`
       }
-      
+
       setHistory(prev => [...prev, { cmd, output }])
       setCommandInput('')
     }
@@ -483,7 +483,7 @@ export default function AboutSection() {
           {/* Closing line */}
           <div className="mt-8 pt-6 border-t border-accent/20">
             <blockquote className="font-mono text-xs text-parchment/25 italic leading-relaxed">
-              "a product without users is merely a project."
+              "To nurture others to love the art of making."
             </blockquote>
           </div>
         </div>
@@ -494,194 +494,194 @@ export default function AboutSection() {
         <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
           <div>
             {/* Terminal header bar */}
-          <div className="mb-6">
-            <div className="label-caps mb-2">PERSONAL CATALOG</div>
-            <div
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-accent/30 rounded-sm mb-4"
-              style={{ background: 'rgba(28,32,53,0.8)' }}
-            >
-              <div className="w-2 h-2 rounded-full bg-red-500/60" />
-              <div className="w-2 h-2 rounded-full bg-yellow-400/60" />
-              <div className="w-2 h-2 rounded-full bg-green-400/60" />
-              <div className="flex-1" />
-              <span className="font-mono text-2xs text-parchment/20">~/jjz/personal</span>
-            </div>
+            <div className="mb-6">
+              <div className="label-caps mb-2">PERSONAL CATALOG</div>
+              <div
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-accent/30 rounded-sm mb-4"
+                style={{ background: 'rgba(28,32,53,0.8)' }}
+              >
+                <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                <div className="w-2 h-2 rounded-full bg-yellow-400/60" />
+                <div className="w-2 h-2 rounded-full bg-green-400/60" />
+                <div className="flex-1" />
+                <span className="font-mono text-2xs text-parchment/20">~/jjz/personal</span>
+              </div>
 
-            {/* Tab switcher */}
-            <div className="flex border border-accent/25 rounded-sm overflow-hidden">
-              {(['books', 'music', 'play'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className="flex-1 py-1.5 font-mono text-2xs tracking-label uppercase transition-all duration-250"
-                  style={{
-                    background: activeTab === tab ? 'rgba(56,64,106,0.4)' : 'transparent',
-                    color: activeTab === tab ? '#cfccbb' : 'rgba(207,204,187,0.3)',
-                    borderRight: tab !== 'play' ? '1px solid rgba(56,64,106,0.25)' : undefined,
-                    transition: 'background 0.25s cubic-bezier(0.22,1,0.36,1), color 0.25s ease',
-                  }}
-                >
-                  {tab === 'books' ? '📚 shelf' : tab === 'music' ? '♫ now' : '◈ play'}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* ── BOOKSHELF ── */}
-          {activeTab === 'books' && (
-            <TerminalSection label="The Bookshelf">
-              <div className="space-y-1.5">
-                {BOOKSHELF.map((book, i) => (
-                  <div
-                    key={book.title}
-                    className="flex items-start gap-2.5 py-1.5 border-b border-accent/10 last:border-b-0 group cursor-default"
+              {/* Tab switcher */}
+              <div className="flex border border-accent/25 rounded-sm overflow-hidden">
+                {(['books', 'music', 'play'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className="flex-1 py-1.5 font-mono text-2xs tracking-label uppercase transition-all duration-250"
                     style={{
-                      opacity: 1,
-                      animation: `fadeIn 0.3s ease ${i * 40}ms both`,
+                      background: activeTab === tab ? 'rgba(56,64,106,0.4)' : 'transparent',
+                      color: activeTab === tab ? '#cfccbb' : 'rgba(207,204,187,0.3)',
+                      borderRight: tab !== 'play' ? '1px solid rgba(56,64,106,0.25)' : undefined,
+                      transition: 'background 0.25s cubic-bezier(0.22,1,0.36,1), color 0.25s ease',
                     }}
                   >
-                    <span
-                      className="font-mono text-xs flex-shrink-0 mt-0.5"
-                      style={{ color: STATUS_COLORS[book.status] }}
-                    >
-                      {STATUS_ICONS[book.status]}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-mono text-xs text-parchment/70 leading-tight truncate">
-                        {book.title}
-                      </p>
-                      <p className="font-mono text-2xs text-parchment/30 mt-0.5">
-                        {book.author}
-                        <span className="ml-2 opacity-50">— {book.category}</span>
-                      </p>
-                    </div>
-                  </div>
+                    {tab === 'books' ? '📚 shelf' : tab === 'music' ? '♫ now' : '◈ play'}
+                  </button>
                 ))}
-                <InteractiveTerminalPrompt
-                  history={history}
-                  commandInput={commandInput}
-                  setCommandInput={setCommandInput}
-                  handleCommand={handleCommand}
-                  inputRef={inputRef}
-                />
               </div>
-            </TerminalSection>
-          )}
+            </div>
 
-          {/* ── ROTATIONS ── */}
-          {activeTab === 'music' && (
-            <TerminalSection label="Current Rotations">
-              <div className="space-y-0">
-                {ROTATIONS.map((track, i) => (
-                  <div
-                    key={track.artist}
-                    className="flex items-center justify-between py-2.5 border-b border-accent/10 last:border-b-0 group cursor-default"
-                    style={{ animation: `fadeIn 0.3s ease ${i * 35}ms both` }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-2xs text-parchment/20 w-4">
-                        {String(i + 1).padStart(2, '0')}
+            {/* ── BOOKSHELF ── */}
+            {activeTab === 'books' && (
+              <TerminalSection label="The Bookshelf">
+                <div className="space-y-1.5">
+                  {BOOKSHELF.map((book, i) => (
+                    <div
+                      key={book.title}
+                      className="flex items-start gap-2.5 py-1.5 border-b border-accent/10 last:border-b-0 group cursor-default"
+                      style={{
+                        opacity: 1,
+                        animation: `fadeIn 0.3s ease ${i * 40}ms both`,
+                      }}
+                    >
+                      <span
+                        className="font-mono text-xs flex-shrink-0 mt-0.5"
+                        style={{ color: STATUS_COLORS[book.status] }}
+                      >
+                        {STATUS_ICONS[book.status]}
                       </span>
-                      {/* Mini waveform visual */}
-                      <div className="flex items-end gap-0.5 h-3">
-                        {[3, 5, 2, 4, 6, 3, 5].map((h, j) => (
-                          <div
-                            key={j}
-                            className="w-0.5 bg-gold/30 group-hover:bg-gold/60 rounded-full"
-                            style={{
-                              height: `${h * 2}px`,
-                              transition: `height 0.3s cubic-bezier(0.22,1,0.36,1) ${j * 25}ms, background-color 0.3s ease`,
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <div>
-                        <p className="font-sans font-medium text-xs text-parchment/70 leading-none">
-                          {track.artist}
+                      <div className="min-w-0">
+                        <p className="font-mono text-xs text-parchment/70 leading-tight truncate">
+                          {book.title}
                         </p>
-                        <p className="font-mono text-2xs text-parchment/30 mt-0.5">{track.note}</p>
+                        <p className="font-mono text-2xs text-parchment/30 mt-0.5">
+                          {book.author}
+                          <span className="ml-2 opacity-50">— {book.category}</span>
+                        </p>
                       </div>
                     </div>
-                    <span className="font-mono text-2xs text-parchment/15">♫</span>
-                  </div>
-                ))}
-                <InteractiveTerminalPrompt
-                  history={history}
-                  commandInput={commandInput}
-                  setCommandInput={setCommandInput}
-                  handleCommand={handleCommand}
-                  inputRef={inputRef}
-                />
-              </div>
-            </TerminalSection>
-          )}
-
-          {/* ── PLAYGROUND ── */}
-          {activeTab === 'play' && (
-            <TerminalSection label="The Playground">
-              <div className="flex gap-4">
-                {/* 25% Left Column: Directory Panel */}
-                <div className="w-1/4 shrink-0 flex flex-col space-y-4 pt-1 border-r border-accent/10 pr-2">
-                  {PLAYGROUND.map((game) => (
-                    <button
-                      key={game.id}
-                      onClick={() => setActiveGameId(game.id)}
-                      className="flex items-start gap-1.5 text-left group w-full cursor-pointer"
-                    >
-                      <span 
-                        className="font-mono text-xs leading-[1.2] transition-colors duration-200 mt-[1px]"
-                        style={{ color: activeGameId === game.id ? '#ebd648' : 'transparent' }}
-                      >
-                        {'>'}
-                      </span>
-                      <span 
-                        className="font-mono text-2xs tracking-label uppercase leading-tight transition-colors duration-200"
-                        style={{ color: activeGameId === game.id ? '#cfccbb' : 'rgba(207,204,187,0.35)' }}
-                      >
-                        {game.id} <span className="opacity-50">//</span><br />
-                        <span className="opacity-80">{game.title}</span>
-                      </span>
-                    </button>
                   ))}
+                  <InteractiveTerminalPrompt
+                    history={history}
+                    commandInput={commandInput}
+                    setCommandInput={setCommandInput}
+                    handleCommand={handleCommand}
+                    inputRef={inputRef}
+                  />
                 </div>
-                
-                {/* 75% Right Column: Details Display Pane */}
-                <div className="w-3/4 flex-1 pl-2">
-                  <div className="space-y-0">
-                    {PLAYGROUND.find(g => g.id === activeGameId)?.specs.map((item, i) => (
-                      <div
-                        key={`${activeGameId}-${item.label}`}
-                        className="flex items-start justify-between py-2.5 border-b border-accent/10 last:border-b-0"
-                        style={{ animation: `fadeIn 0.3s ease ${i * 30}ms both` }}
-                      >
-                        <div>
-                          <span className="font-mono text-2xs tracking-label text-parchment/30 uppercase block">
-                            {item.label}
-                          </span>
-                          <span className={`font-mono text-2xs block mt-0.5 ${item.sublabel ? 'text-parchment/20' : 'opacity-0 select-none'}`}>
-                            {item.sublabel || '—'}
-                          </span>
-                        </div>
-                        <span
-                          className="font-mono text-xs text-right mt-0.5"
-                          style={{ color: i === 0 ? '#9cd5f8' : i === 2 ? '#ebd648' : '#cfccbb', opacity: 0.7 }}
-                        >
-                          {item.value}
+              </TerminalSection>
+            )}
+
+            {/* ── ROTATIONS ── */}
+            {activeTab === 'music' && (
+              <TerminalSection label="Current Rotations">
+                <div className="space-y-0">
+                  {ROTATIONS.map((track, i) => (
+                    <div
+                      key={track.artist}
+                      className="flex items-center justify-between py-2.5 border-b border-accent/10 last:border-b-0 group cursor-default"
+                      style={{ animation: `fadeIn 0.3s ease ${i * 35}ms both` }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-2xs text-parchment/20 w-4">
+                          {String(i + 1).padStart(2, '0')}
                         </span>
+                        {/* Mini waveform visual */}
+                        <div className="flex items-end gap-0.5 h-3">
+                          {[3, 5, 2, 4, 6, 3, 5].map((h, j) => (
+                            <div
+                              key={j}
+                              className="w-0.5 bg-gold/30 group-hover:bg-gold/60 rounded-full"
+                              style={{
+                                height: `${h * 2}px`,
+                                transition: `height 0.3s cubic-bezier(0.22,1,0.36,1) ${j * 25}ms, background-color 0.3s ease`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div>
+                          <p className="font-sans font-medium text-xs text-parchment/70 leading-none">
+                            {track.note}
+                          </p>
+                          <p className="font-mono text-2xs text-parchment/30 mt-0.5">{track.artist}</p>
+                        </div>
                       </div>
+                      <span className="font-mono text-2xs text-parchment/15">♫</span>
+                    </div>
+                  ))}
+                  <InteractiveTerminalPrompt
+                    history={history}
+                    commandInput={commandInput}
+                    setCommandInput={setCommandInput}
+                    handleCommand={handleCommand}
+                    inputRef={inputRef}
+                  />
+                </div>
+              </TerminalSection>
+            )}
+
+            {/* ── PLAYGROUND ── */}
+            {activeTab === 'play' && (
+              <TerminalSection label="The Playground">
+                <div className="flex gap-4">
+                  {/* 25% Left Column: Directory Panel */}
+                  <div className="w-1/4 shrink-0 flex flex-col space-y-4 pt-1 border-r border-accent/10 pr-2">
+                    {PLAYGROUND.map((game) => (
+                      <button
+                        key={game.id}
+                        onClick={() => setActiveGameId(game.id)}
+                        className="flex items-start gap-1.5 text-left group w-full cursor-pointer"
+                      >
+                        <span
+                          className="font-mono text-xs leading-[1.2] transition-colors duration-200 mt-[1px]"
+                          style={{ color: activeGameId === game.id ? '#ebd648' : 'transparent' }}
+                        >
+                          {'>'}
+                        </span>
+                        <span
+                          className="font-mono text-2xs tracking-label uppercase leading-tight transition-colors duration-200"
+                          style={{ color: activeGameId === game.id ? '#cfccbb' : 'rgba(207,204,187,0.35)' }}
+                        >
+                          {game.id} <span className="opacity-50">//</span><br />
+                          <span className="opacity-80">{game.title}</span>
+                        </span>
+                      </button>
                     ))}
                   </div>
+
+                  {/* 75% Right Column: Details Display Pane */}
+                  <div className="w-3/4 flex-1 pl-2">
+                    <div className="space-y-0">
+                      {PLAYGROUND.find(g => g.id === activeGameId)?.specs.map((item, i) => (
+                        <div
+                          key={`${activeGameId}-${item.label}`}
+                          className="flex items-start justify-between py-2.5 border-b border-accent/10 last:border-b-0"
+                          style={{ animation: `fadeIn 0.3s ease ${i * 30}ms both` }}
+                        >
+                          <div>
+                            <span className="font-mono text-2xs tracking-label text-parchment/30 uppercase block">
+                              {item.label}
+                            </span>
+                            <span className={`font-mono text-2xs block mt-0.5 ${item.sublabel ? 'text-parchment/20' : 'opacity-0 select-none'}`}>
+                              {item.sublabel || '—'}
+                            </span>
+                          </div>
+                          <span
+                            className="font-mono text-xs text-right mt-0.5"
+                            style={{ color: i === 0 ? '#9cd5f8' : i === 2 ? '#ebd648' : '#cfccbb', opacity: 0.7 }}
+                          >
+                            {item.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <InteractiveTerminalPrompt
-                history={history}
-                commandInput={commandInput}
-                setCommandInput={setCommandInput}
-                handleCommand={handleCommand}
-                inputRef={inputRef}
-              />
-            </TerminalSection>
-          )}
+                <InteractiveTerminalPrompt
+                  history={history}
+                  commandInput={commandInput}
+                  setCommandInput={setCommandInput}
+                  handleCommand={handleCommand}
+                  inputRef={inputRef}
+                />
+              </TerminalSection>
+            )}
           </div>
         </div>
       </div>

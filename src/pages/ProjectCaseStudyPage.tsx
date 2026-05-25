@@ -380,6 +380,207 @@ function MetadataSidebar({
   )
 }
 
+// ── Visual Showcase Component ────────────────────────────────────────────────
+function VisualShowcase({
+  images,
+  accentColor,
+  mounted,
+  mountDelay,
+}: {
+  images?: { src: string; label: string; description?: string }[]
+  accentColor: string
+  mounted: boolean
+  mountDelay: number
+}) {
+  const [activeTab, setActiveTab] = useState(0)
+
+  // Default geometric placeholders if no screenshots exist
+  const placeholders = [
+    { label: 'System Overview', symbol: '◈', description: 'Central workspace layout and main user path.' },
+    { label: 'Detailed Workspace', symbol: '⬡', description: 'Deep dive view of structural details and content.' },
+    { label: 'Interactive Features', symbol: '◉', description: 'Secondary controls, statistics, and configuration.' },
+  ]
+
+  const items = (images && images.length > 0 ? images : placeholders) as {
+    label: string
+    src?: string
+    symbol?: string
+    description?: string
+  }[]
+
+  return (
+    <div
+      style={{
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? 'translateY(0)' : 'translateY(10px)',
+        transition: `opacity 0.5s ease ${mountDelay}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${mountDelay}ms`,
+      }}
+      className="space-y-6"
+    >
+      {/* Device frame (simulated browser mockup) */}
+      <div
+        className="relative rounded-[3px] border shadow-2xl overflow-hidden transition-all duration-300"
+        style={{
+          borderColor: 'rgba(56,64,106,0.35)',
+          backgroundColor: 'rgba(28,32,53,0.7)',
+        }}
+      >
+        {/* Browser Top Bar */}
+        <div
+          className="flex items-center justify-between px-4 py-3 border-b"
+          style={{
+            borderColor: 'rgba(56,64,106,0.2)',
+            backgroundColor: 'rgba(20,24,40,0.5)',
+          }}
+        >
+          {/* Window control dots */}
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+          </div>
+
+          {/* Browser Address Bar */}
+          <div
+            className="flex-1 max-w-md mx-4 py-1 px-3 text-2xs font-mono text-center rounded truncate"
+            style={{
+              backgroundColor: 'rgba(10,12,22,0.6)',
+              color: 'rgba(207,204,187,0.35)',
+              border: '1px solid rgba(56,64,106,0.15)',
+            }}
+          >
+            {images && images.length > 0 ? `visuals://showcase/${items[activeTab].label.toLowerCase().replace(/\s+/g, '-')}` : 'visuals://design-template/geometric-spec'}
+          </div>
+
+          <div className="w-10" /> {/* Spacer to balance dots */}
+        </div>
+
+        {/* Viewport Canvas */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-[#0a0c16]">
+          {/* Scanlines / Grid lines overlay */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+            backgroundImage: `linear-gradient(rgba(207,204,187,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(207,204,187,0.1) 1px, transparent 1px)`,
+            backgroundSize: '24px 24px'
+          }} />
+
+          {/* Glowing background radial gradient matching project accent color */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-40 transition-all duration-700"
+            style={{
+              background: `radial-gradient(circle at center, ${accentColor}15 0%, transparent 70%)`
+            }}
+          />
+
+          {/* Show image or placeholder */}
+          {images && images.length > 0 ? (
+            <div className="w-full h-full relative">
+              {images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={img.label}
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out"
+                  style={{
+                    opacity: i === activeTab ? 1 : 0,
+                    transform: i === activeTab ? 'scale(1)' : 'scale(1.025)',
+                    visibility: i === activeTab ? 'visible' : 'hidden',
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            // Geometric template fallback
+            <div className="flex flex-col items-center justify-center p-8 text-center h-full w-full relative">
+              {/* Spinning or pulsing backdrop ring */}
+              <div 
+                className="absolute w-64 h-64 border rounded-full border-dashed animate-[spin_120s_linear_infinite]"
+                style={{ borderColor: `${accentColor}12` }}
+              />
+              <div 
+                className="absolute w-48 h-48 border rounded-full border-dashed animate-[spin_80s_linear_infinite_reverse]"
+                style={{ borderColor: `${accentColor}08` }}
+              />
+              
+              {/* Central pulsing symbol */}
+              <div 
+                className="relative z-10 font-mono text-7xl select-none transition-all duration-500 transform hover:scale-110"
+                style={{ 
+                  color: accentColor,
+                  textShadow: `0 0 40px ${accentColor}50`
+                }}
+              >
+                {(items[activeTab] as any).symbol}
+              </div>
+
+              {/* Title & Description of current screen within canvas */}
+              <div className="relative z-10 mt-6 space-y-2 max-w-sm">
+                <span className="font-mono text-2xs uppercase tracking-widest" style={{ color: `${accentColor}80` }}>
+                  [Mockup Template Unit_{String(activeTab + 1).padStart(2, '0')}]
+                </span>
+                <h4 className="font-sans font-black text-parchment text-lg tracking-tight">
+                  {items[activeTab].label}
+                </h4>
+                <p className="font-mono text-xs text-parchment/40 px-4">
+                  {items[activeTab].description}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Tabs and Controls */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {items.map((item, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveTab(idx)}
+            className="flex flex-col text-left p-3.5 border transition-all duration-300 relative group rounded-sm"
+            style={{
+              borderColor: idx === activeTab ? `${accentColor}40` : 'rgba(56,64,106,0.18)',
+              backgroundColor: idx === activeTab ? `${accentColor}06` : 'rgba(28,32,53,0.3)',
+            }}
+          >
+            {/* Top row */}
+            <div className="flex items-center justify-between w-full mb-1">
+              <span className="font-mono text-2xs text-parchment/20 group-hover:text-parchment/40">
+                0{idx + 1}
+              </span>
+              {!images && (
+                <span className="font-mono text-2xs" style={{ color: idx === activeTab ? accentColor : 'rgba(207,204,187,0.2)' }}>
+                  {(item as any).symbol}
+                </span>
+              )}
+            </div>
+
+            {/* Label */}
+            <h5 
+              className="font-sans font-bold text-xs tracking-tight transition-colors duration-200"
+              style={{ color: idx === activeTab ? accentColor : 'rgba(207,204,187,0.55)' }}
+            >
+              {item.label}
+            </h5>
+
+            {/* Description */}
+            <p className="font-mono text-3xs text-parchment/35 mt-1 leading-normal group-hover:text-parchment/50 transition-colors truncate w-full">
+              {item.description}
+            </p>
+
+            {/* Selected bottom glow bar */}
+            {idx === activeTab && (
+              <div 
+                className="absolute bottom-0 left-0 right-0 h-0.5" 
+                style={{ backgroundColor: accentColor }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export default function ProjectCaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -547,10 +748,18 @@ export default function ProjectCaseStudyPage() {
             </section>
           )}
 
-          {/* §02 Problem Space */}
+          {/* §02 Interface Showcase */}
+          {cs && (
+            <section>
+              <SectionRule index="02" label="Interface Showcase" accentColor={acc} mounted={mounted} mountDelay={300} />
+              <VisualShowcase images={cs.images} accentColor={acc} mounted={mounted} mountDelay={360} />
+            </section>
+          )}
+
+          {/* §03 Problem Space */}
           {cs?.problemSpace && cs.problemSpace.length > 0 && (
             <section>
-              <SectionRule index="02" label="Problem Space & Scope" accentColor={acc} mounted={mounted} mountDelay={300} />
+              <SectionRule index="03" label="Problem Space & Scope" accentColor={acc} mounted={mounted} mountDelay={480} />
               <div>
                 {cs.problemSpace.map((para, i) => (
                   <EditorialParagraph
@@ -558,22 +767,22 @@ export default function ProjectCaseStudyPage() {
                     text={para}
                     accentColor={acc}
                     mounted={mounted}
-                    mountDelay={360 + i * 80}
+                    mountDelay={540 + i * 80}
                   />
                 ))}
               </div>
             </section>
           )}
 
-          {/* §03 System Architecture */}
+          {/* §04 System Architecture */}
           {cs?.systemArchitecture && cs.systemArchitecture.length > 0 && (
             <section>
               <SectionRule
-                index="03"
+                index="04"
                 label="System Architecture & Design Engineering"
                 accentColor={acc}
                 mounted={mounted}
-                mountDelay={480}
+                mountDelay={660}
               />
 
               {/* Stack chips row */}
@@ -581,7 +790,7 @@ export default function ProjectCaseStudyPage() {
                 className="flex flex-wrap gap-1.5 mb-6"
                 style={{
                   opacity: mounted ? 1 : 0,
-                  transition: 'opacity 0.5s ease 540ms',
+                  transition: 'opacity 0.5s ease 720ms',
                 }}
               >
                 {project.tools.map((tool) => (
@@ -590,7 +799,7 @@ export default function ProjectCaseStudyPage() {
               </div>
 
               {/* Spec box wrapper */}
-              <SpecBox accentColor={acc} stamp="[ARCH // DESIGN-ENG]" mounted={mounted} mountDelay={560}>
+              <SpecBox accentColor={acc} stamp="[ARCH // DESIGN-ENG]" mounted={mounted} mountDelay={740}>
                 <div>
                   {cs.systemArchitecture.map((para, i) => (
                     <EditorialParagraph
@@ -598,7 +807,7 @@ export default function ProjectCaseStudyPage() {
                       text={para}
                       accentColor={acc}
                       mounted={mounted}
-                      mountDelay={580 + i * 80}
+                      mountDelay={760 + i * 80}
                     />
                   ))}
                 </div>
@@ -606,10 +815,10 @@ export default function ProjectCaseStudyPage() {
             </section>
           )}
 
-          {/* §04 Validation & Impact */}
+          {/* §05 Validation & Impact */}
           {cs?.validation && cs.validation.length > 0 && (
             <section>
-              <SectionRule index="04" label="Validation & Impact" accentColor={acc} mounted={mounted} mountDelay={700} />
+              <SectionRule index="05" label="Validation & Impact" accentColor={acc} mounted={mounted} mountDelay={880} />
 
               {/* Metric callouts row */}
               {project.metrics.length > 0 && (
@@ -618,7 +827,7 @@ export default function ProjectCaseStudyPage() {
                   style={{
                     opacity: mounted ? 1 : 0,
                     transform: mounted ? 'translateY(0)' : 'translateY(6px)',
-                    transition: 'opacity 0.5s ease 760ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) 760ms',
+                    transition: 'opacity 0.5s ease 940ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) 940ms',
                   }}
                 >
                   {project.metrics.map((m) => (
@@ -634,17 +843,17 @@ export default function ProjectCaseStudyPage() {
                     text={para}
                     accentColor={acc}
                     mounted={mounted}
-                    mountDelay={780 + i * 80}
+                    mountDelay={960 + i * 80}
                   />
                 ))}
               </div>
             </section>
           )}
 
-          {/* §05 Roadmap */}
+          {/* §06 Roadmap */}
           {cs?.roadmap && (
             <section>
-              <SectionRule index="05" label="Roadmap" accentColor={acc} mounted={mounted} mountDelay={900} />
+              <SectionRule index="06" label="Roadmap" accentColor={acc} mounted={mounted} mountDelay={1080} />
               <div
                 className="px-6 py-5 border-l-2"
                 style={{
@@ -652,7 +861,7 @@ export default function ProjectCaseStudyPage() {
                   backgroundColor: `${acc}06`,
                   opacity: mounted ? 1 : 0,
                   transform: mounted ? 'translateY(0)' : 'translateY(6px)',
-                  transition: 'opacity 0.5s ease 960ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) 960ms',
+                  transition: 'opacity 0.5s ease 1140ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) 1140ms',
                 }}
               >
                 <p className="font-mono text-xs text-parchment/55 leading-[1.85] italic">{cs.roadmap}</p>

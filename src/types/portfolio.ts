@@ -26,6 +26,12 @@ export interface ProjectMetric {
 }
 
 // ─── ARCHETYPE A — Formal Full Case Study ────────────────────────────────────
+export interface CaseStudyImage {
+  src: string
+  label: string
+  description?: string
+}
+
 /** Structured editorial case study content. Maps to Phase 1 Archetype A. */
 export interface CaseStudyContent {
   /** One-paragraph context, engineering role, and high-level product impact */
@@ -38,6 +44,8 @@ export interface CaseStudyContent {
   validation: string[]
   /** Optional forward-looking roadmap note */
   roadmap?: string
+  /** Optional visual screenshots or mockups of the interface */
+  images?: CaseStudyImage[]
 }
 
 export interface Project {
@@ -57,6 +65,7 @@ export interface Project {
   tagline: string
   narrative: string[]
   url?: string
+  year: string | number
   /** Award labels e.g. "1st Place", "Honorable Mention" */
   awards?: string[]
   status: 'live' | 'offline' | 'archived'
@@ -84,8 +93,9 @@ export interface Experiment {
   visualAssetType: ExperimentType
   description: string
   imageUrl?: string
-  year: number
+  year: string | number
   category: ExperimentCategory
+  role?: string
   /** Optional experiment log content (Archetype B) */
   log?: ExperimentLogContent
 }

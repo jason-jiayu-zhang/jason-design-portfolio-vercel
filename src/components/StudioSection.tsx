@@ -3,7 +3,7 @@ import { EXPERIMENTS } from '../data/portfolio'
 
 export default function StudioSection() {
   return (
-    <section id="studio" className="relative bg-primary py-16 md:py-24 px-4 sm:px-6 lg:px-12">
+    <section id="studio" className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-12">
       {/* Section header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 pb-4 border-b border-accent/30">
         <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
@@ -22,9 +22,11 @@ export default function StudioSection() {
           <Link
             key={exp.id}
             to={`/studio/${exp.id}`}
-            className="group relative flex flex-col gap-3 p-5 border-0 bg-surface/10 hover:bg-surface/30 transition-all duration-300 cursor-pointer"
+            className="group relative flex flex-col gap-3 p-5 border-0 bg-primary z-0 cursor-pointer"
             style={{ borderBottom: i < EXPERIMENTS.length - 4 ? '1px solid rgba(56,64,106,0.2)' : undefined }}
           >
+            {/* Background overlay for transparent hover effect over solid background */}
+            <div className="absolute inset-0 -z-10 bg-surface/10 group-hover:bg-surface/30 transition-colors duration-300 pointer-events-none rounded-sm" />
             {/* Visual area */}
             <div
               className="relative w-full aspect-square bg-accent/10 rounded-sm overflow-hidden flex items-center justify-center border border-accent/20 group-hover:border-parchment/20 transition-colors duration-300"

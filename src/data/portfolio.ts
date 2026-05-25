@@ -61,11 +61,12 @@ export const STATUS_CYCLE: StatusCycle[] = [
 export const PROJECTS: Project[] = [
   {
     id: 'cattlelog',
+    year: 'Present',
     slug: 'Cattlelog',
     title: 'Cattlelog',
     subtitle: 'Streamlining Course & Professor Discovery for UC Davis',
-    role: 'Lead Product Designer & UI Engineer',
-    tools: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase', 'Figma', 'PostHog'],
+    role: 'Design Engineer',
+    tools: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase', 'Figma'],
     categories: ['Product', 'Full-Stack Engineering', 'UI/UX'],
     wheelIndex: 0,
     accentColor: '#9cd5f8',
@@ -76,8 +77,6 @@ export const PROJECTS: Project[] = [
     ],
     narrative: [
       'Cattlelog is a course and professor discovery platform serving 30,000+ UC Davis students, combining professor ratings, grade distributions, and comparison tools to simplify academic planning.',
-      'To resolve the frustration of tab-switching across six different school pages, we consolidated GE requirements, course details, and professor reviews into a single clean catalog with robust searching and filtering.',
-      'Using PostHog for user behavior analytics, we identified page drop-off issues and designed a targeted landing page highlighting new features, which successfully reduced user drop-off by 80%.',
     ],
     url: 'https://daviscattlelog.com',
     status: 'live',
@@ -93,23 +92,39 @@ export const PROJECTS: Project[] = [
         'The design system was architected in Figma first: a rigorously token-based component library covering typography scales, spacing primitives, color roles, and interactive states. Every component was designed with direct React parity in mind — each Figma frame mapped one-to-one to a typed React component.',
         'The frontend stack — Vite, React, TypeScript, Tailwind CSS — was chosen for developer velocity and strict type safety. Tailwind utility classes were mapped directly from Figma\'s design token names, ensuring zero drift between design intent and shipped UI.',
         'Supabase served as the backend layer for course and professor data, with a Postgres full-text search index powering the catalog search. The data pipeline fed directly into a React Query cache layer, keeping the UI reactive without redundant fetches.',
-        'PostHog was instrumented at the component level — tracking funnel drop-off, feature adoption, and session replays — giving the design team a continuous feedback loop between shipped UI and real user behavior.',
       ],
       validation: [
         'Cattlelog scaled to 30,000+ total users and 1,000+ daily actives within its first academic year — driven entirely by organic word-of-mouth among UC Davis students.',
-        'PostHog analytics identified a critical drop-off on the landing page. I designed and A/B tested a redesigned hero that surfaced new features (grade distributions, professor comparison) above the fold. The result: an 80% reduction in landing-page drop-off.',
         'The component design system proved its value when the team shipped the Grade Distribution feature in under a week — the existing token system absorbed the new UI without regressions in visual consistency.',
       ],
       roadmap:
         'Next: a personalized dashboard that aggregates a student\'s full course history, predicted GPA curves per major, and proactive scheduling conflict detection — moving Cattlelog from a discovery tool to an ongoing academic co-pilot.',
+      images: [
+        {
+          src: '/images/projects/cattlelog-landing.webp',
+          label: 'Landing Page',
+          description: 'Consolidated UC Davis course & professor catalog discovery portal.'
+        },
+        {
+          src: '/images/projects/cattlelog-about.webp',
+          label: 'Team & Mission',
+          description: 'Meet the designers and engineers behind the platform.'
+        },
+        {
+          src: '/images/projects/cattlelog-cattleblog.webp',
+          label: 'Cattleblog',
+          description: 'Academic planning resources, tips, and student announcements.'
+        }
+      ]
     },
   },
   {
     id: 'fimanu',
+    year: 'Present',
     slug: 'Fimanu',
     title: 'Fimanu',
     subtitle: 'Visualizing Design Output and Assets via Figma REST API',
-    role: 'UI/UX Designer & Full-Stack Engineer',
+    role: 'Full-Stack Designer',
     tools: ['React', 'TypeScript', 'Figma REST API', 'Figma'],
     categories: ['Product', 'Full-Stack Engineering', 'UI/UX'],
     wheelIndex: 1,
@@ -121,8 +136,6 @@ export const PROJECTS: Project[] = [
     ],
     narrative: [
       'A design-engineering tool that allows users to visualize and inspect their design output directly through the Figma REST API.',
-      'Bridging the gap between Figma design files and live codebases by translating design tokens and assets in real time.',
-      'Streamlining developer handoff and asset pipeline automation for product teams.',
     ],
     url: 'https://figma-tracker.up.railway.app',
     status: 'live',
@@ -149,10 +162,11 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'product-space',
+    year: 2025,
     slug: 'Product Space',
-    title: 'Product Space @ UCD',
+    title: 'Product Space Website',
     subtitle: 'Designing for the Next Generation of Product Leaders',
-    role: 'Vice President of Design',
+    role: 'VP of Design',
     tools: ['Figma', 'FigJam'],
     categories: ['Product', 'Mentorship', 'Marketing', 'UI/UX'],
     wheelIndex: 2,
@@ -166,7 +180,6 @@ export const PROJECTS: Project[] = [
     narrative: [
       'A community driven by mentorship, marketing, and product management.',
       'Designing for the next generation of product leaders — creating environments that empower students to think user-first.',
-      'A product without users is merely a project.',
     ],
     url: 'https://www.davisproductspace.org',
     status: 'live',
@@ -192,10 +205,11 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'spot',
+    year: 2024,
     slug: 'Spot',
     title: 'Spot',
     subtitle: 'Real-Time Campus Study Space Mapping',
-    role: 'Lead Designer & Researcher',
+    role: 'Product Designer',
     tools: ['Figma'],
     categories: ['Product', 'UI/UX'],
     wheelIndex: 3,
@@ -208,13 +222,13 @@ export const PROJECTS: Project[] = [
     awards: ['1st Place'],
     narrative: [
       'A real-time, data-driven mapping application built to eliminate the friction of finding study spaces.',
-      'Designed, researched, and prototyped within a rigorous 24-hour design sprint at ProdCon 2025.',
+      'Designed, researched, and prototyped within a 24-hour product competition at ProdCon 2025.',
     ],
     url: '',
     status: 'offline',
     caseStudy: {
       executiveSummary:
-        'Designed, researched, and prototyped within a rigorous 24-hour window at ProdCon 2025, Spot is a real-time, data-driven mapping application built to eliminate the friction of finding study spaces on campus. By aggregating occupancy data, structural facility layouts, and student preferences into an intuitive mobile interface, Spot empowers students to find, track, and reserve optimal study environments in real time. The project was awarded 1st Place out of 20+ competing teams.',
+        'Designed, researched, and prototyped within a 24-hour product competition at ProdCon 2025, Spot is a real-time, data-driven mapping application built to eliminate the friction of finding study spaces on campus. By aggregating occupancy data, structural facility layouts, and student preferences into an intuitive mobile interface, Spot empowers students to find, track, and reserve optimal study environments in real time. The project was awarded 1st Place out of 20+ competing teams.',
       problemSpace: [
         'The "Wandering" Tax: Students lose an average of 15 to 30 minutes just looking for an open desk, causing frustration and interrupting study momentum.',
         'Information Asymmetry: While individual library websites might show general building hours, there is no centralized, live indicator showing which floors or specific tables are full.',
@@ -247,6 +261,7 @@ export const EXPERIMENTS: Experiment[] = [
     imageUrl: '/images/experiments/campus-rec-ad.webp',
     year: 2025,
     category: 'conceptual',
+    role: 'Self-Initiated',
     log: {
       spark:
         'Pure curiosity about static print design — I wanted to push a visual idea about motion and energy into a format with no scrolling, no hover states, no animation. Just composition and contrast.',
@@ -265,6 +280,7 @@ export const EXPERIMENTS: Experiment[] = [
     imageUrl: '/images/experiments/cs-tutoring-graphics.webp',
     year: 2025,
     category: 'published',
+    role: 'Design Advisor',
     log: {
       spark:
         'The CS tutoring program needed a fresh promotional push for the new quarter, and I took it as a quick weekend sprint to see how much personality I could inject into a functionally dense announcement.',
@@ -283,6 +299,7 @@ export const EXPERIMENTS: Experiment[] = [
     imageUrl: '/images/experiments/product-space-graphics.webp',
     year: 2025,
     category: 'published',
+    role: 'VP of Design',
     log: {
       spark:
         'As VP of Design I needed to establish a social presence for Product Space that felt credible to both industry recruiters and fellow students — two audiences with very different visual fluency.',
@@ -299,8 +316,9 @@ export const EXPERIMENTS: Experiment[] = [
     visualAssetType: 'Launch Graphic',
     description: 'Cattlelog Beta (02/04); Instagram Launch (02/25); Grade Distribution Launch (03/04).',
     imageUrl: '/images/experiments/cattlelog-graphics.webp',
-    year: 2025,
+    year: 2026,
     category: 'published',
+    role: 'Graphic Designer',
     log: {
       spark:
         'Every major Cattlelog engineering milestone deserved a visual moment — Beta, the Instagram launch, Grade Distributions. I wanted each graphic to feel like a product announcement, not just a social post.',
@@ -317,8 +335,9 @@ export const EXPERIMENTS: Experiment[] = [
     visualAssetType: 'Event Banner',
     description: 'Figma @ UCD Tech Mixer & Sticker Café event marketing assets.',
     imageUrl: '/images/experiments/figma-cl-graphics.webp',
-    year: 2025,
+    year: 'Present',
     category: 'published',
+    role: 'Campus Leader',
     log: {
       spark:
         'Hosting a Figma-sponsored event on campus meant the marketing had to live up to Figma\'s own design bar — which was both a pressure and a genuine creative thrill.',
@@ -335,8 +354,9 @@ export const EXPERIMENTS: Experiment[] = [
     visualAssetType: 'UI Exploration',
     description: 'A curated collection of daily UI design challenges and visual layouts.',
     imageUrl: '/images/experiments/collection-52.webp',
-    year: 2025,
+    year: 2026,
     category: 'conceptual',
+    role: 'Self-Initiated',
     log: {
       spark:
         'An off-the-whim discipline experiment — could I design something intentional every day for 52 weeks without a client brief or a product requirement? Just pure visual exploration.',
@@ -354,8 +374,9 @@ export const EXPERIMENTS: Experiment[] = [
     visualAssetType: 'Social Media Asset',
     description: 'Social graphics for personal branding and internship announcements.',
     imageUrl: '/images/experiments/linkedin-graphics.webp',
-    year: 2025,
+    year: 2026,
     category: 'published',
+    role: 'Self-Initiated',
     log: {
       spark:
         'Off a whim after landing my Figma internship — I wanted the announcement post to feel like a design artifact, not just a humble-brag text post.',
@@ -372,8 +393,9 @@ export const EXPERIMENTS: Experiment[] = [
     visualAssetType: 'Event Banner',
     description: 'Promotional banner designs and marketing assets for UC Davis Formula Racing.',
     imageUrl: '/images/experiments/formula-ucd.webp',
-    year: 2025,
+    year: 2026,
     category: 'published',
+    role: 'Design Advisor',
     log: {
       spark:
         'A friend on the Formula Racing team asked if I could help with their promo materials. I immediately said yes — it was a completely different design register than anything else I was doing.',

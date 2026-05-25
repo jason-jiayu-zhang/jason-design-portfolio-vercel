@@ -80,6 +80,140 @@ function NarrativePanel({ project }: NarrativePanelProps) {
   )
 }
 
+// ── Visual Preview Carousel ────────────────────────────────────────────────
+interface ProjectPreviewCarouselProps {
+  project: Project
+}
+
+function ProjectPreviewCarousel({ project }: ProjectPreviewCarouselProps) {
+  const [activeImageIdx, setActiveImageIdx] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const images = project.caseStudy?.images || []
+  const acc = project.accentColor
+
+  // Auto-play the carousel
+  useEffect(() => {
+    if (images.length <= 1) return
+    const interval = setInterval(() => {
+      setActiveImageIdx((prev) => (prev + 1) % images.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [images.length])
+
+  // Reset index when project changes
+  useEffect(() => {
+    setActiveImageIdx(0)
+  }, [project.id])
+
+  const handleDotClick = (e: React.MouseEvent, idx: number) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setActiveImageIdx(idx)
+  }
+
+  // Geometric symbols per project matching their concept
+  const projectSymbols = {
+    cattlelog: '◈',
+    fimanu: '⬡',
+    'product-space': '◉',
+    spot: '⬢',
+  } as Record<string, string>
+
+  const currentSymbol = projectSymbols[project.id] || '◈'
+
+  return (
+    <Link
+      to={`/work/${project.id}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group/carousel relative block w-full aspect-[21/9] rounded-sm overflow-hidden border transition-all duration-300 bg-surface/10 hover:bg-surface/20 shadow-lg mb-4"
+      style={{
+        borderColor: isHovered ? `${acc}60` : `${acc}25`,
+        boxShadow: isHovered ? `0 12px 48px -12px ${acc}20` : `0 8px 32px -8px ${acc}08`,
+      }}
+    >
+      {/* Scanlines / Grid lines overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+        backgroundImage: `linear-gradient(rgba(207,204,187,0.1) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(207,204,187,0.1) 1px, transparent 1px)`,
+        backgroundSize: '16px 16px'
+      }} />
+
+      {images.length > 0 ? (
+        <div className="w-full h-full relative">
+          {images.map((img, i) => (
+            <img
+              key={i}
+              src={img.src}
+              alt={img.label}
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{
+                opacity: i === activeImageIdx ? (isHovered ? 1 : 0.6) : 0,
+                transform: i === activeImageIdx ? (isHovered ? 'scale(1.05)' : 'scale(1)') : 'scale(1.025)',
+                visibility: i === activeImageIdx ? 'visible' : 'hidden',
+              }}
+            />
+          ))}
+
+          {/* Banner screen label */}
+          <div className="absolute bottom-3 left-3 pointer-events-none transition-opacity duration-300">
+            <span className="font-mono text-[9px] tracking-widest uppercase text-parchment/70 font-semibold drop-shadow-md">
+              // {images[activeImageIdx].label}
+            </span>
+          </div>
+        </div>
+      ) : (
+        // Render geometric Spec/Placeholder with hover states matching Studio style
+        <div className="w-full h-full flex flex-col items-center justify-center relative p-6">
+          {/* Spinning dashed rings */}
+          <div className="absolute w-40 h-40 border rounded-full border-dashed animate-[spin_120s_linear_infinite]"
+               style={{ borderColor: `${acc}15` }} />
+          <div className="absolute w-28 h-28 border rounded-full border-dashed animate-[spin_80s_linear_infinite_reverse]"
+               style={{ borderColor: `${acc}10` }} />
+
+          {/* Glowing central glyph */}
+          <div 
+            className="font-mono text-5xl transition-all duration-500 select-none"
+            style={{ 
+              color: acc,
+              opacity: isHovered ? 0.75 : 0.25,
+              transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+              textShadow: isHovered ? `0 0 24px ${acc}60` : `0 0 8px ${acc}20`
+            }}
+          >
+            {currentSymbol}
+          </div>
+
+          <div className="absolute bottom-3 text-center w-full px-4">
+            <p className="font-mono text-3xs tracking-label uppercase text-parchment/20 group-hover/carousel:text-[#cfccbb90] transition-colors">
+              [{project.title} Spec Template]
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Pagination dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 z-10 px-2 py-1 rounded bg-[#0a0c16]/50 backdrop-blur-sm">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={(e) => handleDotClick(e, i)}
+              className="w-1 h-1 rounded-full transition-all duration-300"
+              style={{
+                backgroundColor: i === activeImageIdx ? acc : '#cfccbb',
+                opacity: i === activeImageIdx ? 1 : 0.3,
+                transform: i === activeImageIdx ? 'scale(1.35)' : 'scale(1)',
+              }}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </Link>
+  )
+}
+
 // ── Main Hero Section ──────────────────────────────────────────────────────
 export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -301,6 +435,11 @@ export default function HeroSection() {
                   )}
                 </div>
 
+                {/* Visual Preview Carousel */}
+                <AnimatedElement delay={400}>
+                  <ProjectPreviewCarousel project={project} />
+                </AnimatedElement>
+ 
                 {/* 3 & 4. Description Block with Macro Margin above */}
                 <div className="mb-8">
                   <NarrativePanel project={project} />
