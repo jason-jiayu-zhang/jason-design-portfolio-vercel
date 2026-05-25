@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { TIMELINE, BELIEFS, BOOKSHELF, ROTATIONS, PLAYGROUND, EDUCATION } from '../data/about'
 import type { TimelineEntry, Belief, BookEntry } from '../data/about'
 
@@ -51,9 +51,9 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        <div className="flex flex-col lg:flex-row lg:items-start gap-1 lg:gap-4 flex-1 min-w-0">
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
           {/* Left — number + period */}
-          <div className="flex items-center gap-3 flex-shrink-0 lg:w-36">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <span className="font-mono text-2xs text-parchment/20 w-5 text-right">
               {String(index + 1).padStart(2, '0')}
             </span>
@@ -65,7 +65,7 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
           </div>
 
           {/* Center — role + org */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pl-8">
             <p className="font-sans font-semibold text-sm text-parchment leading-snug" style={{ letterSpacing: '-0.02em' }}>
               {entry.role}
             </p>
@@ -91,7 +91,7 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
         }}
       >
         <div className="overflow-hidden">
-          <div className="pt-3 pl-0 lg:pl-10 space-y-2 pb-2">
+          <div className="pt-3 pl-8 space-y-2 pb-2">
             <p className="font-mono text-xs text-parchment/45 leading-relaxed">{entry.detail}</p>
             <div className="flex flex-wrap gap-1.5">
               {entry.tags.map((tag) => (
@@ -203,10 +203,165 @@ function Blink() {
   )
 }
 
+function InteractiveTerminalPrompt({
+  history,
+  commandInput,
+  setCommandInput,
+  handleCommand,
+  inputRef
+}: {
+  history: Array<{cmd: string, output: React.ReactNode}>;
+  commandInput: string;
+  setCommandInput: (val: string) => void;
+  handleCommand: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}) {
+  return (
+    <div className="pt-3 space-y-2">
+      {history.map((h, i) => (
+        <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
+          <div className="flex items-center gap-1.5">
+            <span className="font-mono text-2xs text-gold/50">›_</span>
+            <span className="font-mono text-xs text-parchment/70">{h.cmd}</span>
+          </div>
+          {h.output && (
+            <div className="font-mono text-xs text-parchment/40 pl-4 whitespace-pre-wrap">
+              {h.output}
+            </div>
+          )}
+        </div>
+      ))}
+      <div 
+        className="flex items-center gap-1.5 relative cursor-text min-h-[20px]"
+        onClick={() => inputRef.current?.focus()}
+      >
+        <span className="font-mono text-2xs text-parchment/30">›_</span>
+        <span className="font-mono text-xs text-parchment/70 flex-1 whitespace-pre-wrap break-all">
+          {commandInput}
+          <Blink />
+        </span>
+        <input
+          ref={inputRef}
+          type="text"
+          value={commandInput}
+          onChange={(e) => setCommandInput(e.target.value)}
+          onKeyDown={handleCommand}
+          onBlur={() => {
+            // Keep focus if we click somewhere else inside the terminal, but allow blurring if scrolled away
+          }}
+          className="absolute opacity-0 inset-0 w-full h-full cursor-text"
+          spellCheck={false}
+          autoComplete="off"
+        />
+      </div>
+    </div>
+  )
+}
+
 // ─── About Section — Main Export ──────────────────────────────────────────────
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'books' | 'music' | 'play'>('books')
   const [activeGameId, setActiveGameId] = useState<string>('01')
+  const [history, setHistory] = useState<Array<{cmd: string, output: React.ReactNode}>>([
+    { cmd: 'sysinfo', output: 'JasonOS v1.0.0\nType "help" for a list of available commands.' }
+  ])
+  const [commandInput, setCommandInput] = useState('')
+  const [uptimeStart] = useState(() => Date.now())
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // Auto-focus the terminal when it scrolls into view, and blur when it leaves
+  // so we don't hijack keyboard scrolling when the user isn't looking at it.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          inputRef.current?.focus({ preventScroll: true })
+        } else {
+          inputRef.current?.blur()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (inputRef.current) {
+      observer.observe(inputRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [activeTab])
+
+  const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const cmd = commandInput.trim()
+      if (!cmd) return
+      
+      let output: React.ReactNode = ''
+      const lowerCmd = cmd.toLowerCase()
+      
+      if (lowerCmd === 'help') {
+        output = 'Available commands: help, clear, cd <tab>, ls, resume, contact, whoami, sudo, echo, ping, coffee, uptime, rm -rf /, flip, unflip, cat'
+      } else if (lowerCmd === 'clear') {
+        setHistory([])
+        setCommandInput('')
+        return
+      } else if (lowerCmd.startsWith('cd ')) {
+        const target = lowerCmd.split(' ')[1]
+        if (target === 'books' || target === 'shelf') { setActiveTab('books'); output = 'Changed directory to books' }
+        else if (target === 'music' || target === 'now') { setActiveTab('music'); output = 'Changed directory to music' }
+        else if (target === 'play') { setActiveTab('play'); output = 'Changed directory to play' }
+        else { output = `cd: no such file or directory: ${target}\nAvailable directories: books (shelf), music (now), play` }
+      } else if (lowerCmd === 'ls') {
+        if (activeTab === 'books') output = BOOKSHELF.map(b => b.title).join('  ')
+        else if (activeTab === 'music') output = ROTATIONS.map(r => r.artist).join('  ')
+        else if (activeTab === 'play') output = PLAYGROUND.map(p => p.id).join('  ')
+      } else if (lowerCmd === 'resume') {
+        window.open('https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1', '_blank')
+        output = 'Opening resume...'
+      } else if (lowerCmd === 'contact') {
+        output = "Let's connect! Check the footer for my social links."
+      } else if (lowerCmd === 'whoami') {
+        output = 'Jason Jiayu Zhang - Designer & Engineer'
+      } else if (lowerCmd.startsWith('sudo ')) {
+        output = 'User is not in the sudoers file. This incident will be reported.'
+      } else if (lowerCmd === 'sudo') {
+        output = 'usage: sudo command'
+      } else if (lowerCmd.startsWith('echo ')) {
+        output = cmd.slice(5)
+      } else if (lowerCmd === 'echo') {
+        output = ''
+      } else if (lowerCmd === 'ping') {
+        output = 'PONG'
+      } else if (lowerCmd === 'coffee') {
+        output = <span>Let's chat! Schedule a time here: <br/><a href="https://calendar.app.google/Vp2ioxnPTR66xhUo6" target="_blank" rel="noreferrer" className="text-gold hover:underline">https://calendar.app.google/Vp2ioxnPTR66xhUo6</a></span>
+      } else if (lowerCmd === 'uptime') {
+        const secs = Math.floor((Date.now() - uptimeStart) / 1000)
+        output = `up ${secs} seconds`
+      } else if (lowerCmd === 'rm -rf /') {
+        output = "Permission denied: Please don't delete my portfolio."
+      } else if (lowerCmd === 'flip') {
+        output = '(╯°□°）╯︵ ┻━┻'
+      } else if (lowerCmd === 'unflip') {
+        output = '┬─┬ ノ( ゜-゜ノ)'
+      } else if (lowerCmd === 'cat') {
+        output = <pre className="font-mono text-2xs leading-tight mt-1">{`          —————
+　　　　　╱ ＞　　 フ
+        |   _  _l
+       ╱\`  ミ＿xノ
+      /　　　 　 |
+　　　 /   |    J
+    _|    \\ \\ \\
+  ╱ _|     | | |
+ | (_ \\____\\_),_)
+  ╲ _)`}</pre>
+      } else {
+        output = `command not found: ${cmd}`
+      }
+      
+      setHistory(prev => [...prev, { cmd, output }])
+      setCommandInput('')
+    }
+  }
+
 
   return (
     <section id="about" className="relative py-12 md:py-20 border-t border-accent/25">
@@ -255,7 +410,7 @@ export default function AboutSection() {
             {EDUCATION.degrees.map((d) => (
               <div
                 key={d}
-                className="px-2 py-0.5 border border-accent/30 rounded-sm"
+                className="px-2 pt-0 pb-0.5 border border-accent/30 rounded-sm"
                 style={{ background: 'rgba(56,64,106,0.15)' }}
               >
                 <span className="font-mono text-2xs tracking-label text-gold/70">{d}</span>
@@ -337,7 +492,8 @@ export default function AboutSection() {
             COLUMN 3 — Personal Catalog (Terminal Interface)
         ══════════════════════════════════════════════════════════════════════ */}
         <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-          {/* Terminal header bar */}
+          <div>
+            {/* Terminal header bar */}
           <div className="mb-6">
             <div className="label-caps mb-2">PERSONAL CATALOG</div>
             <div
@@ -401,10 +557,13 @@ export default function AboutSection() {
                     </div>
                   </div>
                 ))}
-                <div className="pt-2 flex items-center gap-1">
-                  <span className="font-mono text-2xs text-parchment/20">›_</span>
-                  <Blink />
-                </div>
+                <InteractiveTerminalPrompt
+                  history={history}
+                  commandInput={commandInput}
+                  setCommandInput={setCommandInput}
+                  handleCommand={handleCommand}
+                  inputRef={inputRef}
+                />
               </div>
             </TerminalSection>
           )}
@@ -446,10 +605,13 @@ export default function AboutSection() {
                     <span className="font-mono text-2xs text-parchment/15">♫</span>
                   </div>
                 ))}
-                <div className="pt-2 flex items-center gap-1">
-                  <span className="font-mono text-2xs text-parchment/20">›_</span>
-                  <Blink />
-                </div>
+                <InteractiveTerminalPrompt
+                  history={history}
+                  commandInput={commandInput}
+                  setCommandInput={setCommandInput}
+                  handleCommand={handleCommand}
+                  inputRef={inputRef}
+                />
               </div>
             </TerminalSection>
           )}
@@ -508,15 +670,19 @@ export default function AboutSection() {
                         </span>
                       </div>
                     ))}
-                    <div className="pt-2 flex items-center gap-1">
-                      <span className="font-mono text-2xs text-parchment/20">›_</span>
-                      <Blink />
-                    </div>
                   </div>
                 </div>
               </div>
+              <InteractiveTerminalPrompt
+                history={history}
+                commandInput={commandInput}
+                setCommandInput={setCommandInput}
+                handleCommand={handleCommand}
+                inputRef={inputRef}
+              />
             </TerminalSection>
           )}
+          </div>
         </div>
       </div>
 

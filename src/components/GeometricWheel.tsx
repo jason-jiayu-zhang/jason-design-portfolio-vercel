@@ -225,7 +225,7 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
 
         {/* Dynamic cross-hairs at snap points */}
         {Array.from({ length: projects.length }, (_, i) => {
-          const deg = i * SNAP_INTERVAL
+          const deg = -i * SNAP_INTERVAL
           const outer = polarToCartesian(CX, CY, 276, deg)
           const inner = polarToCartesian(CX, CY, 246, deg)
           const dotPos = polarToCartesian(CX, CY, 246, deg)
@@ -272,7 +272,7 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
 
         {/* Project label slugs at compass points */}
         {projects.map((proj, i) => {
-          const angleDeg = i * SNAP_INTERVAL
+          const angleDeg = -i * SNAP_INTERVAL
           const pos = polarToCartesian(CX, CY, LABEL_RADIUS, angleDeg)
           const isActive = i === activeIndex
           
@@ -310,14 +310,14 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
 
       {/* ── STATIC OVERLAY (never rotates) ─────────────────────────────────── */}
 
-      {/* Active project accent arc — drawn at top (270°), fixed */}
+      {/* Active project accent arc — drawn at top (0°), fixed */}
       {(() => {
         const proj = projects[activeIndex]
         const arcColor = proj?.accentColor ?? PARCHMENT
-        // Arc from 265° to 275° at main ring
+        // Arc from -8° to 8° at main ring
         const arcR = 200
-        const p1 = polarToCartesian(CX, CY, arcR, 262)
-        const p2 = polarToCartesian(CX, CY, arcR, 278)
+        const p1 = polarToCartesian(CX, CY, arcR, -8)
+        const p2 = polarToCartesian(CX, CY, arcR, 8)
         return (
           <path
             className="pulse-active"

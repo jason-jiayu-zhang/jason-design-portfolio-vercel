@@ -88,6 +88,9 @@ export default function HeroSection() {
   const [projKey, setProjKey] = useState('proj-0')
   const keyRef = useRef(0)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  
+  const wheelContainerRef = useRef<HTMLDivElement>(null)
+  const wheelPosRef = useRef<number | null>(null)
 
   const handleProjectChange = useCallback((index: number) => {
     if (index === activeIndex) return;
@@ -97,12 +100,31 @@ export default function HeroSection() {
     setIsFadingOut(true)
     
     timeoutRef.current = setTimeout(() => {
+      // Record the wheel's position relative to the viewport right before content changes
+      if (wheelContainerRef.current) {
+        wheelPosRef.current = wheelContainerRef.current.getBoundingClientRect().top
+      }
+      
       setDisplayIndex(index)
       keyRef.current += 1
       setProjKey(`proj-${index}-${keyRef.current}`)
       setIsFadingOut(false)
     }, 300)
   }, [activeIndex])
+
+  React.useLayoutEffect(() => {
+    if (wheelPosRef.current !== null && wheelContainerRef.current) {
+      const newTop = wheelContainerRef.current.getBoundingClientRect().top
+      const diff = newTop - wheelPosRef.current
+      
+      // If the wheel moved relative to the viewport (e.g. because text above it changed height),
+      // adjust the window scroll to keep it under the user's finger.
+      if (Math.abs(diff) > 0) {
+        window.scrollBy({ top: diff })
+      }
+      wheelPosRef.current = null
+    }
+  }, [displayIndex, projKey])
 
   const activeProject = PROJECTS[activeIndex]
   const project = PROJECTS[displayIndex]
@@ -343,6 +365,7 @@ export default function HeroSection() {
 
         {/* ── RIGHT 55% — Interactive Wheel ── */}
         <div
+          ref={wheelContainerRef}
           className="relative flex items-center justify-center w-full lg:w-[55%] min-h-[40vh] lg:min-h-0 py-8 sm:py-12 lg:py-0"
           style={{ background: 'radial-gradient(ellipse at center, rgba(56,64,106,0.1) 0%, transparent 70%)' }}
         >
