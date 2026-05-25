@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
 import ArchiveSection from './components/ArchiveSection'
