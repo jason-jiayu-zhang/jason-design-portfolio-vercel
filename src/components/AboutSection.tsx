@@ -216,23 +216,34 @@ function InteractiveTerminalPrompt({
   handleCommand: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
 }) {
+  const historyEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    historyEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [history])
+
   return (
-    <div className="pt-3 space-y-2">
-      {history.map((h, i) => (
-        <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
-          <div className="flex items-center gap-1.5">
-            <span className="font-mono text-2xs text-gold/50">›_</span>
-            <span className="font-mono text-xs text-parchment/70">{h.cmd}</span>
-          </div>
-          {h.output && (
-            <div className="font-mono text-xs text-parchment/40 pl-4 whitespace-pre-wrap">
-              {h.output}
+    <div className="pt-3 flex flex-col gap-2">
+      {history.length > 0 && (
+        <div className="space-y-2 max-h-[160px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(207,204,187,0.2) transparent' }}>
+          {history.map((h, i) => (
+            <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-2xs text-gold/50">›_</span>
+                <span className="font-mono text-xs text-parchment/70">{h.cmd}</span>
+              </div>
+              {h.output && (
+                <div className="font-mono text-xs text-parchment/40 pl-4 whitespace-pre-wrap">
+                  {h.output}
+                </div>
+              )}
             </div>
-          )}
+          ))}
+          <div ref={historyEndRef} />
         </div>
-      ))}
+      )}
       <div
-        className="flex items-center gap-1.5 relative cursor-text min-h-[20px]"
+        className="flex items-center gap-1.5 relative cursor-text min-h-[20px] shrink-0"
         onClick={() => inputRef.current?.focus()}
       >
         <span className="font-mono text-2xs text-parchment/30">›_</span>
@@ -291,6 +302,53 @@ export default function AboutSection() {
   }, [activeTab])
 
   const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const cmd = commandInput.toLowerCase()
+      const commands = [
+        'help', 'clear', 'cd', 'ls', 'resume', 'contact', 'whoami',
+        'sudo', 'echo', 'ping', 'coffee', 'uptime', 'rm -rf /', 'flip', 'unflip', 'cat'
+      ]
+
+      const isBaseCommand = !cmd.includes(' ') || cmd.startsWith('rm')
+      if (isBaseCommand) {
+        const matches = commands.filter(c => c.startsWith(cmd))
+        if (matches.length === 1) {
+          let suffix = ''
+          if (['cd', 'sudo', 'echo'].includes(matches[0])) suffix = ' '
+          setCommandInput(matches[0] + suffix)
+        } else if (matches.length > 1) {
+          const sorted = matches.sort()
+          const first = sorted[0]
+          const last = sorted[sorted.length - 1]
+          let i = 0
+          while (i < first.length && first.charAt(i) === last.charAt(i)) i++
+          const commonPrefix = first.substring(0, i)
+          if (commonPrefix.length > cmd.length) {
+            setCommandInput(commonPrefix)
+          }
+        }
+      } else if (cmd.startsWith('cd ')) {
+        const dirs = ['books', 'shelf', 'music', 'now', 'play']
+        const arg = cmd.slice(3)
+        const matches = dirs.filter(d => d.startsWith(arg))
+        if (matches.length === 1) {
+          setCommandInput('cd ' + matches[0])
+        } else if (matches.length > 1) {
+          const sorted = matches.sort()
+          const first = sorted[0]
+          const last = sorted[sorted.length - 1]
+          let i = 0
+          while (i < first.length && first.charAt(i) === last.charAt(i)) i++
+          const commonPrefix = first.substring(0, i)
+          if (commonPrefix.length > arg.length) {
+            setCommandInput('cd ' + commonPrefix)
+          }
+        }
+      }
+      return
+    }
+
     if (e.key === 'Enter') {
       const cmd = commandInput.trim()
       if (!cmd) return
@@ -512,7 +570,10 @@ export default function AboutSection() {
                 {(['books', 'music', 'play'] as const).map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => setActiveTab(tab)}
+                    onClick={() => {
+                      setActiveTab(tab)
+                      setCommandInput('')
+                    }}
                     className="flex-1 py-1.5 font-mono text-2xs tracking-label uppercase transition-all duration-250"
                     style={{
                       background: activeTab === tab ? 'rgba(56,64,106,0.4)' : 'transparent',
