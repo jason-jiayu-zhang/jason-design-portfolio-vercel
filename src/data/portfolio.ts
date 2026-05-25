@@ -245,6 +245,23 @@ export const PROJECTS: Project[] = [
       ],
       roadmap:
         'Scaling the product with a lightweight full-stack implementation to consume live location data and campus network connection density, plus introducing micro-reservations to optimize underutilized university real estate.',
+      images: [
+        {
+          src: '/images/projects/spot-onboarding.png',
+          label: 'Onboarding Flow',
+          description: 'A seamless onboarding experience that introduces users to core features.'
+        },
+        {
+          src: '/images/projects/spot-map-and-catalog.png',
+          label: 'Map & Catalog',
+          description: 'Live occupancy heatmapping and detailed study space catalog.'
+        },
+        {
+          src: '/images/projects/spot-spot-creation.png',
+          label: 'Spot Creation',
+          description: 'Interface for adding and configuring new study spots with environmental preferences.'
+        }
+      ]
     },
   },
 ]

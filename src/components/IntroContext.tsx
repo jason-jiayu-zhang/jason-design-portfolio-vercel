@@ -17,11 +17,17 @@ export function useIntro() {
 }
 
 export function IntroProvider({ children }: { children: React.ReactNode }) {
-  const [hasLoaded, setHasLoaded] = useState(false)
-  const [phase, setPhase] = useState<IntroPhase>('initial')
+  const [hasLoaded, setHasLoaded] = useState(() => {
+    return sessionStorage.getItem('introPlayed') === 'true'
+  })
+  const [phase, setPhase] = useState<IntroPhase>(() => {
+    return sessionStorage.getItem('introPlayed') === 'true' ? 'phase03' : 'initial'
+  })
 
   useEffect(() => {
-
+    if (sessionStorage.getItem('introPlayed') === 'true') {
+      return
+    }
 
     setHasLoaded(false)
     
@@ -38,6 +44,7 @@ export function IntroProvider({ children }: { children: React.ReactNode }) {
     // Phase 03: 1400ms after phase02 (4000ms total)
     const timer2 = setTimeout(() => {
       setPhase('phase03')
+      sessionStorage.setItem('introPlayed', 'true')
     }, 4000)
 
     return () => {

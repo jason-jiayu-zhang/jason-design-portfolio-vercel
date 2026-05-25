@@ -225,7 +225,7 @@ function InteractiveTerminalPrompt({
   return (
     <div className="pt-3 flex flex-col gap-2">
       {history.length > 0 && (
-        <div className="space-y-2 max-h-[160px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(207,204,187,0.2) transparent' }}>
+        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(207,204,187,0.2) transparent' }}>
           {history.map((h, i) => (
             <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
               <div className="flex items-center gap-1.5">
@@ -371,7 +371,7 @@ export default function AboutSection() {
       } else if (lowerCmd === 'ls') {
         if (activeTab === 'books') output = BOOKSHELF.map(b => b.title).join('  ')
         else if (activeTab === 'music') output = ROTATIONS.map(r => r.artist).join('  ')
-        else if (activeTab === 'play') output = PLAYGROUND.map(p => p.id).join('  ')
+        else if (activeTab === 'play') output = PLAYGROUND.map(p => p.title).join('  ')
       } else if (lowerCmd === 'resume') {
         window.open('https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1', '_blank')
         output = 'Opening resume...'
@@ -468,7 +468,7 @@ export default function AboutSection() {
             {EDUCATION.degrees.map((d) => (
               <div
                 key={d}
-                className="px-2 pt-0 pb-0.5 border border-accent/30 rounded-sm"
+                className="px-2 pt-0 pb-1 border border-accent/30 rounded-sm"
                 style={{ background: 'rgba(56,64,106,0.15)' }}
               >
                 <span className="font-mono text-2xs tracking-label text-gold/70">{d}</span>

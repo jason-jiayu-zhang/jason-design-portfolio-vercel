@@ -1,3 +1,4 @@
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
 import ArchiveSection from './components/ArchiveSection'
@@ -7,9 +8,31 @@ import Footer from './components/Footer'
 import { IntroProvider, useIntro } from './components/IntroContext'
 import './index.css'
 
+const SCROLL_KEY = 'home_scroll_y'
+
 function AppContent() {
   const { phase } = useIntro()
   const isPhase3 = phase === 'phase03'
+  const restoredRef = useRef(false)
+
+  // Save scroll position continuously while on this page
+  useEffect(() => {
+    const handleScroll = () => {
+      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY))
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Once phase3 content is rendered, restore saved scroll position (only once)
+  useLayoutEffect(() => {
+    if (!isPhase3 || restoredRef.current) return
+    restoredRef.current = true
+    const saved = sessionStorage.getItem(SCROLL_KEY)
+    if (saved) {
+      window.scrollTo(0, parseInt(saved, 10))
+    }
+  }, [isPhase3])
 
   return (
     <div className="min-h-screen flex flex-col bg-primary">
