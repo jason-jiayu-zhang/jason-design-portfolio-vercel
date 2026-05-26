@@ -2,8 +2,8 @@
 
 A personal portfolio showcasing UI/UX design, web development projects, and my resume.
 
-## Live Demo
-[Link to your live Vercel deployment here]
+## Visit
+[https://jason.zhangjiayu.com](https://jason.zhangjiayu.com)
 
 ## Tech Stack
 - React
