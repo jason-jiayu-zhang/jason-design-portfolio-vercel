@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PROJECTS, EXPERIMENTS } from '../data/portfolio'
 
@@ -12,6 +13,87 @@ type ArchiveItem = {
   linkPath: string
   isCaseStudy: boolean
 }
+
+const TagList = ({ tags }: { tags: string[] }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(tags.length);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const measureContainer = measureRef.current;
+    if (!container || !measureContainer) return;
+
+    const calculate = () => {
+      const containerWidth = container.clientWidth;
+      const tagElements = Array.from(measureContainer.children) as HTMLElement[];
+      
+      if (tagElements.length === 0) return;
+
+      let totalWidth = 0;
+      const gap = 6;
+      
+      for (let i = 0; i < tagElements.length; i++) {
+        totalWidth += tagElements[i].offsetWidth + (i > 0 ? gap : 0);
+      }
+      
+      if (totalWidth <= containerWidth) {
+        setVisibleCount(tags.length);
+        return;
+      }
+      
+      const plusBadgeWidth = 32; 
+      let currentWidth = 0;
+      let count = 0;
+      
+      for (let i = 0; i < tagElements.length; i++) {
+        const w = tagElements[i].offsetWidth;
+        if (currentWidth + w + gap + plusBadgeWidth > containerWidth) {
+          break;
+        }
+        currentWidth += w + (count > 0 ? gap : 0);
+        count++;
+      }
+      
+      setVisibleCount(Math.max(1, count));
+    };
+
+    const observer = new ResizeObserver(calculate);
+    observer.observe(container);
+    calculate();
+    
+    return () => observer.disconnect();
+  }, [tags]);
+
+  return (
+    <div className="relative flex-1 min-w-0 flex items-center overflow-hidden" ref={containerRef}>
+      <div 
+        ref={measureRef} 
+        className="absolute top-0 left-0 flex gap-1.5 invisible pointer-events-none opacity-0"
+        aria-hidden="true"
+      >
+        {tags.map((tag, i) => (
+          <span key={`measure-${i}`} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono whitespace-nowrap">
+            {tag}
+          </span>
+        ))}
+      </div>
+      
+      <div className="flex gap-1.5 items-center w-full">
+        {tags.slice(0, visibleCount).map((tag, i) => (
+          <span key={i} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/60 whitespace-nowrap bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
+            {tag}
+          </span>
+        ))}
+        {visibleCount < tags.length && (
+          <span className="shrink-0 px-1.5 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/40 bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
+            +{tags.length - visibleCount}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const allItems: ArchiveItem[] = [
   ...PROJECTS.map((p) => ({
@@ -82,53 +164,35 @@ export default function ArchiveSection() {
             {/* Mobile Layout */}
             <div className="flex flex-col gap-2 p-4 md:hidden">
               <div className="flex justify-between items-center">
-                <span className="font-mono text-xs text-parchment/50">{item.year}</span>
+                <span className="font-mono text-2xs tracking-label text-parchment/30">{item.year}</span>
                 <span className="font-mono text-2xs px-2 py-0.5 rounded-sm border border-white/10 text-parchment/50 uppercase">
                   {item.type}
                 </span>
               </div>
-              <h3 className="font-sans font-medium text-lg text-parchment group-hover:text-white transition-colors duration-300">
+              <h3 className="font-sans font-semibold text-sm leading-snug text-parchment group-hover:text-white transition-colors duration-300" style={{ letterSpacing: '-0.02em' }}>
                 {item.title}
               </h3>
-              <div className="flex gap-1.5 items-center mt-1 overflow-hidden">
+              <div className="flex gap-1.5 items-center mt-1 overflow-hidden w-full">
                 {item.role !== '-' && (
-                  <span className="font-mono text-xs text-parchment/50 mr-1 shrink-0">{item.role}</span>
+                  <span className="font-mono text-2xs text-gold/70 mr-1 shrink-0 mt-0.5">{item.role}</span>
                 )}
-                {item.contextTags.slice(0, 1).map((tag, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/60 whitespace-nowrap bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
-                    {tag}
-                  </span>
-                ))}
-                {item.contextTags.length > 1 && (
-                  <span className="shrink-0 px-1.5 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/40 bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
-                    +{item.contextTags.length - 1}
-                  </span>
-                )}
+                <TagList tags={item.contextTags} />
               </div>
             </div>
 
             {/* Desktop Layout */}
-            <div className="hidden md:grid grid-cols-[80px_3fr_2fr_2fr_1fr_80px] gap-4 p-4 items-center font-mono text-sm">
-              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300">
+            <div className="hidden md:grid grid-cols-[80px_3fr_2fr_2fr_1fr_80px] gap-4 p-4 items-center font-mono text-xs">
+              <div className="font-mono text-2xs tracking-label text-parchment/30 group-hover:text-parchment/80 transition-colors duration-300">
                 {item.year}
               </div>
-              <div className="font-sans font-medium text-lg text-parchment group-hover:text-white transition-colors duration-300">
+              <div className="font-sans font-semibold text-sm leading-snug text-parchment group-hover:text-white transition-colors duration-300" style={{ letterSpacing: '-0.02em' }}>
                 {item.title}
               </div>
-              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 truncate">
+              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 truncate mt-0.5 font-mono text-2xs text-gold/70">
                 {item.role}
               </div>
-              <div className="flex gap-1.5 items-center overflow-hidden">
-                {item.contextTags.slice(0, 1).map((tag, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/60 whitespace-nowrap bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
-                    {tag}
-                  </span>
-                ))}
-                {item.contextTags.length > 1 && (
-                  <span className="shrink-0 px-1.5 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/40 bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
-                    +{item.contextTags.length - 1}
-                  </span>
-                )}
+              <div className="flex gap-1.5 items-center overflow-hidden w-full">
+                <TagList tags={item.contextTags} />
               </div>
               <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300">
                 {item.type}

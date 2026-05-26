@@ -1,4 +1,21 @@
 {
+  "redirects": [
+    {
+      "source": "/Collection52/:path*",
+      "destination": "/favicon.svg",
+      "permanent": true
+    },
+    {
+      "source": "/Collection%2052/:path*",
+      "destination": "/favicon.svg",
+      "permanent": true
+    },
+    {
+      "source": "/Vector.svg",
+      "destination": "/favicon.svg",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

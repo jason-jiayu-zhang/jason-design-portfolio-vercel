@@ -24,8 +24,8 @@ function TiltCard({ to, children, style, className }: TiltCardProps) {
     // Normalized -1..1 offset from centre
     const nx = (e.clientX - cx) / (rect.width / 2)
     const ny = (e.clientY - cy) / (rect.height / 2)
-    // Tilt max ±6 degrees — subtle, premium feel
-    setTilt({ rx: -ny * 6, ry: nx * 6 })
+    // Tilt max ±2 degrees — very subtle, premium feel
+    setTilt({ rx: -ny * 2, ry: nx * 2 })
     // Spotlight follows cursor inside the card (0–100%)
     const px = ((e.clientX - rect.left) / rect.width) * 100
     const py = ((e.clientY - rect.top) / rect.height) * 100

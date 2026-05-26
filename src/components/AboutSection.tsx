@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { TIMELINE, BELIEFS, BOOKSHELF, ROTATIONS, PLAYGROUND, EDUCATION } from '../data/about'
 import type { TimelineEntry, Belief, BookEntry } from '../data/about'
 import { useScanline } from './ScanlineContext'
+import { BIO } from '../data/portfolio'
 
 // ─── Animated underline link ──────────────────────────────────────────────────
 function AnchorLine({
@@ -264,36 +265,11 @@ function persistHistory(history: HistoryEntry[]) {
   } catch { /* ignore */ }
 }
 
-// ─── Inline Zsh-style tab-completion hint ───────────────────────────────────────────
 const ALL_COMMANDS = [
-  'help', 'clear', 'ls', 'cd ', 'cat ', 'resume', 'contact', 'whoami',
+  'help', 'clear', 'ls', 'cd ', 'cat ', 'pwd', 'resume', 'contact', 'whoami',
   'sudo ', 'echo ', 'ping', 'coffee', 'uptime', 'rm -rf /', 'flip', 'unflip',
-  'sysinfo', 'scanline',
-]
-
-function getCompletionHint(
-  input: string,
-  activeTab: 'books' | 'music' | 'play'
-): string {
-  if (!input) return ''
-  const lower = input.toLowerCase()
-
-  if (lower.startsWith('cat ')) {
-    const arg = lower.slice(4)
-    const files = VFS[activeTab]?.map(f => f.file) ?? []
-    const match = files.find(f => f.startsWith(arg) && f !== arg)
-    if (match) return input + match.slice(arg.length)
-  } else if (lower.startsWith('cd ')) {
-    const arg = lower.slice(3)
-    const dirs = ['books', 'music', 'play', 'shelf', 'now']
-    const match = dirs.find(d => d.startsWith(arg) && d !== arg)
-    if (match) return input + match.slice(arg.length)
-  } else {
-    const match = ALL_COMMANDS.find(c => c.startsWith(lower) && c !== lower)
-    if (match) return input + match.slice(input.length)
-  }
-  return ''
-}
+  'sysinfo', 'scanline', 'scanline on', 'scanline off', 'scanline toggle'
+];
 
 function InteractiveTerminalPrompt({
   history,
@@ -301,78 +277,118 @@ function InteractiveTerminalPrompt({
   setCommandInput,
   handleCommand,
   inputRef,
-  activeTab,
 }: {
   history: Array<{ cmd: string, output: React.ReactNode }>;
   commandInput: string;
   setCommandInput: (val: string) => void;
   handleCommand: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
-  activeTab: 'books' | 'music' | 'play';
 }) {
   const historyEndRef = useRef<HTMLDivElement>(null)
-  const hint = getCompletionHint(commandInput, activeTab)
-  const hintSuffix = hint.slice(commandInput.length)
+  const isInitialMount = useRef(true)
+  const [historyIndex, setHistoryIndex] = useState(-1)
 
   useEffect(() => {
     if (historyEndRef.current && historyEndRef.current.parentElement) {
       const parent = historyEndRef.current.parentElement;
       parent.scrollTo({
         top: parent.scrollHeight,
-        behavior: 'smooth'
+        behavior: isInitialMount.current ? 'auto' : 'smooth'
       });
+      isInitialMount.current = false;
     }
   }, [history])
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (history.length > 0) {
+        const nextIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1);
+        setHistoryIndex(nextIndex);
+        setCommandInput(history[nextIndex].cmd);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex !== -1) {
+        const nextIndex = historyIndex + 1;
+        if (nextIndex >= history.length) {
+          setHistoryIndex(-1);
+          setCommandInput('');
+        } else {
+          setHistoryIndex(nextIndex);
+          setCommandInput(history[nextIndex].cmd);
+        }
+      }
+    } else {
+      if (e.key === 'Enter') {
+        setHistoryIndex(-1);
+      }
+      handleCommand(e);
+    }
+  };
+
   return (
-    <div className="pt-3 flex flex-col gap-2">
-      {history.length > 0 && (
-        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(207,204,187,0.2) transparent' }}>
-          {history.map((h, i) => (
-            <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
-              <div className="flex items-center gap-1.5">
-                <span className="font-mono text-2xs text-gold/50">›_</span>
-                <span className="font-mono text-xs text-parchment/70">{h.cmd}</span>
-              </div>
-              {h.output && (
-                <div className="font-mono text-xs text-parchment/40 pl-4 whitespace-pre-wrap">
-                  {h.output}
-                </div>
-              )}
-            </div>
-          ))}
-          <div ref={historyEndRef} />
+    <div className="mt-8 flex flex-col border border-accent/20 rounded-md overflow-hidden bg-[#0b0c10]/40 backdrop-blur-sm shadow-sm">
+      {/* Terminal Header */}
+      <div className="flex items-center px-3 py-1.5 border-b border-accent/20 bg-accent/5">
+        <div className="flex gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+          <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
         </div>
-      )}
-      <div
-        className="flex items-center gap-1.5 relative cursor-text min-h-[20px] shrink-0"
-        onClick={() => inputRef.current?.focus()}
-      >
-        <span className="font-mono text-2xs text-parchment/30">›_</span>
-        {/* Inline hint layer — the ghost text behind the visible cursor */}
-        <span
-          className="font-mono text-xs flex-1 whitespace-pre-wrap break-all pointer-events-none select-none"
-          aria-hidden
+        <div className="flex-1 text-center font-mono text-[10px] text-parchment/30 uppercase tracking-widest">
+          bash
+        </div>
+        <div className="w-[34px]" /> {/* Spacer to balance the dots for center alignment */}
+      </div>
+
+      {/* Terminal Body */}
+      <div className="p-3 flex flex-col gap-2">
+        {history.length > 0 && (
+          <div className="space-y-2 max-h-[320px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(207,204,187,0.2) transparent' }}>
+            {history.map((h, i) => (
+              <div key={i} className="space-y-1" style={{ animation: 'fadeIn 0.2s ease both' }}>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-2xs text-gold/50">›_</span>
+                  <span className="font-mono text-xs text-parchment/70">{h.cmd}</span>
+                </div>
+                {h.output && (
+                  <div className="font-mono text-xs text-parchment/40 pl-4 whitespace-pre-wrap">
+                    {h.output}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div ref={historyEndRef} />
+          </div>
+        )}
+        <div
+          className="flex items-center gap-1.5 relative cursor-text min-h-[20px] shrink-0"
+          onClick={() => inputRef.current?.focus()}
         >
-          <span className="text-parchment/70">{commandInput}</span>
-          {hintSuffix && (
-            <span style={{ color: 'rgba(207,204,187,0.22)' }}>{hintSuffix}</span>
-          )}
-          <Blink />
-        </span>
-        <input
-          ref={inputRef}
-          type="text"
-          value={commandInput}
-          onChange={(e) => setCommandInput(e.target.value)}
-          onKeyDown={handleCommand}
-          onBlur={() => {
-            // Keep focus if we click somewhere else inside the terminal, but allow blurring if scrolled away
-          }}
-          className="absolute opacity-0 inset-0 w-full h-full cursor-text"
-          spellCheck={false}
-          autoComplete="off"
-        />
+          <span className="font-mono text-2xs text-parchment/30">›_</span>
+          {/* Inline hint layer — the ghost text behind the visible cursor */}
+          <span
+            className="font-mono text-xs flex-1 whitespace-pre-wrap break-all pointer-events-none select-none"
+            aria-hidden
+          >
+            <span className="text-parchment/70">{commandInput}</span>
+            <Blink />
+          </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={commandInput}
+            onChange={(e) => setCommandInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={() => {
+              // Keep focus if we click somewhere else inside the terminal, but allow blurring if scrolled away
+            }}
+            className="absolute opacity-0 inset-0 w-full h-full cursor-text"
+            spellCheck={false}
+            autoComplete="off"
+          />
+        </div>
       </div>
     </div>
   )
@@ -414,11 +430,54 @@ export default function AboutSection() {
 
   const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
-      e.preventDefault()
-      // Accept the inline Zsh-style ghost hint if present
-      const hint = getCompletionHint(commandInput, activeTab)
-      if (hint) setCommandInput(hint)
-      return
+      e.preventDefault();
+      if (!commandInput) return;
+      const lower = commandInput.toLowerCase();
+      let completions: string[] = [];
+
+      if (lower.startsWith('cat ')) {
+        const arg = lower.slice(4);
+        const files = VFS[activeTab]?.map(f => f.file) ?? [];
+        completions = files.filter(f => f.startsWith(arg)).map(f => 'cat ' + f);
+      } else if (lower.startsWith('cd ')) {
+        const arg = lower.slice(3);
+        const dirs = ['books', 'music', 'play', 'shelf', 'now'];
+        completions = dirs.filter(d => d.startsWith(arg)).map(d => 'cd ' + d);
+      } else {
+        completions = ALL_COMMANDS.filter(c => c.startsWith(lower));
+      }
+
+      if (completions.length === 1) {
+        setCommandInput(completions[0]);
+      } else if (completions.length > 1) {
+        // Find longest common prefix
+        let prefix = completions[0];
+        for (let i = 1; i < completions.length; i++) {
+          let j = 0;
+          while (j < prefix.length && j < completions[i].length && prefix[j] === completions[i][j]) {
+            j++;
+          }
+          prefix = prefix.slice(0, j);
+        }
+
+        if (prefix.length > commandInput.length) {
+          setCommandInput(prefix);
+        } else {
+          // If we already have the longest common prefix, show the possibilities in history
+          const output = completions.map(c => {
+            if (c.startsWith('cat ') && commandInput.startsWith('cat ')) return c.slice(4);
+            if (c.startsWith('cd ') && commandInput.startsWith('cd ')) return c.slice(3);
+            return c.trim();
+          }).join('  ');
+
+          setHistory(prev => {
+            const next = [...prev, { cmd: commandInput, output }];
+            persistHistory(next);
+            return next;
+          });
+        }
+      }
+      return;
     }
 
     if (e.key === 'Enter') {
@@ -431,7 +490,7 @@ export default function AboutSection() {
       if (lowerCmd === 'help') {
         output = [
           'Available commands:',
-          '  help, clear, ls, cd <dir>, cat <file>',
+          '  help, clear, ls, cd <dir>, cat <file>, pwd',
           '  resume, contact, whoami, uptime',
           '  sudo, echo, ping, coffee, flip, unflip, rm -rf /',
           '  scanline [on|off|toggle]',
@@ -445,6 +504,8 @@ export default function AboutSection() {
         persistHistory(cleared)
         setCommandInput('')
         return
+      } else if (lowerCmd === 'pwd') {
+        output = `~/jjz/personal/${activeTab}`
       } else if (lowerCmd === 'cd ..' || lowerCmd === 'cd ~') {
         output = '~/jjz/personal'
       } else if (lowerCmd.startsWith('cd ')) {
@@ -476,18 +537,19 @@ export default function AboutSection() {
         }
       } else if (lowerCmd === 'cat') {
         // bare cat — ASCII kitty easter egg
-        output = <pre className="font-mono text-2xs leading-tight mt-1">{`          —————
-					╱ ＞　　 フ
-        |   _  _l
-       ╱\`  ミ＿xノ
-      /　　　 　 |
-			 /   |    J
-    _|    \\ \\ \\
+        output = <pre className="font-mono text-2xs leading-tight mt-1">{`
+          ——————
+         ╱ ＞　　 フ
+        |   _  _1
+       ╱ \\\` ミ_xノ
+      /        |
+      /   |    J
+   __|     \\ \\ \\
   ╱ _|     | | |
  | (_ \\____\\_),_)
-  ╲ _)`}</pre>
+  \\__)`}</pre>
       } else if (lowerCmd === 'resume') {
-        window.open('https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1', '_blank')
+        window.open(BIO.resumeUrl, '_blank')
         output = 'Opening resume...'
       } else if (lowerCmd === 'contact') {
         output = "Let's connect! Check the footer for my social links."
@@ -573,14 +635,14 @@ export default function AboutSection() {
               <span className="w-1.5 h-1.5 rounded-full bg-gold/70 animate-pulse" />
               BEHIND THE PIXELS
             </div>
-            <h2 
-              className="font-sans font-black text-parchment leading-tight mb-3" 
+            <h2
+              className="font-sans font-black text-parchment leading-tight mb-3"
               style={{ fontSize: 'clamp(1.4rem, 2vw, 1.8rem)', letterSpacing: '-0.04em' }}
             >
               I'm Jason—a hybrid <span className="text-gold">designer × engineer</span> who believes that the most profound digital experiences live at the intersection of rigorous logic and poetic expression.
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
             <div>
               <p className="font-mono text-xs text-parchment/50 leading-relaxed">
@@ -593,7 +655,7 @@ export default function AboutSection() {
               </p>
             </div>
           </div>
-          
+
           {/* Terminal-like metadata */}
           <div className="mt-8 flex flex-wrap gap-6 pt-6 border-t border-accent/20">
             <div className="flex flex-col gap-1.5">
@@ -614,53 +676,49 @@ export default function AboutSection() {
         </div>
 
         {/* Imagery Pane */}
-        <div className="col-span-1 lg:col-span-1 px-4 sm:px-6 lg:px-8 py-8 lg:py-10 flex flex-col justify-center items-center relative overflow-hidden">
-          {/* Subtle grid background for the image pane */}
-          <div 
-            className="absolute inset-0 opacity-[0.03] pointer-events-none"
-            style={{ 
-              backgroundImage: 'linear-gradient(to right, #cfccbb 1px, transparent 1px), linear-gradient(to bottom, #cfccbb 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
+        <div className="col-span-1 lg:col-span-1 px-4 sm:px-6 lg:px-8 py-8 lg:py-10 flex flex-col justify-center items-center relative overflow-hidden bg-[#16192b]">
+          {/* Subtle dotted background for the image pane */}
+          <div
+            className="absolute inset-0 opacity-[0.15] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(#cfccbb 1px, transparent 1px)',
+              backgroundSize: '16px 16px'
             }}
           />
-          
+
           <div className="relative w-full max-w-[280px] aspect-[4/5] mx-auto flex items-center justify-center">
             {/* Image 1: Main portrait */}
-            <div className="absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div className="group absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
               <div className="relative w-full h-full overflow-hidden">
-                <img 
-                  src="/images/IMG_8345.JPG" 
-                  alt="Jason Portrait" 
-                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity hover:grayscale-0 hover:mix-blend-normal hover:brightness-100 transition-all duration-700" 
+                <img
+                  src="/images/IMG_8345.JPG"
+                  alt="Jason Portrait"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
                 />
                 {/* Scanline overlay */}
-                <div 
-                  className="absolute inset-0 pointer-events-none"
+                <div
+                  className={`absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-0 ${scanlineActive ? 'opacity-100' : 'opacity-30'}`}
                   style={{
                     background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
-                    backgroundSize: '100% 4px, 3px 100%',
-                    opacity: scanlineActive ? 1 : 0.3,
-                    transition: 'opacity 0.3s ease'
+                    backgroundSize: '100% 4px, 3px 100%'
                   }}
                 />
               </div>
             </div>
-            
+
             {/* Image 2: Secondary / Action shot */}
-            <div className="absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30 transition-all duration-500">
+            <div className="group absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30 transition-all duration-500">
               <div className="relative w-full h-full overflow-hidden">
-                <img 
-                  src="/images/Jason Zhang_26-04-29_Stripe_Booth2_4954.jpg" 
-                  alt="Jason at work" 
-                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity hover:grayscale-0 hover:mix-blend-normal hover:brightness-100 transition-all duration-700" 
+                <img
+                  src="/images/Jason Zhang_26-04-29_Stripe_Booth2_4954.jpg"
+                  alt="Jason at work"
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
                 />
-                <div 
-                  className="absolute inset-0 pointer-events-none"
+                <div
+                  className={`absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-0 ${scanlineActive ? 'opacity-100' : 'opacity-30'}`}
                   style={{
                     background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
-                    backgroundSize: '100% 4px, 3px 100%',
-                    opacity: scanlineActive ? 1 : 0.3,
-                    transition: 'opacity 0.3s ease'
+                    backgroundSize: '100% 4px, 3px 100%'
                   }}
                 />
               </div>
@@ -740,7 +798,7 @@ export default function AboutSection() {
 
           {/* Resume CTA */}
           <div className="mt-8 pt-6 border-t border-accent/20">
-            <AnchorLine href="https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1">
+            <AnchorLine href={BIO.resumeUrl}>
               <span className="font-mono text-xs tracking-label uppercase text-gold/70 hover:text-gold transition-colors">
                 View Full Resume ↗
               </span>
@@ -861,7 +919,6 @@ export default function AboutSection() {
                     setCommandInput={setCommandInput}
                     handleCommand={handleCommand}
                     inputRef={inputRef}
-                    activeTab={activeTab}
                   />
                 </div>
               </TerminalSection>
@@ -910,7 +967,6 @@ export default function AboutSection() {
                     setCommandInput={setCommandInput}
                     handleCommand={handleCommand}
                     inputRef={inputRef}
-                    activeTab={activeTab}
                   />
                 </div>
               </TerminalSection>
@@ -979,7 +1035,6 @@ export default function AboutSection() {
                   setCommandInput={setCommandInput}
                   handleCommand={handleCommand}
                   inputRef={inputRef}
-                  activeTab={activeTab}
                 />
               </TerminalSection>
             )}

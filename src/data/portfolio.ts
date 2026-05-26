@@ -13,7 +13,7 @@ export const BIO: BioProfile = {
   roles: ['DESIGN ENGINEER', 'PRODUCT DESIGNER'],
   email: 'jason.jiayu.zhang@gmail.com',
   resumeUrl:
-    'https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1',
+    '/JasonResume.pdf',
   tagline: 'a product without users is merely a project.',
   socials: [
     {

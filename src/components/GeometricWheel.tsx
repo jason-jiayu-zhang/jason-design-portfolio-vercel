@@ -81,12 +81,12 @@ const StaticBackground = memo(() => {
       }
       .ambient-ring-cw {
         transform-origin: ${CX}px ${CY}px;
-        animation: spin-cw 120s linear infinite;
+        animation: spin-cw 400s linear infinite;
         will-change: transform;
       }
       .ambient-ring-ccw {
         transform-origin: ${CX}px ${CY}px;
-        animation: spin-ccw 90s linear infinite;
+        animation: spin-ccw 300s linear infinite;
         will-change: transform;
       }
       .pulse-active {
