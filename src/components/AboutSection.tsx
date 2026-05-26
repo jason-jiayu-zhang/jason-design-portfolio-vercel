@@ -562,6 +562,120 @@ export default function AboutSection() {
         </div>
       </div>
 
+      {/* ── Personal Introduction Module ───────────────────────────────────── */}
+      <div
+        className="grid grid-cols-1 lg:grid-cols-3 gap-px border-l border-r border-b border-accent/15 mx-4 sm:mx-6 lg:mx-10"
+      >
+        {/* Copy Pane */}
+        <div className="col-span-1 lg:col-span-2 px-4 sm:px-6 lg:px-8 py-8 lg:py-10 border-b lg:border-b-0 lg:border-r border-accent/20 flex flex-col justify-center">
+          <div className="mb-8">
+            <div className="label-caps mb-2 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold/70 animate-pulse" />
+              BEHIND THE PIXELS
+            </div>
+            <h2 
+              className="font-sans font-black text-parchment leading-tight mb-3" 
+              style={{ fontSize: 'clamp(1.4rem, 2vw, 1.8rem)', letterSpacing: '-0.04em' }}
+            >
+              I'm Jason—a hybrid <span className="text-gold">designer × engineer</span> who believes that the most profound digital experiences live at the intersection of rigorous logic and poetic expression.
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+            <div>
+              <p className="font-mono text-xs text-parchment/50 leading-relaxed">
+                My work is driven by a fascination with systems. Whether I'm architecting a robust front-end component library or crafting the micro-interactions of a physical product interface, I strive for a balance between aesthetic purity and functional resilience.
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-xs text-parchment/50 leading-relaxed">
+                Beyond the editor, I am deeply invested in human-computer interaction history, photography, and exploring how artifacts shape our daily rituals. I build tools that feel like extensions of thought.
+              </p>
+            </div>
+          </div>
+          
+          {/* Terminal-like metadata */}
+          <div className="mt-8 flex flex-wrap gap-6 pt-6 border-t border-accent/20">
+            <div className="flex flex-col gap-1.5">
+              <span className="font-mono text-2xs text-parchment/30 uppercase tracking-wider">Status</span>
+              <span className="font-mono text-xs text-parchment/70">Online, Creating</span>
+            </div>
+            <div className="w-px h-8 bg-accent/20 hidden sm:block" />
+            <div className="flex flex-col gap-1.5">
+              <span className="font-mono text-2xs text-parchment/30 uppercase tracking-wider">Location</span>
+              <span className="font-mono text-xs text-parchment/70">San Francisco, CA</span>
+            </div>
+            <div className="w-px h-8 bg-accent/20 hidden sm:block" />
+            <div className="flex flex-col gap-1.5">
+              <span className="font-mono text-2xs text-parchment/30 uppercase tracking-wider">Class</span>
+              <span className="font-mono text-xs text-parchment/70">Design Engineer</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Imagery Pane */}
+        <div className="col-span-1 lg:col-span-1 px-4 sm:px-6 lg:px-8 py-8 lg:py-10 flex flex-col justify-center items-center relative overflow-hidden">
+          {/* Subtle grid background for the image pane */}
+          <div 
+            className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            style={{ 
+              backgroundImage: 'linear-gradient(to right, #cfccbb 1px, transparent 1px), linear-gradient(to bottom, #cfccbb 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}
+          />
+          
+          <div className="relative w-full max-w-[280px] aspect-[4/5] mx-auto flex items-center justify-center">
+            {/* Image 1: Main portrait */}
+            <div className="absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <div className="relative w-full h-full overflow-hidden">
+                <img 
+                  src="/images/IMG_8345.JPG" 
+                  alt="Jason Portrait" 
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity hover:grayscale-0 hover:mix-blend-normal hover:brightness-100 transition-all duration-700" 
+                />
+                {/* Scanline overlay */}
+                <div 
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+                    backgroundSize: '100% 4px, 3px 100%',
+                    opacity: scanlineActive ? 1 : 0.3,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                />
+              </div>
+            </div>
+            
+            {/* Image 2: Secondary / Action shot */}
+            <div className="absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30 transition-all duration-500">
+              <div className="relative w-full h-full overflow-hidden">
+                <img 
+                  src="/images/Jason Zhang_26-04-29_Stripe_Booth2_4954.jpg" 
+                  alt="Jason at work" 
+                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity hover:grayscale-0 hover:mix-blend-normal hover:brightness-100 transition-all duration-700" 
+                />
+                <div 
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+                    backgroundSize: '100% 4px, 3px 100%',
+                    opacity: scanlineActive ? 1 : 0.3,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Decorative crosshairs */}
+            <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-accent/50 z-30 pointer-events-none" />
+            <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-accent/50 z-30 pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] text-accent/40 z-0 select-none">
+              ASSET_SYS_READY
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── Three-column layout ───────────────────────────────────────────── */}
       <div
         className="grid grid-cols-1 lg:grid-cols-3 gap-px border-l border-r border-accent/15 mx-4 sm:mx-6 lg:mx-10"
