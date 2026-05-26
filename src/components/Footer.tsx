@@ -54,8 +54,11 @@ export default function Footer() {
             className="w-[18px] h-[18px] object-contain"
             alt="Logo"
           />
-          <div className="w-px h-3 bg-accent/50" />
-          <span className="font-mono text-2xs text-parchment/25 tracking-label uppercase">
+          <span className="font-mono text-2xs text-parchment/70 tracking-label uppercase">
+            {BIO.fullName}
+          </span>
+          <div className="hidden sm:block w-px h-3 bg-accent/50" />
+          <span className="hidden sm:block font-mono text-2xs text-parchment/25 tracking-label uppercase">
             {BIO.roles[0]}
           </span>
         </div>
@@ -83,11 +86,11 @@ export default function Footer() {
         className="flex flex-col sm:flex-row items-center justify-between gap-2 px-8 lg:px-10 py-3 sm:py-2 text-center"
         style={{ borderTop: '1px solid rgba(56,64,106,0.15)' }}
       >
-        <span className="font-mono text-2xs text-parchment/10 tracking-label">
-          {BIO.fullName.toUpperCase()}
+        <span className="font-mono text-2xs text-parchment/15 tracking-label uppercase">
+          DESIGNED & ENGINEERED BY {BIO.fullName.split(' ')[0]}
         </span>
-        <span className="font-mono text-2xs text-parchment/10 tracking-label">
-          {BIO.email}
+        <span className="font-mono text-2xs text-parchment/15 tracking-label uppercase">
+          ALL SYSTEMS NOMINAL
         </span>
       </div>
     </footer>

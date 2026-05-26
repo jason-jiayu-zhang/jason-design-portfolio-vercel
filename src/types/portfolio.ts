@@ -10,6 +10,7 @@ export type ProjectCategory =
   | 'Mentorship'
   | 'Graphics'
   | 'Marketing'
+  | 'Tooling'
 
 export type ExperimentType =
   | 'Promotional Graphic'

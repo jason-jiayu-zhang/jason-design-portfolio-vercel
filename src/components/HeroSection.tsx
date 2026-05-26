@@ -415,14 +415,16 @@ export default function HeroSection() {
                     </div>
                   </AnimatedElement>
                   <AnimatedElement delay={120} className="mt-1">
-                    <div
-                      className="font-sans font-bold text-4xl text-parchment leading-none tracking-tight"
+                    <Link
+                      to={`/work/${project.id}`}
+                      viewTransition
+                      className="font-sans font-bold text-4xl text-parchment leading-none tracking-tight block hover:opacity-80 transition-opacity cursor-pointer"
                       style={{
                         viewTransitionName: `project-title-${project.id}`,
                       }}
                     >
                       {project.title}
-                    </div>
+                    </Link>
                   </AnimatedElement>
                   <AnimatedElement delay={180}>
                     <div className="font-mono text-sm text-parchment/60 tracking-tight mt-1">

@@ -62,17 +62,16 @@ function SectionRule({
       <span className="font-mono text-2xs tracking-label uppercase" style={{ color: `${accentColor}90` }}>
         {label}
       </span>
-      {/* Copy link button */}
       <button
         onClick={handleCopyLink}
         aria-label={`Copy link to ${label} section`}
-        className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 relative"
+        className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 relative flex items-center w-4 h-4"
         style={{ color: copied ? accentColor : 'rgba(207,204,187,0.35)' }}
       >
         {copied ? (
-          <span className="font-mono text-2xs" style={{ color: accentColor }}>✓ Copied!</span>
+          <span className="font-mono text-2xs whitespace-nowrap absolute left-0" style={{ color: accentColor }}>✓ Copied!</span>
         ) : (
-          <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg viewBox="0 0 16 16" className="w-3 h-3 absolute left-0" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2-2a2.5 2.5 0 0 0-3.5-3.5L7.5 5" strokeLinecap="round" />
             <path d="M9.5 6.5a2.5 2.5 0 0 0-3.5 0l-2 2a2.5 2.5 0 0 0 3.5 3.5L8.5 11" strokeLinecap="round" />
           </svg>
@@ -708,7 +707,7 @@ function VisualShowcase({
             </h5>
 
             {/* Description */}
-            <p className="font-mono text-3xs text-parchment/35 mt-1 leading-normal group-hover:text-parchment/50 transition-colors truncate w-full">
+            <p className="font-mono text-xs text-parchment/55 mt-1.5 leading-[1.6] group-hover:text-parchment/70 transition-colors w-full">
               {item.description}
             </p>
 

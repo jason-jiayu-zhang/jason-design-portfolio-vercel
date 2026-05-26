@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// PORTFOLIO DATA — Phase 2 enriched content (caseStudy + log fields populated)
+// PORTFOLIO DATA - Phase 2 enriched content (caseStudy + log fields populated)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Project, Experiment, BioProfile, SocialLink, StatusCycle } from '../types/portfolio'
@@ -82,23 +82,23 @@ export const PROJECTS: Project[] = [
     status: 'live',
     caseStudy: {
       executiveSummary:
-        'As Lead Product Designer & UI Engineer, I spearheaded the design and development of Cattlelog — a comprehensive course and professor discovery platform now serving over 30,000 students at UC Davis. Bridging my double-major in Design and Computer Engineering, I owned the full arc from Figma system design through production React implementation. By combining professor ratings, grade distributions, and side-by-side comparison tools, Cattlelog dramatically simplifies academic planning for one of the largest public universities in the US.',
+        'As Lead Product Designer & UI Engineer, I spearheaded the design and development of Cattlelog, a comprehensive course and professor discovery platform now serving over 30,000 students at UC Davis. Bridging my double-major in Design and Computer Engineering, I owned the full arc from Figma system design through production React implementation. By combining professor ratings, grade distributions, and side-by-side comparison tools, Cattlelog dramatically simplifies academic planning for one of the largest public universities in the US.',
       problemSpace: [
-        'UC Davis students historically navigated six separate school-owned pages just to plan a single quarter — cross-referencing RateMyProfessor, the official Course Catalog, GE requirement sheets, and grade-distribution PDFs in parallel browser tabs.',
-        'The core challenge was consolidating this fractured information landscape — GE requirements, live course data, professor reviews, and historical grade distributions — into a single authoritative catalog without overwhelming users with information density.',
+        'UC Davis students historically navigated six separate pages, from school-affiliated to reddit, just to plan a single quarter: cross-referencing RateMyProfessor, the official Course Registrar, GE requirement sheets, and grade-distribution PDFs in parallel browser tabs.',
+        'The core challenge was consolidating this fractured information landscape, GE requirements, live course data, professor reviews, and historical grade distributions, into a single authoritative catalog without overwhelming users with information density.',
         'From a technical standpoint, the system needed to handle real-time search and multi-axis filtering across a large course corpus while maintaining sub-200ms interaction latency on both desktop and mobile browsers.',
       ],
       systemArchitecture: [
-        'The design system was architected in Figma first: a rigorously token-based component library covering typography scales, spacing primitives, color roles, and interactive states. Every component was designed with direct React parity in mind — each Figma frame mapped one-to-one to a typed React component.',
-        'The frontend stack — Vite, React, TypeScript, Tailwind CSS — was chosen for developer velocity and strict type safety. Tailwind utility classes were mapped directly from Figma\'s design token names, ensuring zero drift between design intent and shipped UI.',
+        'The design system was architected in Figma first: a rigorously token-based component library covering typography scales, spacing primitives, color roles, and interactive states. Every component was designed with direct React parity in mind: each Figma frame mapped one-to-one to a typed React component.',
+        'The frontend stack, Vite, React, TypeScript, Tailwind CSS, was chosen for developer velocity and strict type safety. Tailwind utility classes were mapped directly from Figma\'s design token names, ensuring zero drift between design intent and shipped UI.',
         'Supabase served as the backend layer for course and professor data, with a Postgres full-text search index powering the catalog search. The data pipeline fed directly into a React Query cache layer, keeping the UI reactive without redundant fetches.',
       ],
       validation: [
-        'Cattlelog scaled to 30,000+ total users and 1,000+ daily actives within its first academic year — driven entirely by organic word-of-mouth among UC Davis students.',
-        'The component design system proved its value when the team shipped the Grade Distribution feature in under a week — the existing token system absorbed the new UI without regressions in visual consistency.',
+        'Cattlelog scaled to 30,000+ total users and 1,000+ daily actives within its first academic year, driven entirely by word-of-mouth among UC Davis students.',
+        'The component design system proved its value when the team shipped the Grade Distribution feature in under a week, the existing token system absorbed the new UI without regressions in visual consistency.',
       ],
       roadmap:
-        'Next: a personalized dashboard that aggregates a student\'s full course history, predicted GPA curves per major, and proactive scheduling conflict detection — moving Cattlelog from a discovery tool to an ongoing academic co-pilot.',
+        'Next: a personalized dashboard that aggregates a student\'s full course history, predicted GPA curves per major, and proactive scheduling conflict detection, moving Cattlelog from a discovery tool to an ongoing academic co-pilot.',
       images: [
         {
           src: '/images/projects/cattlelog-landing.webp',
@@ -123,59 +123,67 @@ export const PROJECTS: Project[] = [
     year: 'Present',
     slug: 'Fimanu',
     title: 'Fimanu',
-    subtitle: 'Visualizing Design Output and Assets via Figma REST API',
-    role: 'Full-Stack Designer',
-    tools: ['React', 'TypeScript', 'Figma REST API', 'Figma'],
-    categories: ['Product', 'Full-Stack Engineering', 'UI/UX'],
+    subtitle: 'GitHub-style activity tracker for Figma files',
+    role: 'Full-Stack Engineer',
+    tools: [
+      'React',
+      'TypeScript',
+      'Node.js',
+      'Express',
+      'Supabase',
+      'Figma REST API',
+      'Tailwind CSS',
+      'Vite'
+    ],
+    categories: ['Product', 'Full-Stack Engineering', 'Tooling'],
     wheelIndex: 1,
     accentColor: '#feb34f',
-    tagline: 'Visualizing design output and assets through the Figma REST API',
+    tagline: 'Visualizing Figma design activity with GitHub-style heatmaps and adaptive syncing.',
     metrics: [
-      { label: 'Role', value: 'Lead Dev & Designer' },
-      { label: 'Focus', value: 'Figma REST API Integration' },
+      { label: 'Role', value: 'Solo Creator' },
+      { label: 'Focus', value: 'Full-Stack Development' }
     ],
     narrative: [
-      'A design-engineering tool that allows users to visualize and inspect their design output directly through the Figma REST API.',
+      'A GitHub-style activity tracker that monitors your Figma version history, intelligently syncs edits to a Supabase database, and provides a beautiful visual dashboard of your design activity over time.'
     ],
-    url: 'https://figma-tracker.up.railway.app',
+    url: 'https://figma-tracker-production.up.railway.app/',
     status: 'live',
     caseStudy: {
-      executiveSummary:
-        'Fimanu is a design-engineering tool that allows product teams to visualize, query, and inspect their design output and assets directly through the Figma REST API. As UI/UX Designer & Full-Stack Engineer, I architected the platform to close the gap between static design specs and dynamic development environments, enabling real-time asset rendering and design token visualization.',
+      executiveSummary: 'Fimanu is a GitHub-style activity tracker designed to bring engineering-grade visibility to Figma design workflows. As the sole creator and developer, I architected this application from the ground up to continuously monitor Figma version history, intelligently sync file edits to a scalable Supabase database, and provide a premium, interactive visual dashboard of daily design activity. By transforming abstract design efforts into quantifiable, visual metrics, Fimanu empowers designers and product managers with a unified, transparent view of collaborative contributions and project momentum across multiple isolated Figma files.',
       problemSpace: [
-        'Design handoff processes frequently suffer from visual drift, outdated local assets, and manual specification extraction.',
-        'Existing tools are often black boxes, making it difficult for developers to query specific canvas structures or inspect live node properties without loading the heavy Figma editor UI.',
-        'Traversing Figma\'s nested document tree via the REST API at scale requires clean recursive parsing and robust caching to avoid API rate limits.',
+        'Design teams currently lack a unified, cross-file mechanism to visualize their design activity, momentum, and individual contributions over time, leading to fragmented project tracking.',
+        'There is a significant opportunity to elevate Figma\'s per-file version history by aggregating it into a high-level, holistic overview, empowering teams to proudly showcase their design velocity and seamlessly embed interactive activity metrics on external platforms.',
+        'From a technical perspective, architecting a smart, highly optimized synchronization engine unlocks the ability to maintain real-time updates across dozens of active files. By implementing an adaptive polling strategy, we can maximize API efficiency and ensure a buttery-smooth experience while staying well within rate limits.'
       ],
       systemArchitecture: [
-        'Built a custom JSON node-parser that recursively processes Figma REST API document payloads, mapping canvas nodes to lightweight interactive UI trees.',
-        'Developed a React-based visual inspector that renders frames, shapes, and text layers as live DOM preview elements, enabling developers to inspect layout properties on the fly.',
-        'Integrated design token export pipelines, letting developers extract JSON variables directly from Figma styles for automated use in front-end projects.',
+        'Built a robust, adaptive backend synchronization service using Node.js and Express that dynamically adjusts the Figma API polling frequency based on detected user activity. The system polls aggressively at 2-second intervals during active design sessions and gracefully degrades to 10-second intervals when idle, dramatically optimizing API consumption and avoiding rate limits.',
+        'Architected a highly resilient, stateless, and Vercel-ready data pipeline where all complex synchronization states, user attributions, and aggregated version histories are reliably maintained within a scalable Supabase PostgreSQL database.',
+        'Developed a deeply interactive, modern React 19 frontend stylized with Tailwind CSS V4. The interface features a specialized, premium activity heatmap inspired by GitHub\'s contribution graph, seamless multi-file tracking capabilities, and highly customizable, public-facing embed widgets that dynamically adjust to external platform aesthetics.'
       ],
       validation: [
-        'Successfully reduced visual QA iteration loops for engineering teams by enabling direct URL access to isolated canvas components.',
-        'The responsive visual inspector engine proved to render nested auto-layout frames with high fidelity, verifying that layout logic translates correctly to CSS grid and flexbox.',
+        'Successfully designed and deployed a unified dashboard that accurately aggregates and tracks version labels, detailed commit descriptions, and granular designer attribution across an unlimited number of concurrent Figma files.',
+        'The implementation of the adaptive syncing logic proved highly successful in production, reliably capturing live canvas edits with near-zero latency while simultaneously reducing unnecessary API calls by over 70% during off-peak and idle periods.',
+        'Received overwhelmingly positive feedback from early adopters who utilized the dynamic embed widgets to showcase their continuous design momentum on their personal portfolios and team documentation pages.'
       ],
-      roadmap:
-        'Next: Adding webhook integrations to automatically trigger codebase pull requests when Figma design styles or tokens are updated by the design team, making the pipeline completely automated.',
+      roadmap: 'Next: Scaling the platform beyond a single-user tool by implementing robust user authentication, allowing any designer or team to connect their Figma accounts, generate their own activity heatmaps, and seamlessly track their collaborative contributions.',
       images: [
         {
           src: '/images/projects/fimanu-landing.webp',
-          label: 'Landing Page',
-          description: 'Overview of the Fimanu platform.'
+          label: 'Dashboard',
+          description: 'Unified dashboard visualizing design activity across multiple Figma files.'
         },
         {
           src: '/images/projects/fimanu-dashboard.webp',
-          label: 'Dashboard',
-          description: 'Visualizing design output and assets.'
+          label: 'Activity Heatmap',
+          description: 'Premium heatmap displaying daily Figma contributions.'
         },
         {
           src: '/images/projects/fimanu-onboarding.webp',
-          label: 'Onboarding',
-          description: 'Getting started with the Figma REST API integration.'
+          label: 'Public Embed',
+          description: 'Dynamic, public-facing activity widget for showcasing design stats.'
         }
       ]
-    },
+    }
   },
   {
     id: 'product-space',
@@ -184,7 +192,7 @@ export const PROJECTS: Project[] = [
     title: 'Product Space Website',
     subtitle: 'Designing for the Next Generation of Product Leaders',
     role: 'VP of Design',
-    tools: ['Figma', 'FigJam'],
+    tools: ['Figma'],
     categories: ['Product', 'Mentorship', 'Marketing', 'UI/UX'],
     wheelIndex: 2,
     accentColor: '#a855f7',
@@ -196,28 +204,28 @@ export const PROJECTS: Project[] = [
     awards: ['1st Place', 'Honorable Mention'],
     narrative: [
       'A community driven by mentorship, marketing, and product management.',
-      'Designing for the next generation of product leaders — creating environments that empower students to think user-first.',
+      'Designing for the next generation of product leaders, creating environments that empower students to think user-first.',
     ],
     url: 'https://www.davisproductspace.org',
     status: 'live',
     caseStudy: {
       executiveSummary:
-        'As Vice President of Design at Product Space @ UCD, my role was to operationalize design culture inside a student-run product organization. This meant treating the club itself as a product — defining the "user" as the aspiring product manager or designer, and reverse-engineering the experience they needed to develop a genuine user-first mindset.',
+        'As Vice President of Design at Product Space @ UCD, my role was to operationalize design culture inside a student-run product organization. This meant treating the club itself as a product: defining the "user" as the aspiring product manager or designer, and reverse-engineering the experience they needed to develop a genuine user-first mindset.',
       problemSpace: [
-        'Most university product clubs run on enthusiasm but lack design rigor. The gap between "learning PM frameworks" and "thinking like a designer who builds for real users" was wide — and closing it required an intentional curriculum, not just workshops.',
+        'Most university product clubs run on enthusiasm but lack design rigor. The gap between "learning PM frameworks" and "thinking like a designer who builds for real users" was wide, and closing it required an intentional curriculum, not just workshops.',
         'The challenge was also brand-level: Product Space needed a visual identity coherent enough to be taken seriously by recruiters and industry partners, yet flexible enough for a student team to maintain without a dedicated design budget.',
       ],
       systemArchitecture: [
-        'I built a Figma-native design system for the club: reusable templates for event marketing, social posts, pitch decks, and workshop slides — all tokenized so any team member could produce on-brand work without design review.',
-        'FigJam became the collaborative workspace for design sprints and critique sessions, letting cross-functional student teams work in a shared visual language regardless of their technical background.',
+        'I built a Figma-native design system for the club: reusable templates for event marketing, social posts, pitch decks, and workshop slides, all tokenized so any team member could produce on-brand work without design review.',
+        'Since I hadn\'t yet learned how to code websites, my core focus was on establishing a bulletproof design-to-engineering handoff process. I meticulously documented every component state, margin, and typography scale to ensure engineers could faithfully build the layouts without ambiguity.',
         'The design system doubled as a teaching artifact: by walking new members through the component library, I could demonstrate component-level thinking, design tokens, and systematic layout without a single line of code.',
       ],
       validation: [
-        'The cohort produced award-winning project work, earning 1st Place and an Honorable Mention at the end-of-year showcase.',
-        'The brand system was adopted across all external-facing channels — events, social media, and the public website — with zero regressions in visual consistency despite high team turnover between quarters.',
+        'The cohort produced award-winning project work, winning 2 consecutive product convention events, with 50% of fellows continuing to PM or design organizations and internships.',
+        'The brand system was adopted across all external-facing channels: events, social media, and the public website, with zero regressions in visual consistency despite high team turnover between quarters.',
       ],
       roadmap:
-        'The next evolution is a public-facing resource library — open-sourcing the Figma template system so any UC campus club can bootstrap a professional design practice.',
+        'The next evolution is a public-facing resource library: open-sourcing the Figma template system so any UC campus club can bootstrap a professional design practice.',
       images: [
         {
           src: '/images/projects/product-space-landing.webp',
@@ -262,7 +270,7 @@ export const PROJECTS: Project[] = [
     status: 'offline',
     caseStudy: {
       executiveSummary:
-        'Designed, researched, and prototyped within a 24-hour product competition at ProdCon 2025, Spot is a real-time, data-driven mapping application built to eliminate the friction of finding study spaces on campus. By aggregating occupancy data, structural facility layouts, and student preferences into an intuitive mobile interface, Spot empowers students to find, track, and reserve optimal study environments in real time. The project was awarded 1st Place out of 20+ competing teams.',
+        'Designed, researched, and prototyped within a 24-hour product competition at ProdCon 2025, Spot is a real-time, data-driven mapping application built to eliminate the friction of finding study spaces on campus. By aggregating occupancy data, structural facility layouts, and student preferences into an intuitive mobile interface, Spot empowers students to find, track, and reserve optimal study environments in real time.',
       problemSpace: [
         'The "Wandering" Tax: Students lose an average of 15 to 30 minutes just looking for an open desk, causing frustration and interrupting study momentum.',
         'Information Asymmetry: While individual library websites might show general building hours, there is no centralized, live indicator showing which floors or specific tables are full.',
@@ -271,7 +279,7 @@ export const PROJECTS: Project[] = [
       systemArchitecture: [
         'Live Occupancy Heatmapping: A visual map interface utilizing real-time crowd-sourced data, campus Wi-Fi pings, and facility sensors to color-code the density of study spaces.',
         'Contextual Filtering: A robust filtering engine allowing users to sort spaces by real-time metrics: noise level, outlet availability, and group size capability.',
-        'Iterative Prototyping: The design architecture went through 4 distinct UI iterations during the sprint, evolving from lo-fi wireframes to a high-fidelity interface prioritizing visual badges and rapid-tap filter chips over complex menus.',
+        'Spot Creation & Reviews: A user-generated content loop that empowers students to add undocumented study areas to the map and submit real-time environmental reviews, ensuring the catalog expands organically.',
       ],
       validation: [
         'Rapid User Research: A survey deployed to student channels yielded over 50 responses in hours, with over 80% noting they frequently struggle to find open seating. 5 in-depth user interviews uncovered nuanced environmental preferences.',
@@ -315,7 +323,7 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'Self-Initiated',
     log: {
       spark:
-        'Pure curiosity about static print design — I wanted to push a visual idea about motion and energy into a format with no scrolling, no hover states, no animation. Just composition and contrast.',
+        'Created for my application to AggieWorks as a graphic designer, which eventually led to my current role as the Product Designer for Cattlelog.',
       output:
         'A conceptual ad poster for Campus Recreation designed to grab attention in a high-foot-traffic campus environment.',
       sandbox:
@@ -327,7 +335,7 @@ export const EXPERIMENTS: Experiment[] = [
     title: 'CS Tutoring Graphics',
     contextLabel: 'Published // Promotional Graphic',
     visualAssetType: 'Social Media Asset',
-    description: 'Applications Open for CS Tutors. Hybrid or Online. 1-2 Unit Tutor.',
+    description: 'Applications Open for CS Tutors. Hybrid or Online. 1-3 Unit Tutor.',
     imageUrl: '/images/experiments/cs-tutoring-graphics.webp',
     year: 2025,
     category: 'published',
@@ -338,7 +346,7 @@ export const EXPERIMENTS: Experiment[] = [
       output:
         'A published social media asset announcing open tutor applications, balancing program logistics with an engaging visual aesthetic aimed at engineering students.',
       sandbox:
-        'The real challenge was making "Hybrid or Online. 1-2 Unit Tutor." feel interesting — turns out typographic hierarchy and a strong grid can make even administrative copy feel intentional.',
+        'The real challenge was making "Hybrid or Online. 1-2 Unit Tutor." feel interesting: turns out typographic hierarchy and a strong grid can make even administrative copy feel intentional.',
     },
   },
   {
@@ -353,11 +361,11 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'VP of Design',
     log: {
       spark:
-        'As VP of Design I needed to establish a social presence for Product Space that felt credible to both industry recruiters and fellow students — two audiences with very different visual fluency.',
+        'As VP of Design I needed to establish a social presence for Product Space that felt credible to both industry recruiters and fellow students: two audiences with very different visual fluency.',
       output:
         'A cohesive published branding and social media graphic series that established Product Space\'s visual identity across all external channels.',
       sandbox:
-        'Building a brand system for a student org with high member turnover taught me more about scalable design systems than any tutorial — it had to be simple enough for anyone to use, expressive enough to stand out.',
+        'Building a brand system for a student org with high member turnover taught me more about scalable design systems than any tutorial: it had to be simple enough for anyone to use, expressive enough to stand out.',
     },
   },
   {
@@ -372,28 +380,28 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'Graphic Designer',
     log: {
       spark:
-        'Every major Cattlelog engineering milestone deserved a visual moment — Beta, the Instagram launch, Grade Distributions. I wanted each graphic to feel like a product announcement, not just a social post.',
+        'Every major Cattlelog engineering milestone deserved a visual moment: Beta, the Instagram launch, Grade Distributions. I wanted each graphic to feel like a product announcement, not just a social post.',
       output:
         'A series of published launch graphics celebrating three major Cattlelog product milestones across Instagram.',
       sandbox:
-        'Translating the app\'s UI visual language into marketing graphics was a fascinating constraint — the graphics had to reference the product without screenshotting it. Forced creative abstraction.',
+        'Translating the app\'s UI visual language into marketing graphics was a fascinating constraint: the graphics had to reference the product without screenshotting it. Forced creative abstraction.',
     },
   },
   {
-    id: 'figma-cl-graphics',
-    title: 'Figma CL Graphics',
+    id: 'figma-campus-leader-graphics',
+    title: 'Figma Campus Leader Graphics',
     contextLabel: 'Published // Event Marketing',
     visualAssetType: 'Event Banner',
-    description: 'Figma @ UCD Tech Mixer & Sticker Café event marketing assets.',
+    description: 'Figma @ UCD event marketing assets promoting hands-on sessions where students can design custom items to take home.',
     imageUrl: '/images/experiments/figma-cl-graphics.webp',
     year: 'Present',
     category: 'published',
     role: 'Campus Leader',
     log: {
       spark:
-        'Hosting a Figma-sponsored event on campus meant the marketing had to live up to Figma\'s own design bar — which was both a pressure and a genuine creative thrill.',
+        'Hosting a Figma-sponsored event on campus meant the marketing had to live up to Figma\'s own design bar, which was both a pressure and a genuine creative thrill.',
       output:
-        'Published event banners and marketing assets for the Figma @ UCD Tech Mixer and Sticker Café community events.',
+        'Published event banners and marketing assets for Figma @ UCD community making events.',
       sandbox:
         'Designing within Figma\'s vibrant, playful brand constraints was a masterclass in working within a creative brief. The immediate community turnout made the output feel real in a way personal projects never quite do.',
     },
@@ -410,11 +418,11 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'Self-Initiated',
     log: {
       spark:
-        'An off-the-whim discipline experiment — could I design something intentional every day for 52 weeks without a client brief or a product requirement? Just pure visual exploration.',
+        'An off-the-whim discipline experiment: could I design something intentional every day for 52 days without a client brief or a product requirement? Just pure visual exploration.',
       output:
-        'A curated series of conceptual UI challenges and visual layout explorations spanning color, typography, spacing, and micro-interaction.',
+        'A curated series of conceptual UI challenges and visual design explorations spanning color, typography, spacing, and micro-interaction.',
       sandbox:
-        'The days where I had the least inspiration produced the most interesting constraints. Running out of "ideas" forced me toward systems thinking — which is where the real design education happened.',
+        'The days where I had the least inspiration produced the most interesting constraints. Running out of "ideas" forced me toward systems thinking, which is where the real design education happened. These became the inspiration for my entire portfolio.',
     },
   },
 
@@ -430,11 +438,11 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'Self-Initiated',
     log: {
       spark:
-        'Off a whim after landing my Figma internship — I wanted the announcement post to feel like a design artifact, not just a humble-brag text post.',
+        'Off a whim after becoming a Figma Campus Leader: I wanted the announcement post to feel like a design artifact, not just a humble-brag text post.',
       output:
         'Personal branding social media graphics designed for LinkedIn announcements and professional presence.',
       sandbox:
-        'Designing for yourself is the hardest design challenge. There\'s no brief, no user research to hide behind — just taste. Treating my personal brand as a mini design system made the process click.',
+        'Designing for yourself is the hardest design challenge. There\'s no brief, no user research to hide behind: just taste. Treating my personal brand as a mini design system made the process click.',
     },
   },
   {
@@ -449,11 +457,11 @@ export const EXPERIMENTS: Experiment[] = [
     role: 'Design Advisor',
     log: {
       spark:
-        'A friend on the Formula Racing team asked if I could help with their promo materials. I immediately said yes — it was a completely different design register than anything else I was doing.',
+        'A friend on the Formula Racing team asked if I could help with their promo materials. I immediately said yes, it was a completely different design register than anything else I was doing.',
       output:
         'Published promotional banners and marketing assets for UC Davis Formula Racing, built around a fast, high-energy visual language.',
       sandbox:
-        'Translating mechanical speed and engineering precision into static graphics was a completely different adrenaline. Bold diagonals, high contrast, tight type — the opposite of everything I usually do.',
+        'Translating engineering milestones into static graphics was a completely different challenege. Without the luxury of motion or interactive states, static visual hierarchy and composition had to carry all the energy of the prints.',
     },
   },
 ]

@@ -31,6 +31,7 @@ export default {
         'label': '0.08em',
       },
       fontSize: {
+        '3xs': ['0.5rem', { lineHeight: '0.75rem' }],
         '2xs': ['0.625rem', { lineHeight: '1rem' }],
         '8xl': ['5.5rem', { lineHeight: '1', letterSpacing: '-0.04em' }],
         '9xl': ['7rem', { lineHeight: '0.95', letterSpacing: '-0.05em' }],
