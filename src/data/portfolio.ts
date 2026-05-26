@@ -158,6 +158,23 @@ export const PROJECTS: Project[] = [
       ],
       roadmap:
         'Next: Adding webhook integrations to automatically trigger codebase pull requests when Figma design styles or tokens are updated by the design team, making the pipeline completely automated.',
+      images: [
+        {
+          src: '/images/projects/fimanu-landing.webp',
+          label: 'Landing Page',
+          description: 'Overview of the Fimanu platform.'
+        },
+        {
+          src: '/images/projects/fimanu-dashboard.webp',
+          label: 'Dashboard',
+          description: 'Visualizing design output and assets.'
+        },
+        {
+          src: '/images/projects/fimanu-onboarding.webp',
+          label: 'Onboarding',
+          description: 'Getting started with the Figma REST API integration.'
+        }
+      ]
     },
   },
   {
@@ -173,7 +190,7 @@ export const PROJECTS: Project[] = [
     accentColor: '#a855f7',
     tagline: 'Designing for the Next Generation of Product Leaders',
     metrics: [
-      { label: 'Role', value: 'VP of Design' },
+      { label: 'Reach', value: '100+ Fellows' },
       { label: 'Focus', value: 'Mentorship' },
     ],
     awards: ['1st Place', 'Honorable Mention'],
@@ -201,6 +218,23 @@ export const PROJECTS: Project[] = [
       ],
       roadmap:
         'The next evolution is a public-facing resource library — open-sourcing the Figma template system so any UC campus club can bootstrap a professional design practice.',
+      images: [
+        {
+          src: '/images/projects/product-space-landing.webp',
+          label: 'Landing Page',
+          description: 'The homepage for Product Space @ UCD.'
+        },
+        {
+          src: '/images/projects/product-space-about.webp',
+          label: 'About Us',
+          description: 'Our mission and the people behind Product Space.'
+        },
+        {
+          src: '/images/projects/product-space-join.webp',
+          label: 'Join Us',
+          description: 'Application and recruitment details for prospective members.'
+        }
+      ]
     },
   },
   {
@@ -247,17 +281,17 @@ export const PROJECTS: Project[] = [
         'Scaling the product with a lightweight full-stack implementation to consume live location data and campus network connection density, plus introducing micro-reservations to optimize underutilized university real estate.',
       images: [
         {
-          src: '/images/projects/spot-onboarding.png',
+          src: '/images/projects/spot-onboarding.webp',
           label: 'Onboarding Flow',
           description: 'A seamless onboarding experience that introduces users to core features.'
         },
         {
-          src: '/images/projects/spot-map-and-catalog.png',
+          src: '/images/projects/spot-map-and-catalog.webp',
           label: 'Map & Catalog',
           description: 'Live occupancy heatmapping and detailed study space catalog.'
         },
         {
-          src: '/images/projects/spot-spot-creation.png',
+          src: '/images/projects/spot-spot-creation.webp',
           label: 'Spot Creation',
           description: 'Interface for adding and configuring new study spots with environmental preferences.'
         }

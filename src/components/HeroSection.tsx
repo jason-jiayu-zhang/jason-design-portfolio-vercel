@@ -124,6 +124,7 @@ function ProjectPreviewCarousel({ project }: ProjectPreviewCarouselProps) {
   return (
     <Link
       to={`/work/${project.id}`}
+      viewTransition
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group/carousel relative block w-full aspect-[21/9] rounded-sm overflow-hidden border transition-all duration-300 bg-surface/10 hover:bg-surface/20 shadow-lg mb-4"
@@ -146,6 +147,10 @@ function ProjectPreviewCarousel({ project }: ProjectPreviewCarouselProps) {
               key={i}
               src={img.src}
               alt={img.label}
+              /* LCP candidate (first slide of first project): prioritize fetch */
+              fetchPriority={i === 0 ? 'high' : 'low'}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding={i === 0 ? 'sync' : 'async'}
               className="absolute inset-0 w-full h-full object-cover transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{
                 opacity: i === activeImageIdx ? (isHovered ? 1 : 0.6) : 0,
@@ -225,6 +230,7 @@ export default function HeroSection() {
   
   const wheelContainerRef = useRef<HTMLDivElement>(null)
   const wheelPosRef = useRef<number | null>(null)
+  const leftPanelRef = useRef<HTMLDivElement>(null)
 
   const handleProjectChange = useCallback((index: number) => {
     if (index === activeIndex) return;
@@ -246,6 +252,67 @@ export default function HeroSection() {
     }, 300)
   }, [activeIndex])
 
+  // ── Touch swipe state (for mobile project switching) ─────────────────────
+  const touchStartXRef = useRef(0)
+  const touchStartYRef = useRef(0)
+  const touchStartTimeRef = useRef(0)
+  const touchSwipeLockedRef = useRef<'horizontal' | 'vertical' | null>(null)
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0]
+    touchStartXRef.current = t.clientX
+    touchStartYRef.current = t.clientY
+    touchStartTimeRef.current = performance.now()
+    touchSwipeLockedRef.current = null
+  }
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchSwipeLockedRef.current !== 'horizontal') return
+
+    const t = e.changedTouches[0]
+    const deltaX = t.clientX - touchStartXRef.current
+    const elapsed = performance.now() - touchStartTimeRef.current
+
+    if (Math.abs(deltaX) > 50 && elapsed < 250) {
+      if (deltaX < 0) {
+        // Swipe left → next project
+        handleProjectChange((activeIndex + 1) % PROJECTS.length)
+      } else {
+        // Swipe right → previous project
+        handleProjectChange((activeIndex - 1 + PROJECTS.length) % PROJECTS.length)
+      }
+    }
+
+    touchSwipeLockedRef.current = null
+  }
+
+  // Attach non-passive touchmove listener so we can call preventDefault on horizontal swipes
+  // Also handles axis-lock detection (can't use synthetic onTouchMove for preventDefault)
+  useEffect(() => {
+    const el = leftPanelRef.current
+    if (!el) return
+    const handler = (e: TouchEvent) => {
+      const t = e.touches[0]
+      const deltaX = t.clientX - touchStartXRef.current
+      const deltaY = t.clientY - touchStartYRef.current
+
+      // Lock to an axis on the first significant movement
+      if (!touchSwipeLockedRef.current) {
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+          touchSwipeLockedRef.current = 'horizontal'
+        } else if (Math.abs(deltaY) > 8) {
+          touchSwipeLockedRef.current = 'vertical'
+        }
+      }
+
+      if (touchSwipeLockedRef.current === 'horizontal') {
+        e.preventDefault()
+      }
+    }
+    el.addEventListener('touchmove', handler, { passive: false })
+    return () => el.removeEventListener('touchmove', handler)
+  }, [])
+
   React.useLayoutEffect(() => {
     if (wheelPosRef.current !== null && wheelContainerRef.current) {
       const newTop = wheelContainerRef.current.getBoundingClientRect().top
@@ -266,10 +333,16 @@ export default function HeroSection() {
   const showPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
   const isPhase3 = hasLoaded || phase === 'phase03'
 
+  useEffect(() => {
+    if (phase === 'phase03' && !hasLoaded) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
+  }, [phase, hasLoaded])
+
   return (
     <section
       id="featured"
-      className="relative w-full overflow-x-hidden min-h-[100dvh] lg:h-screen"
+      className="relative w-full overflow-x-clip min-h-[100dvh]"
       style={{ marginTop: 0, paddingTop: '48px' }}
     >
       {/* ── Horizontal hairline accent ── */}
@@ -281,7 +354,7 @@ export default function HeroSection() {
       )}
 
       {/* ── SPLIT LAYOUT ── */}
-      <div className="flex flex-col lg:flex-row min-h-full flex-1 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] min-h-full flex-1 relative">
         
         {/* Vertical split line */}
         {showPhase2 && (
@@ -293,7 +366,10 @@ export default function HeroSection() {
 
         {/* ── LEFT 45% — Project Metadata Panel ── */}
         <div
-          className="relative flex flex-col justify-start px-4 sm:px-6 lg:px-12 min-h-full flex-1 pt-16 sm:pt-20 lg:pt-32 pb-24 lg:pb-24 w-full lg:w-[45%]"
+          ref={leftPanelRef}
+          className="relative flex flex-col justify-start px-4 sm:px-6 lg:px-12 min-h-full pt-16 sm:pt-20 lg:pt-32 pb-24 lg:pb-24 w-full"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           {showPhase2 && (
             <>
@@ -339,7 +415,12 @@ export default function HeroSection() {
                     </div>
                   </AnimatedElement>
                   <AnimatedElement delay={120} className="mt-1">
-                    <div className="font-sans font-bold text-4xl text-parchment leading-none tracking-tight">
+                    <div
+                      className="font-sans font-bold text-4xl text-parchment leading-none tracking-tight"
+                      style={{
+                        viewTransitionName: `project-title-${project.id}`,
+                      }}
+                    >
                       {project.title}
                     </div>
                   </AnimatedElement>
@@ -435,6 +516,46 @@ export default function HeroSection() {
                   )}
                 </div>
 
+                {/* 3. Status badge & CTA */}
+                <AnimatedElement delay={380}>
+                  <div className="flex flex-wrap items-center gap-y-2 gap-x-3 mb-8">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{
+                          backgroundColor: project.status === 'live' ? '#4ade80' : '#a39d7b',
+                          boxShadow: project.status === 'live' ? '0 0 6px #4ade80' : 'none',
+                        }}
+                      />
+                      <span className="label-caps">
+                        {project.status === 'live' ? 'Live' : project.status === 'offline' ? 'Offline' : 'Archived'}
+                      </span>
+                    </div>
+                    {project.url && (
+                      <>
+                        <div className="w-px h-3 bg-white/20 hidden xs:block" />
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="label-caps hover:text-parchment transition-colors underline underline-offset-2"
+                        >
+                          {project.url.replace('https://', '')} ↗
+                        </a>
+                      </>
+                    )}
+                    <div className="w-px h-3 bg-white/20" />
+                    <Link
+                      to={`/work/${project.id}`}
+                      viewTransition
+                      className="label-caps transition-opacity hover:opacity-80 underline underline-offset-2"
+                      style={{ color: project.accentColor }}
+                    >
+                      Read Case Study →
+                    </Link>
+                  </div>
+                </AnimatedElement>
+
                 {/* Visual Preview Carousel */}
                 <AnimatedElement delay={400}>
                   <ProjectPreviewCarousel project={project} />
@@ -446,46 +567,6 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* 5. Status badge & CTA — absolutely positioned at bottom-left */}
-              <div 
-                key={`status-${projKey}`}
-                className="absolute bottom-4 sm:bottom-8 left-4 sm:left-6 lg:left-12 flex flex-wrap items-center gap-y-2 gap-x-3 transition-opacity duration-300 ease-in-out"
-                style={{ opacity: isFadingOut ? 0 : 1 }}
-              >
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{
-                      backgroundColor: project.status === 'live' ? '#4ade80' : '#a39d7b',
-                      boxShadow: project.status === 'live' ? '0 0 6px #4ade80' : 'none',
-                    }}
-                  />
-                  <span className="label-caps">
-                    {project.status === 'live' ? 'Live' : project.status === 'offline' ? 'Offline' : 'Archived'}
-                  </span>
-                </div>
-                {project.url && (
-                  <>
-                    <div className="w-px h-3 bg-white/20 hidden xs:block" />
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="label-caps hover:text-parchment transition-colors underline underline-offset-2"
-                    >
-                      {project.url.replace('https://', '')} ↗
-                    </a>
-                  </>
-                )}
-                <div className="w-px h-3 bg-white/20" />
-                <Link
-                  to={`/work/${project.id}`}
-                  className="label-caps transition-opacity hover:opacity-80 underline underline-offset-2"
-                  style={{ color: project.accentColor }}
-                >
-                  Read Case Study →
-                </Link>
-              </div>
 
               {/* Left edge index line */}
               <div 
@@ -502,109 +583,111 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* ── RIGHT 55% — Interactive Wheel ── */}
-        <div
-          ref={wheelContainerRef}
-          className="relative flex items-center justify-center w-full lg:w-[55%] min-h-[40vh] lg:min-h-0 py-8 sm:py-12 lg:py-0"
-          style={{ background: 'radial-gradient(ellipse at center, rgba(56,64,106,0.1) 0%, transparent 70%)' }}
-        >
-          {showPhase2 && (
-            <>
-          {/* Corner coordinate labels */}
-          <div className={`hidden lg:block absolute top-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-            X:{Math.round(300 + Math.cos(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
-          </div>
-          <div className={`hidden lg:block absolute top-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-            Y:{Math.round(300 + Math.sin(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
-          </div>
-          <div className={`hidden lg:block absolute bottom-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-            θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°
-          </div>
-          <div className={`hidden lg:block absolute bottom-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-            R:276
-          </div>
-          </>
-          )}
-
-          {isPhase3 && (
-            <>
-              {/* Left Arrow Button */}
-              <div className="absolute left-3 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-20">
-                <button
-                  onClick={() => handleProjectChange((activeIndex - 1 + PROJECTS.length) % PROJECTS.length)}
-                  className="p-2 md:p-3 rounded-full border bg-primary/40 backdrop-blur-md transition-all duration-300 group focus:outline-none hover:bg-surface/50 active:scale-95 animate-arrow-left-in"
-                  style={{
-                    borderColor: `${activeProject.accentColor}33`,
-                    color: activeProject.accentColor,
-                    boxShadow: '0 0 0px transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = activeProject.accentColor
-                    e.currentTarget.style.boxShadow = `0 0 12px ${activeProject.accentColor}33`
-                    e.currentTarget.style.color = '#cfccbb'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${activeProject.accentColor}33`
-                    e.currentTarget.style.boxShadow = 'none'
-                    e.currentTarget.style.color = activeProject.accentColor
-                  }}
-                  aria-label="Previous Project"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform duration-300">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Right Arrow Button */}
-              <div className="absolute right-3 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-20">
-                <button
-                  onClick={() => handleProjectChange((activeIndex + 1) % PROJECTS.length)}
-                  className="p-2 md:p-3 rounded-full border bg-primary/40 backdrop-blur-md transition-all duration-300 group focus:outline-none hover:bg-surface/50 active:scale-95 animate-arrow-right-in"
-                  style={{
-                    borderColor: `${activeProject.accentColor}33`,
-                    color: activeProject.accentColor,
-                    boxShadow: '0 0 0px transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = activeProject.accentColor
-                    e.currentTarget.style.boxShadow = `0 0 12px ${activeProject.accentColor}33`
-                    e.currentTarget.style.color = '#cfccbb'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${activeProject.accentColor}33`
-                    e.currentTarget.style.boxShadow = 'none'
-                    e.currentTarget.style.color = activeProject.accentColor
-                  }}
-                  aria-label="Next Project"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform duration-300">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                  </svg>
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* Wheel SVG container */}
+        {/* ── RIGHT 55% — Interactive Wheel Wrapper ── */}
+        <div className="w-full">
           <div
-            className="relative flex items-center justify-center"
-            style={{ width: 'var(--wheel-size)', height: 'var(--wheel-size)' }}
+            ref={wheelContainerRef}
+            className="relative flex items-center justify-center w-full min-h-[40vh] lg:h-[calc(100vh-48px)] lg:sticky lg:top-[48px] py-8 sm:py-12 lg:py-0"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(56,64,106,0.1) 0%, transparent 70%)' }}
           >
-            <WheelSelector
-              onProjectChange={handleProjectChange}
-              activeIndex={activeIndex}
+            {showPhase2 && (
+              <>
+            {/* Corner coordinate labels */}
+            <div className={`hidden lg:block absolute top-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              X:{Math.round(300 + Math.cos(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
+            </div>
+            <div className={`hidden lg:block absolute top-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              Y:{Math.round(300 + Math.sin(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
+            </div>
+            <div className={`hidden lg:block absolute bottom-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°
+            </div>
+            <div className={`hidden lg:block absolute bottom-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              R:276
+            </div>
+            </>
+            )}
+
+            {isPhase3 && (
+              <>
+                {/* Left Arrow Button */}
+                <div className="absolute left-3 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-20">
+                  <button
+                    onClick={() => handleProjectChange((activeIndex - 1 + PROJECTS.length) % PROJECTS.length)}
+                    className="p-2 md:p-3 rounded-full border bg-primary/40 backdrop-blur-md transition-all duration-300 group focus:outline-none hover:bg-surface/50 active:scale-95 animate-arrow-left-in"
+                    style={{
+                      borderColor: `${activeProject.accentColor}33`,
+                      color: activeProject.accentColor,
+                      boxShadow: '0 0 0px transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = activeProject.accentColor
+                      e.currentTarget.style.boxShadow = `0 0 12px ${activeProject.accentColor}33`
+                      e.currentTarget.style.color = '#cfccbb'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${activeProject.accentColor}33`
+                      e.currentTarget.style.boxShadow = 'none'
+                      e.currentTarget.style.color = activeProject.accentColor
+                    }}
+                    aria-label="Previous Project"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform duration-300">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Right Arrow Button */}
+                <div className="absolute right-3 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-20">
+                  <button
+                    onClick={() => handleProjectChange((activeIndex + 1) % PROJECTS.length)}
+                    className="p-2 md:p-3 rounded-full border bg-primary/40 backdrop-blur-md transition-all duration-300 group focus:outline-none hover:bg-surface/50 active:scale-95 animate-arrow-right-in"
+                    style={{
+                      borderColor: `${activeProject.accentColor}33`,
+                      color: activeProject.accentColor,
+                      boxShadow: '0 0 0px transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = activeProject.accentColor
+                      e.currentTarget.style.boxShadow = `0 0 12px ${activeProject.accentColor}33`
+                      e.currentTarget.style.color = '#cfccbb'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${activeProject.accentColor}33`
+                      e.currentTarget.style.boxShadow = 'none'
+                      e.currentTarget.style.color = activeProject.accentColor
+                    }}
+                    aria-label="Next Project"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform duration-300">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* Wheel SVG container */}
+            <div
+              className="relative flex items-center justify-center"
+              style={{ width: 'var(--wheel-size)', height: 'var(--wheel-size)' }}
+            >
+              <WheelSelector
+                onProjectChange={handleProjectChange}
+                activeIndex={activeIndex}
+              />
+            </div>
+
+            {/* Active project accent glow behind wheel */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(ellipse at center, ${activeProject.accentColor}08 0%, transparent 65%)`,
+                transition: 'background 0.8s ease',
+              }}
             />
           </div>
-
-          {/* Active project accent glow behind wheel */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(ellipse at center, ${activeProject.accentColor}08 0%, transparent 65%)`,
-              transition: 'background 0.8s ease',
-            }}
-          />
         </div>
       </div>
     </section>

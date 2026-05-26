@@ -5,37 +5,17 @@ import ArchiveSection from './components/ArchiveSection'
 import StudioSection from './components/StudioSection'
 import AboutSection from './components/AboutSection'
 import Footer from './components/Footer'
-import { IntroProvider, useIntro } from './components/IntroContext'
+import { useIntro, IntroProvider } from './components/IntroContext'
+import { useScanline } from './components/ScanlineContext'
 import './index.css'
-
-const SCROLL_KEY = 'home_scroll_y'
 
 function AppContent() {
   const { phase } = useIntro()
   const isPhase3 = phase === 'phase03'
-  const restoredRef = useRef(false)
-
-  // Save scroll position continuously while on this page
-  useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY))
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Once phase3 content is rendered, restore saved scroll position (only once)
-  useLayoutEffect(() => {
-    if (!isPhase3 || restoredRef.current) return
-    restoredRef.current = true
-    const saved = sessionStorage.getItem(SCROLL_KEY)
-    if (saved) {
-      window.scrollTo(0, parseInt(saved, 10))
-    }
-  }, [isPhase3])
+  const { scanlineActive } = useScanline()
 
   return (
-    <div className="min-h-screen flex flex-col bg-primary">
+    <div className={`min-h-screen flex flex-col bg-primary${scanlineActive ? ' scanline-overlay' : ''}`}>
       {/* Persistent nav */}
       <Header />
 
@@ -46,13 +26,19 @@ function AppContent() {
         {isPhase3 && (
           <>
             {/* § 2 — Studio section: off-a-whim experiments */}
-            <StudioSection />
+            <div className="contain-section">
+              <StudioSection />
+            </div>
 
             {/* § 3 — Archive section: masterlist of all work */}
-            <ArchiveSection />
+            <div className="contain-section">
+              <ArchiveSection />
+            </div>
 
             {/* § 4 — 3-column About / Foundations */}
-            <AboutSection />
+            <div className="contain-section">
+              <AboutSection />
+            </div>
           </>
         )}
       </main>

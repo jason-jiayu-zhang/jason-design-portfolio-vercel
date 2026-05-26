@@ -41,6 +41,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -140,6 +141,18 @@
   }
 }
 
+/* ─── CONTENT VISIBILITY CONTAINMENT ─────────────────────────────────────── */
+
+/**
+ * Apply to below-the-fold sections to skip layout + paint until they are
+ * near the viewport. `contain-intrinsic-size` provides an estimated height
+ * so the scrollbar doesn't jump when the section is eventually rendered.
+ */
+.contain-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
 /* ─── SCAN-LINE EFFECT ────────────────────────────────────────────────────── */
 
 .scanline-overlay::after {
@@ -155,6 +168,14 @@
   );
   pointer-events: none;
   z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Clean mode — terminal command "scanline off" removes the CRT grid */
+.scanlines-off.scanline-overlay::after {
+  display: none;
+  background: none;
 }
 
 /* ─── CINEMATIC INTRO SEQUENCE ────────────────────────────────────────────── */
@@ -264,3 +285,47 @@
     font-size: 28px;
   }
 }
+
+/* ─── VIEW TRANSITIONS ────────────────────────────────────────────────────── */
+
+/* Cross-fade root when navigating between pages */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Project title morph — shared element between Hero and Case Study heading */
+::view-transition-group(project-title) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(project-title),
+::view-transition-new(project-title) {
+  width: fit-content;
+  height: 100%;
+}
+
+/* Reduce motion: skip all view transition animations */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ─── LIGHTBOX CAPTION ANIMATION ──────────────────────────────────────────── */
+
+@keyframes slideUpCaption {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+

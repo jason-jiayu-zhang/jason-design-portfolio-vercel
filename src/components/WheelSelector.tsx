@@ -78,7 +78,7 @@ export default function WheelSelector({ onProjectChange, activeIndex }: WheelSel
       }
 
       // Mutate the DOM directly — zero React overhead per frame
-      wheelHandleRef.current?.setRotation(w.angle)
+      wheelHandleRef.current?.setRotation(w.angle, w.velocity)
 
       rafRef.current = requestAnimationFrame(tick)
     }

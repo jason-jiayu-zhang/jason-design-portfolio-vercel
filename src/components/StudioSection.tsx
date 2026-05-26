@@ -1,6 +1,77 @@
 import { Link } from 'react-router-dom'
+import { useRef, useState, useCallback } from 'react'
 import { EXPERIMENTS } from '../data/portfolio'
 
+// ─── 3D Tilt + Spotlight Card ─────────────────────────────────────────────────
+interface TiltCardProps {
+  to: string
+  children: React.ReactNode
+  style?: React.CSSProperties
+  className?: string
+}
+
+function TiltCard({ to, children, style, className }: TiltCardProps) {
+  const cardRef = useRef<HTMLAnchorElement>(null)
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
+  const [spotlight, setSpotlight] = useState({ x: 50, y: 50, opacity: 0 })
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    const card = cardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    // Normalized -1..1 offset from centre
+    const nx = (e.clientX - cx) / (rect.width / 2)
+    const ny = (e.clientY - cy) / (rect.height / 2)
+    // Tilt max ±6 degrees — subtle, premium feel
+    setTilt({ rx: -ny * 6, ry: nx * 6 })
+    // Spotlight follows cursor inside the card (0–100%)
+    const px = ((e.clientX - rect.left) / rect.width) * 100
+    const py = ((e.clientY - rect.top) / rect.height) * 100
+    setSpotlight({ x: px, y: py, opacity: 0.08 })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ rx: 0, ry: 0 })
+    setSpotlight(prev => ({ ...prev, opacity: 0 }))
+  }, [])
+
+  return (
+    <Link
+      ref={cardRef}
+      to={to}
+      className={`group relative flex flex-col gap-3 p-5 border-0 bg-primary z-0 cursor-pointer ${className ?? ''}`}
+      style={{
+        ...style,
+        // GPU-accelerated 3D transform
+        transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(0)`,
+        transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
+        willChange: 'transform',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Radial spotlight that tracks the mouse */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-sm z-10"
+        style={{
+          background: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(163,157,123,1) 0%, transparent 65%)`,
+          opacity: spotlight.opacity,
+          transition: 'opacity 0.25s ease',
+          willChange: 'opacity',
+          backfaceVisibility: 'hidden',
+        }}
+      />
+      {children}
+    </Link>
+  )
+}
+
+// ─── Studio Section ───────────────────────────────────────────────────────────
 export default function StudioSection() {
   return (
     <section id="studio" className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-12">
@@ -19,17 +90,17 @@ export default function StudioSection() {
       {/* Experiment grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px border border-accent/20">
         {EXPERIMENTS.map((exp, i) => (
-          <Link
+          <TiltCard
             key={exp.id}
             to={`/studio/${exp.id}`}
-            className="group relative flex flex-col gap-3 p-5 border-0 bg-primary z-0 cursor-pointer"
             style={{ borderBottom: i < EXPERIMENTS.length - 4 ? '1px solid rgba(56,64,106,0.2)' : undefined }}
           >
-            {/* Background overlay for transparent hover effect over solid background */}
+            {/* Background overlay for hover effect */}
             <div className="absolute inset-0 -z-10 bg-surface/10 group-hover:bg-surface/30 transition-colors duration-300 pointer-events-none rounded-sm" />
             {/* Visual area */}
             <div
               className="relative w-full aspect-square bg-accent/10 rounded-sm overflow-hidden flex items-center justify-center border border-accent/20 group-hover:border-parchment/20 transition-colors duration-300"
+              style={{ willChange: 'transform', backfaceVisibility: 'hidden' }}
             >
               {exp.imageUrl ? (
                 <img
@@ -38,6 +109,7 @@ export default function StudioSection() {
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-[opacity,transform] duration-500 ease-out"
+                  style={{ willChange: 'transform, opacity' }}
                 />
               ) : (
                 /* Abstract geometric placeholder per experiment */
@@ -75,7 +147,7 @@ export default function StudioSection() {
                 <path d="M0 0 L12 0 L12 12" fill="none" stroke="#cfccbb" strokeWidth="0.8" opacity="0.5" />
               </svg>
             </div>
-          </Link>
+          </TiltCard>
         ))}
       </div>
     </section>

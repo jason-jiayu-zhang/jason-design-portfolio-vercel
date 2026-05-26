@@ -4,12 +4,12 @@
 // Layout: 30% sticky metadata sidebar | 70% scrolling editorial content
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { PROJECTS } from '../data/portfolio'
 
 
-// ── Thin hairline separator with section label ─────────────────────────────────
+// ── Thin hairline separator with section label + deep link ───────────────────
 function SectionRule({
   index,
   label,
@@ -23,14 +23,38 @@ function SectionRule({
   mounted: boolean
   mountDelay: number
 }) {
+  const [copied, setCopied] = useState(false)
+  const sectionId = `${index}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`
+
+  const handleCopyLink = useCallback(async () => {
+    const url = `${window.location.origin}${window.location.pathname}#${sectionId}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Fallback: select + copy
+      const el = document.createElement('input')
+      el.value = url
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }, [sectionId])
+
   return (
     <div
-      className="flex items-center gap-4 mb-8 pb-3"
+      id={sectionId}
+      className="group flex items-center gap-4 mb-8 pb-3"
       style={{
         borderBottom: '1px solid rgba(56,64,106,0.45)',
         opacity: mounted ? 1 : 0,
         transform: mounted ? 'translateY(0)' : 'translateY(6px)',
         transition: `opacity 0.5s ease ${mountDelay}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${mountDelay}ms`,
+        scrollMarginTop: '80px',
       }}
     >
       <span className="font-mono text-2xs text-parchment/15 tabular-nums">{index}</span>
@@ -38,6 +62,22 @@ function SectionRule({
       <span className="font-mono text-2xs tracking-label uppercase" style={{ color: `${accentColor}90` }}>
         {label}
       </span>
+      {/* Copy link button */}
+      <button
+        onClick={handleCopyLink}
+        aria-label={`Copy link to ${label} section`}
+        className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 relative"
+        style={{ color: copied ? accentColor : 'rgba(207,204,187,0.35)' }}
+      >
+        {copied ? (
+          <span className="font-mono text-2xs" style={{ color: accentColor }}>✓ Copied!</span>
+        ) : (
+          <svg viewBox="0 0 16 16" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2-2a2.5 2.5 0 0 0-3.5-3.5L7.5 5" strokeLinecap="round" />
+            <path d="M9.5 6.5a2.5 2.5 0 0 0-3.5 0l-2 2a2.5 2.5 0 0 0 3.5 3.5L8.5 11" strokeLinecap="round" />
+          </svg>
+        )}
+      </button>
     </div>
   )
 }
@@ -248,25 +288,7 @@ function MetadataSidebar({
           <span className="font-mono text-xs text-parchment/20">/ {String(PROJECTS.length).padStart(2, '0')}</span>
         </div>
 
-        {/* Project title */}
-        <div>
-          <h2
-            className="font-sans font-black text-parchment leading-none mb-1"
-            style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', letterSpacing: '-0.04em' }}
-          >
-            {project.title}
-          </h2>
-          <p className="font-mono text-2xs text-parchment/35 leading-relaxed mt-2">{project.subtitle}</p>
-        </div>
 
-        {/* Hairline */}
-        <div className="h-px" style={{ backgroundColor: 'rgba(56,64,106,0.4)' }} />
-
-        {/* Role */}
-        <div>
-          <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-1.5">Role</p>
-          <p className="font-mono text-xs text-parchment/55 leading-relaxed">{project.role}</p>
-        </div>
 
         {/* Tools */}
         <div>
@@ -343,7 +365,7 @@ function MetadataSidebar({
               }}
             />
             <span className="font-mono text-2xs tracking-label text-parchment/35 uppercase">
-              {project.status === 'live' ? 'Live Product' : project.status === 'offline' ? 'Offline' : 'Archived'}
+              {project.status === 'live' ? 'Live' : project.status === 'offline' ? 'Offline' : 'Archived'}
             </span>
           </div>
 
@@ -367,7 +389,7 @@ function MetadataSidebar({
                 className="font-mono text-2xs tracking-label uppercase"
                 style={{ color: project.accentColor }}
               >
-                Visit Live Product
+                Visit {project.title}
               </span>
               <span className="font-mono text-xs text-parchment/25 group-hover:text-parchment/60 transition-colors">
                 ↗
@@ -377,6 +399,112 @@ function MetadataSidebar({
         </div>
       </div>
     </aside>
+  )
+}
+
+// ── Lightbox Overlay ─────────────────────────────────────────────────────────
+function Lightbox({
+  images,
+  activeIndex,
+  onClose,
+  onNext,
+  onPrev,
+}: {
+  images: { src: string; label: string; description?: string }[]
+  activeIndex: number
+  onClose: () => void
+  onNext: () => void
+  onPrev: () => void
+}) {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowRight') onNext()
+      if (e.key === 'ArrowLeft') onPrev()
+    }
+    document.addEventListener('keydown', handleKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', handleKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose, onNext, onPrev])
+
+  const img = images[activeIndex]
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{ backgroundColor: 'rgba(28,32,53,0.96)', backdropFilter: 'blur(16px)' }}
+      onClick={onClose}
+    >
+      {/* Close button */}
+      <button
+        id="lightbox-close"
+        onClick={onClose}
+        className="absolute top-5 right-6 font-mono text-2xl text-parchment/50 hover:text-parchment transition-colors z-10"
+        aria-label="Close lightbox"
+      >
+        ×
+      </button>
+
+      {/* Counter */}
+      <div className="absolute top-5 left-6 font-mono text-2xs text-parchment/30">
+        {String(activeIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
+      </div>
+
+      {/* Prev arrow */}
+      {images.length > 1 && (
+        <button
+          id="lightbox-prev"
+          onClick={(e) => { e.stopPropagation(); onPrev() }}
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-black/30 text-parchment/50 hover:text-parchment hover:border-white/30 transition-all z-10"
+          aria-label="Previous image"
+        >
+          ←
+        </button>
+      )}
+
+      {/* Next arrow */}
+      {images.length > 1 && (
+        <button
+          id="lightbox-next"
+          onClick={(e) => { e.stopPropagation(); onNext() }}
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-black/30 text-parchment/50 hover:text-parchment hover:border-white/30 transition-all z-10"
+          aria-label="Next image"
+        >
+          →
+        </button>
+      )}
+
+      {/* Image */}
+      <div
+        className="relative max-w-[90vw] max-h-[80vh] flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={img.src}
+          alt={img.label}
+          className="max-w-full max-h-[80vh] object-contain rounded shadow-2xl"
+          style={{ border: '1px solid rgba(56,64,106,0.4)' }}
+        />
+      </div>
+
+      {/* Caption — slide up from bottom */}
+      <div
+        className="absolute bottom-0 left-0 right-0 px-8 py-5"
+        style={{
+          background: 'linear-gradient(to top, rgba(28,32,53,0.95) 0%, transparent 100%)',
+          animation: 'slideUpCaption 0.35s cubic-bezier(0.22,1,0.36,1) forwards',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="font-sans font-semibold text-parchment text-sm tracking-tight">{img.label}</p>
+        {img.description && (
+          <p className="font-mono text-xs text-parchment/50 mt-1">{img.description}</p>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -393,6 +521,8 @@ function VisualShowcase({
   mountDelay: number
 }) {
   const [activeTab, setActiveTab] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   // Default geometric placeholders if no screenshots exist
   const placeholders = [
@@ -409,6 +539,7 @@ function VisualShowcase({
   }[]
 
   return (
+    <>
     <div
       style={{
         opacity: mounted ? 1 : 0,
@@ -474,7 +605,15 @@ function VisualShowcase({
 
           {/* Show image or placeholder */}
           {images && images.length > 0 ? (
-            <div className="w-full h-full relative">
+            <div
+              className="w-full h-full relative"
+              style={{ cursor: 'zoom-in' }}
+              onClick={() => { setLightboxIndex(activeTab); setLightboxOpen(true) }}
+              role="button"
+              aria-label="Expand image"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLightboxIndex(activeTab); setLightboxOpen(true) } }}
+            >
               {images.map((img, i) => (
                 <img
                   key={i}
@@ -488,6 +627,12 @@ function VisualShowcase({
                   }}
                 />
               ))}
+              {/* Zoom-in hint overlay */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div className="bg-black/40 backdrop-blur-sm rounded px-3 py-1.5 font-mono text-xs text-parchment/70 border border-white/10">
+                  ⊕ Click to expand
+                </div>
+              </div>
             </div>
           ) : (
             // Geometric template fallback
@@ -578,6 +723,18 @@ function VisualShowcase({
         ))}
       </div>
     </div>
+
+    {/* Lightbox portal */}
+    {lightboxOpen && images && images.length > 0 && (
+      <Lightbox
+        images={images}
+        activeIndex={lightboxIndex}
+        onClose={() => setLightboxOpen(false)}
+        onNext={() => setLightboxIndex((prev) => (prev + 1) % images.length)}
+        onPrev={() => setLightboxIndex((prev) => (prev - 1 + images.length) % images.length)}
+      />
+    )}
+  </>
   )
 }
 
@@ -591,8 +748,17 @@ export default function ProjectCaseStudyPage() {
   const projectIndex = project ? PROJECTS.indexOf(project) : 0
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-    const t = setTimeout(() => setMounted(true), 60)
+    const hash = window.location.hash
+    const t = setTimeout(() => {
+      setMounted(true)
+      // After mount animation, scroll to hash section if present
+      if (hash) {
+        const el = document.querySelector(hash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }
+    }, 120)
     return () => clearTimeout(t)
   }, [slug])
 
@@ -679,7 +845,11 @@ export default function ProjectCaseStudyPage() {
         {/* Display title */}
         <h1
           className="font-sans font-black text-parchment leading-none mb-3"
-          style={{ fontSize: 'clamp(3rem, 8vw, 7rem)', letterSpacing: '-0.05em' }}
+          style={{
+            fontSize: 'clamp(3rem, 8vw, 7rem)',
+            letterSpacing: '-0.05em',
+            viewTransitionName: `project-title-${project.id}`,
+          }}
         >
           {project.title}
         </h1>

@@ -40,7 +40,7 @@ export const TIMELINE: TimelineEntry[] = [
       'Selected as one of Figma\'s global Campus Leaders — hosting workshops, Tech Mixer events, and Sticker Café drops. Bridges the gap between professional-grade tooling and student design culture.',
   },
   {
-    period: 'Mar 2025 – Present',
+    period: 'Oct 2025 – Jan 2026',
     role: 'Vice President of Design',
     org: 'Product Space @ UC Davis',
     tags: ['Leadership', 'Mentorship', 'UI/UX'],
@@ -48,7 +48,7 @@ export const TIMELINE: TimelineEntry[] = [
       'Leads the design vertical of UC Davis\'s premier product organization. Responsible for brand cohesion, design mentorship pipeline, and establishing a human-first design culture across 100+ members.',
   },
   {
-    period: 'Feb 2025 – Dec 2025',
+    period: 'Mar 2025 – Present',
     role: 'Lead Product Designer & UI Engineer',
     org: 'Cattlelog (AggieWorks)',
     tags: ['Full-Stack Engineering', 'UI/UX Design', 'Product'],

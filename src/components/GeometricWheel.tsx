@@ -9,7 +9,7 @@ import type { Project, WheelRing } from '../types/portfolio'
 import { useIntro } from './IntroContext'
 
 export interface WheelHandle {
-  setRotation: (angle: number) => void
+  setRotation: (angle: number, velocity?: number) => void
 }
 
 interface GeometricWheelProps {
@@ -200,9 +200,17 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
   const { hasLoaded, phase } = useIntro()
 
   useImperativeHandle(ref, () => ({
-    setRotation: (angle: number) => {
+    setRotation: (angle: number, velocity?: number) => {
       if (rotatingGroupRef.current) {
-        rotatingGroupRef.current.setAttribute('transform', `rotate(${angle} ${CX} ${CY})`)
+        const speed = Math.abs(velocity || 0)
+        const scale = 1 - Math.min(speed * 0.005, 0.08)
+        
+        // Use pure SVG transform math to avoid Safari CSS transform-origin bugs.
+        // translate(CX, CY) -> scale & rotate from 0,0 -> translate(-CX, -CY)
+        rotatingGroupRef.current.setAttribute(
+          'transform',
+          `translate(${CX}, ${CY}) rotate(${angle}) scale(${scale}) translate(-${CX}, -${CY})`
+        )
       }
       if (degreeTextRef.current) {
         const norm = ((angle % 360) + 360) % 360
@@ -218,7 +226,7 @@ const GeometricWheel = memo(forwardRef<WheelHandle, GeometricWheelProps>(({ rota
       {/* ── ROTATING GROUP (ticks + labels rotate with wheel) ─────────────── */}
       <g
         ref={rotatingGroupRef}
-        transform={`rotate(${rot} ${CX} ${CY})`}
+        transform={`translate(${CX}, ${CY}) rotate(${rot}) translate(-${CX}, -${CY})`}
         style={{ willChange: 'transform' }}
       >
         <StaticRotatingMandalas />

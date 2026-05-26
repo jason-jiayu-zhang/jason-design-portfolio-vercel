@@ -205,7 +205,6 @@ export default function ExperimentLogPage() {
   const next = EXPERIMENTS[expIndex + 1]
 
   useEffect(() => {
-    window.scrollTo(0, 0)
     const t = setTimeout(() => setMounted(true), 60)
     return () => clearTimeout(t)
   }, [id])

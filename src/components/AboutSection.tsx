@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { TIMELINE, BELIEFS, BOOKSHELF, ROTATIONS, PLAYGROUND, EDUCATION } from '../data/about'
 import type { TimelineEntry, Belief, BookEntry } from '../data/about'
+import { useScanline } from './ScanlineContext'
 
 // ─── Animated underline link ──────────────────────────────────────────────────
 function AnchorLine({
@@ -203,23 +204,124 @@ function Blink() {
   )
 }
 
+// ─── Virtual file system for ls / cat ──────────────────────────────────────────────
+function makeSlug(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') + '.md'
+}
+
+const VFS: Record<string, Array<{ file: string; summary: string }>> = {
+  books: BOOKSHELF.map(b => ({
+    file: makeSlug(b.title),
+    summary: [
+      `📖 ${b.title}`,
+      `Author : ${b.author}`,
+      `Genre  : ${b.category}`,
+      `Status : ${{ reading: '▶ Currently reading', done: '✓ Finished', queued: '○ Queued' }[b.status]}`,
+    ].join('\n'),
+  })),
+  music: ROTATIONS.map(r => ({
+    file: makeSlug(r.note),
+    summary: `♫ ${r.note}\nArtist : ${r.artist}`,
+  })),
+  play: PLAYGROUND.map(g => ({
+    file: makeSlug(g.title),
+    summary: [
+      `◈ ${g.title}`,
+      ...g.specs.map(s => `  ${s.label.padEnd(16)} ${s.value}`),
+    ].join('\n'),
+  })),
+}
+
+// ─── Session-persistent history helpers ─────────────────────────────────────────
+const HISTORY_KEY = 'jason_terminal_history'
+const HISTORY_CAP = 50
+
+type HistoryEntry = { cmd: string; output: React.ReactNode }
+
+const INITIAL_HISTORY: HistoryEntry[] = [
+  { cmd: 'sysinfo', output: 'JasonOS v1.0.0\nType "help" for a list of available commands.' },
+]
+
+function loadHistory(): HistoryEntry[] {
+  try {
+    const raw = sessionStorage.getItem(HISTORY_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as Array<{ cmd: string; output: string }>
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map(h => ({ cmd: h.cmd, output: h.output }))
+      }
+    }
+  } catch { /* ignore */ }
+  return INITIAL_HISTORY
+}
+
+function persistHistory(history: HistoryEntry[]) {
+  try {
+    const serializable = history
+      .slice(-HISTORY_CAP)
+      .map(h => ({ cmd: h.cmd, output: typeof h.output === 'string' ? h.output : '[rich output]' }))
+    sessionStorage.setItem(HISTORY_KEY, JSON.stringify(serializable))
+  } catch { /* ignore */ }
+}
+
+// ─── Inline Zsh-style tab-completion hint ───────────────────────────────────────────
+const ALL_COMMANDS = [
+  'help', 'clear', 'ls', 'cd ', 'cat ', 'resume', 'contact', 'whoami',
+  'sudo ', 'echo ', 'ping', 'coffee', 'uptime', 'rm -rf /', 'flip', 'unflip',
+  'sysinfo', 'scanline',
+]
+
+function getCompletionHint(
+  input: string,
+  activeTab: 'books' | 'music' | 'play'
+): string {
+  if (!input) return ''
+  const lower = input.toLowerCase()
+
+  if (lower.startsWith('cat ')) {
+    const arg = lower.slice(4)
+    const files = VFS[activeTab]?.map(f => f.file) ?? []
+    const match = files.find(f => f.startsWith(arg) && f !== arg)
+    if (match) return input + match.slice(arg.length)
+  } else if (lower.startsWith('cd ')) {
+    const arg = lower.slice(3)
+    const dirs = ['books', 'music', 'play', 'shelf', 'now']
+    const match = dirs.find(d => d.startsWith(arg) && d !== arg)
+    if (match) return input + match.slice(arg.length)
+  } else {
+    const match = ALL_COMMANDS.find(c => c.startsWith(lower) && c !== lower)
+    if (match) return input + match.slice(input.length)
+  }
+  return ''
+}
+
 function InteractiveTerminalPrompt({
   history,
   commandInput,
   setCommandInput,
   handleCommand,
-  inputRef
+  inputRef,
+  activeTab,
 }: {
   history: Array<{ cmd: string, output: React.ReactNode }>;
   commandInput: string;
   setCommandInput: (val: string) => void;
   handleCommand: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
+  activeTab: 'books' | 'music' | 'play';
 }) {
   const historyEndRef = useRef<HTMLDivElement>(null)
+  const hint = getCompletionHint(commandInput, activeTab)
+  const hintSuffix = hint.slice(commandInput.length)
 
   useEffect(() => {
-    historyEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (historyEndRef.current && historyEndRef.current.parentElement) {
+      const parent = historyEndRef.current.parentElement;
+      parent.scrollTo({
+        top: parent.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [history])
 
   return (
@@ -247,8 +349,15 @@ function InteractiveTerminalPrompt({
         onClick={() => inputRef.current?.focus()}
       >
         <span className="font-mono text-2xs text-parchment/30">›_</span>
-        <span className="font-mono text-xs text-parchment/70 flex-1 whitespace-pre-wrap break-all">
-          {commandInput}
+        {/* Inline hint layer — the ghost text behind the visible cursor */}
+        <span
+          className="font-mono text-xs flex-1 whitespace-pre-wrap break-all pointer-events-none select-none"
+          aria-hidden
+        >
+          <span className="text-parchment/70">{commandInput}</span>
+          {hintSuffix && (
+            <span style={{ color: 'rgba(207,204,187,0.22)' }}>{hintSuffix}</span>
+          )}
           <Blink />
         </span>
         <input
@@ -273,12 +382,14 @@ function InteractiveTerminalPrompt({
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'books' | 'music' | 'play'>('books')
   const [activeGameId, setActiveGameId] = useState<string>('01')
-  const [history, setHistory] = useState<Array<{ cmd: string, output: React.ReactNode }>>([
-    { cmd: 'sysinfo', output: 'JasonOS v1.0.0\nType "help" for a list of available commands.' }
-  ])
+  const [history, setHistory] = useState<Array<{ cmd: string, output: React.ReactNode }>>(
+    () => loadHistory()
+  )
   const [commandInput, setCommandInput] = useState('')
   const [uptimeStart] = useState(() => Date.now())
   const inputRef = useRef<HTMLInputElement>(null)
+  const { scanlineActive, setScanlineActive, toggleScanline } = useScanline()
+
 
   // Auto-focus the terminal when it scrolls into view, and blur when it leaves
   // so we don't hijack keyboard scrolling when the user isn't looking at it.
@@ -304,48 +415,9 @@ export default function AboutSection() {
   const handleCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
       e.preventDefault()
-      const cmd = commandInput.toLowerCase()
-      const commands = [
-        'help', 'clear', 'cd', 'ls', 'resume', 'contact', 'whoami',
-        'sudo', 'echo', 'ping', 'coffee', 'uptime', 'rm -rf /', 'flip', 'unflip', 'cat'
-      ]
-
-      const isBaseCommand = !cmd.includes(' ') || cmd.startsWith('rm')
-      if (isBaseCommand) {
-        const matches = commands.filter(c => c.startsWith(cmd))
-        if (matches.length === 1) {
-          let suffix = ''
-          if (['cd', 'sudo', 'echo'].includes(matches[0])) suffix = ' '
-          setCommandInput(matches[0] + suffix)
-        } else if (matches.length > 1) {
-          const sorted = matches.sort()
-          const first = sorted[0]
-          const last = sorted[sorted.length - 1]
-          let i = 0
-          while (i < first.length && first.charAt(i) === last.charAt(i)) i++
-          const commonPrefix = first.substring(0, i)
-          if (commonPrefix.length > cmd.length) {
-            setCommandInput(commonPrefix)
-          }
-        }
-      } else if (cmd.startsWith('cd ')) {
-        const dirs = ['books', 'shelf', 'music', 'now', 'play']
-        const arg = cmd.slice(3)
-        const matches = dirs.filter(d => d.startsWith(arg))
-        if (matches.length === 1) {
-          setCommandInput('cd ' + matches[0])
-        } else if (matches.length > 1) {
-          const sorted = matches.sort()
-          const first = sorted[0]
-          const last = sorted[sorted.length - 1]
-          let i = 0
-          while (i < first.length && first.charAt(i) === last.charAt(i)) i++
-          const commonPrefix = first.substring(0, i)
-          if (commonPrefix.length > arg.length) {
-            setCommandInput('cd ' + commonPrefix)
-          }
-        }
-      }
+      // Accept the inline Zsh-style ghost hint if present
+      const hint = getCompletionHint(commandInput, activeTab)
+      if (hint) setCommandInput(hint)
       return
     }
 
@@ -357,28 +429,70 @@ export default function AboutSection() {
       const lowerCmd = cmd.toLowerCase()
 
       if (lowerCmd === 'help') {
-        output = 'Available commands: help, clear, cd <tab>, ls, resume, contact, whoami, sudo, echo, ping, coffee, uptime, rm -rf /, flip, unflip, cat'
+        output = [
+          'Available commands:',
+          '  help, clear, ls, cd <dir>, cat <file>',
+          '  resume, contact, whoami, uptime',
+          '  sudo, echo, ping, coffee, flip, unflip, rm -rf /',
+          '  scanline [on|off|toggle]',
+          '',
+          'Directories: books  music  play',
+          'Tip: type "ls" to list files, "cat <file>.md" to read one.',
+        ].join('\n')
       } else if (lowerCmd === 'clear') {
-        setHistory([])
+        const cleared: HistoryEntry[] = []
+        setHistory(cleared)
+        persistHistory(cleared)
         setCommandInput('')
         return
+      } else if (lowerCmd === 'cd ..' || lowerCmd === 'cd ~') {
+        output = '~/jjz/personal'
       } else if (lowerCmd.startsWith('cd ')) {
-        const target = lowerCmd.split(' ')[1]
-        if (target === 'books' || target === 'shelf') { setActiveTab('books'); output = 'Changed directory to books' }
-        else if (target === 'music' || target === 'now') { setActiveTab('music'); output = 'Changed directory to music' }
-        else if (target === 'play') { setActiveTab('play'); output = 'Changed directory to play' }
-        else { output = `cd: no such file or directory: ${target}\nAvailable directories: books (shelf), music (now), play` }
+        const target = lowerCmd.slice(3).trim()
+        if (target === 'books' || target === 'shelf') {
+          setActiveTab('books')
+          output = 'cd ~/jjz/personal/books'
+        } else if (target === 'music' || target === 'now') {
+          setActiveTab('music')
+          output = 'cd ~/jjz/personal/music'
+        } else if (target === 'play') {
+          setActiveTab('play')
+          output = 'cd ~/jjz/personal/play'
+        } else {
+          output = `cd: no such file or directory: ${target}\nAvailable directories: books  music  play`
+        }
       } else if (lowerCmd === 'ls') {
-        if (activeTab === 'books') output = BOOKSHELF.map(b => b.title).join('  ')
-        else if (activeTab === 'music') output = ROTATIONS.map(r => r.artist).join('  ')
-        else if (activeTab === 'play') output = PLAYGROUND.map(p => p.title).join('  ')
+        const vfsFiles = VFS[activeTab]
+        const dirEmoji = activeTab === 'books' ? '📚' : activeTab === 'music' ? '♫' : '◈'
+        output = `${dirEmoji} ${activeTab}/\n${vfsFiles.map(f => '  ' + f.file).join('\n')}`
+      } else if (lowerCmd.startsWith('cat ')) {
+        const arg = lowerCmd.slice(4).trim()
+        const vfsFiles = VFS[activeTab] ?? []
+        const entry = vfsFiles.find(f => f.file === arg || f.file === arg + '.md')
+        if (entry) {
+          output = entry.summary
+        } else {
+          output = `cat: ${arg}: No such file in current directory\nRun "ls" to list available files.`
+        }
+      } else if (lowerCmd === 'cat') {
+        // bare cat — ASCII kitty easter egg
+        output = <pre className="font-mono text-2xs leading-tight mt-1">{`          —————
+					╱ ＞　　 フ
+        |   _  _l
+       ╱\`  ミ＿xノ
+      /　　　 　 |
+			 /   |    J
+    _|    \\ \\ \\
+  ╱ _|     | | |
+ | (_ \\____\\_),_)
+  ╲ _)`}</pre>
       } else if (lowerCmd === 'resume') {
         window.open('https://www.figma.com/design/o1kklsHC3aczG6VzZYSKrO/Jason-s-Resume?node-id=0-1&t=U3xwtuzfGgomf4Qc-1', '_blank')
         output = 'Opening resume...'
       } else if (lowerCmd === 'contact') {
         output = "Let's connect! Check the footer for my social links."
       } else if (lowerCmd === 'whoami') {
-        output = 'Jason Jiayu Zhang - Designer & Engineer'
+        output = 'Jason Jiayu Zhang — Designer & Engineer'
       } else if (lowerCmd.startsWith('sudo ')) {
         output = 'User is not in the sudoers file. This incident will be reported.'
       } else if (lowerCmd === 'sudo') {
@@ -400,22 +514,31 @@ export default function AboutSection() {
         output = '(╯°□°）╯︵ ┻━┻'
       } else if (lowerCmd === 'unflip') {
         output = '┬─┬ ノ( ゜-゜ノ)'
-      } else if (lowerCmd === 'cat') {
-        output = <pre className="font-mono text-2xs leading-tight mt-1">{`          —————
-　　　　　╱ ＞　　 フ
-        |   _  _l
-       ╱\`  ミ＿xノ
-      /　　　 　 |
-　　　 /   |    J
-    _|    \\ \\ \\
-  ╱ _|     | | |
- | (_ \\____\\_),_)
-  ╲ _)`}</pre>
+      } else if (lowerCmd === 'sysinfo') {
+        output = 'JasonOS v1.0.0\nType "help" for a list of available commands.'
+      } else if (lowerCmd === 'scanline toggle' || lowerCmd === 'scanlines') {
+        toggleScanline()
+        // scanlineActive is current state; after toggle, state flips — report what the new state will be
+        output = !scanlineActive
+          ? 'Scanline overlay enabled. Retro CRT filter active.'
+          : 'Scanline overlay disabled. Clean visual filter active.'
+      } else if (lowerCmd === 'scanline off') {
+        setScanlineActive(false)
+        output = 'Scanline overlay disabled. Clean visual filter active.'
+      } else if (lowerCmd === 'scanline on') {
+        setScanlineActive(true)
+        output = 'Scanline overlay enabled. Retro CRT filter active.'
+      } else if (lowerCmd === 'scanline') {
+        output = `Scanline overlay is currently ${scanlineActive ? 'ON' : 'OFF'}.\nUsage: scanline [on|off|toggle]`
       } else {
         output = `command not found: ${cmd}`
       }
 
-      setHistory(prev => [...prev, { cmd, output }])
+      setHistory(prev => {
+        const next = [...prev, { cmd, output }]
+        persistHistory(next)
+        return next
+      })
       setCommandInput('')
     }
   }
@@ -624,6 +747,7 @@ export default function AboutSection() {
                     setCommandInput={setCommandInput}
                     handleCommand={handleCommand}
                     inputRef={inputRef}
+                    activeTab={activeTab}
                   />
                 </div>
               </TerminalSection>
@@ -672,6 +796,7 @@ export default function AboutSection() {
                     setCommandInput={setCommandInput}
                     handleCommand={handleCommand}
                     inputRef={inputRef}
+                    activeTab={activeTab}
                   />
                 </div>
               </TerminalSection>
@@ -740,6 +865,7 @@ export default function AboutSection() {
                   setCommandInput={setCommandInput}
                   handleCommand={handleCommand}
                   inputRef={inputRef}
+                  activeTab={activeTab}
                 />
               </TerminalSection>
             )}
