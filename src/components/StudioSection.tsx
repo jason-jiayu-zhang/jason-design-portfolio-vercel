@@ -41,7 +41,7 @@ function TiltCard({ to, children, style, className }: TiltCardProps) {
     <Link
       ref={cardRef}
       to={to}
-      className={`group relative flex flex-col gap-3 p-5 border-0 bg-primary z-0 cursor-pointer ${className ?? ''}`}
+      className={`group relative flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 md:p-5 border-0 bg-primary z-0 cursor-pointer ${className ?? ''}`}
       style={{
         ...style,
         // GPU-accelerated 3D transform
@@ -88,12 +88,15 @@ export default function StudioSection() {
       </div>
 
       {/* Experiment grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px border border-accent/20">
-        {EXPERIMENTS.map((exp, i) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px border border-accent/20 bg-accent/20">
+        {[...EXPERIMENTS].sort((a, b) => {
+          const yearA = a.year === 'Present' ? 9999 : Number(a.year);
+          const yearB = b.year === 'Present' ? 9999 : Number(b.year);
+          return yearB - yearA;
+        }).map((exp, i) => (
           <TiltCard
             key={exp.id}
             to={`/studio/${exp.id}`}
-            style={{ borderBottom: i < EXPERIMENTS.length - 4 ? '1px solid rgba(56,64,106,0.2)' : undefined }}
           >
             {/* Background overlay for hover effect */}
             <div className="absolute inset-0 -z-10 bg-surface/10 group-hover:bg-surface/30 transition-colors duration-300 pointer-events-none rounded-sm" />

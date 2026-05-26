@@ -2,7 +2,39 @@ import { useState, useRef, useEffect } from 'react'
 import { TIMELINE, BELIEFS, BOOKSHELF, ROTATIONS, PLAYGROUND, EDUCATION } from '../data/about'
 import type { TimelineEntry, Belief, BookEntry } from '../data/about'
 import { useScanline } from './ScanlineContext'
-import { BIO } from '../data/portfolio'
+import { BIO, STATUS_CYCLE } from '../data/portfolio'
+
+function RotatingStatusText() {
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [animState, setAnimState] = useState<'idle' | 'exit' | 'enter'>('idle')
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setAnimState('exit')
+      setTimeout(() => {
+        setCurrentIdx((prev) => (prev + 1) % STATUS_CYCLE.length)
+        setAnimState('enter')
+        setTimeout(() => setAnimState('idle'), 200)
+      }, 350)
+    }, 10000)
+    return () => clearInterval(intervalRef.current)
+  }, [])
+
+  const textStyle: React.CSSProperties = {
+    transform: animState === 'exit' ? 'translateY(-100%)' : animState === 'enter' ? 'translateY(4px)' : 'translateY(0)',
+    opacity: animState === 'enter' ? 0 : 1,
+    transition: animState === 'exit' ? 'transform 0.32s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.25s ease' : animState === 'enter' ? 'none' : 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease',
+    willChange: 'transform, opacity',
+    display: 'block'
+  }
+
+  return (
+    <span className="font-mono text-xs text-parchment/70 overflow-hidden block h-[1.2em]">
+      <span style={textStyle}>{STATUS_CYCLE[currentIdx].text}</span>
+    </span>
+  )
+}
 
 // ─── Animated underline link ──────────────────────────────────────────────────
 function AnchorLine({
@@ -660,12 +692,12 @@ export default function AboutSection() {
           <div className="mt-8 flex flex-wrap gap-6 pt-6 border-t border-accent/20">
             <div className="flex flex-col gap-1.5">
               <span className="font-mono text-2xs text-parchment/30 uppercase tracking-wider">Status</span>
-              <span className="font-mono text-xs text-parchment/70">Online, Creating</span>
+              <RotatingStatusText />
             </div>
             <div className="w-px h-8 bg-accent/20 hidden sm:block" />
             <div className="flex flex-col gap-1.5">
               <span className="font-mono text-2xs text-parchment/30 uppercase tracking-wider">Location</span>
-              <span className="font-mono text-xs text-parchment/70">San Francisco, CA</span>
+              <span className="font-mono text-xs text-parchment/70">Davis, CA</span>
             </div>
             <div className="w-px h-8 bg-accent/20 hidden sm:block" />
             <div className="flex flex-col gap-1.5">
@@ -693,7 +725,7 @@ export default function AboutSection() {
                 <img
                   src="/images/IMG_8345.JPG"
                   alt="Jason Portrait"
-                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
+                  className="w-full h-full object-cover object-top grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
                 />
                 {/* Scanline overlay */}
                 <div
@@ -712,7 +744,7 @@ export default function AboutSection() {
                 <img
                   src="/images/Jason Zhang_26-04-29_Stripe_Booth2_4954.jpg"
                   alt="Jason at work"
-                  className="w-full h-full object-cover grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
+                  className="w-full h-full object-cover object-[center_30%] grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
                 />
                 <div
                   className={`absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-0 ${scanlineActive ? 'opacity-100' : 'opacity-30'}`}

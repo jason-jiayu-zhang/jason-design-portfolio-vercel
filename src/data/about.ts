@@ -49,7 +49,7 @@ export const TIMELINE: TimelineEntry[] = [
   },
   {
     period: 'Mar 2025 – Present',
-    role: 'Lead Product Designer & UI Engineer',
+    role: 'Design Engineer',
     org: 'Cattlelog (AggieWorks)',
     tags: ['Full-Stack Engineering', 'UI/UX Design', 'Product'],
     detail:
@@ -57,7 +57,7 @@ export const TIMELINE: TimelineEntry[] = [
   },
   {
     period: 'Jan 2026 – Present',
-    role: 'UI/UX Designer & Full-Stack Engineer',
+    role: 'Full-Stack Designer',
     org: 'Fimanu',
     tags: ['Figma REST API', 'Full-Stack Engineering', 'Product Design'],
     detail:

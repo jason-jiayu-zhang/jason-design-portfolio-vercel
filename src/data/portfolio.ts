@@ -53,7 +53,7 @@ export const STATUS_CYCLE: StatusCycle[] = [
   { text: 'Building keyboards' },
   { text: 'Reading Thank You for Arguing' },
   { text: 'Petting my cats' },
-  { text: 'Tennis' },
+  { text: 'Playing tennis' },
 ]
 
 // ─── FEATURED PROJECTS ────────────────────────────────────────────────────────
@@ -314,9 +314,9 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'campus-rec-ad',
     title: 'Campus Recreation Ad',
-    contextLabel: 'Conceptual // Graphic Design',
+    contextLabel: 'Conceptual / Graphic Design',
     visualAssetType: 'Ad Poster Graphic',
-    description: 'Campus Recreation Ad',
+    description: 'A conceptual ad poster for Campus Recreation designed to grab attention in a high-foot-traffic campus environment while establishing strong visual hierarchy in print dimensions.',
     imageUrl: '/images/experiments/campus-rec-ad.webp',
     year: 2025,
     category: 'conceptual',
@@ -333,7 +333,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'cs-tutoring-graphics',
     title: 'CS Tutoring Graphics',
-    contextLabel: 'Published // Promotional Graphic',
+    contextLabel: 'Published / Promotional Graphic',
     visualAssetType: 'Social Media Asset',
     description: 'Applications Open for CS Tutors. Hybrid or Online. 1-3 Unit Tutor.',
     imageUrl: '/images/experiments/cs-tutoring-graphics.webp',
@@ -352,7 +352,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'product-space-graphics',
     title: 'Product Space Graphics',
-    contextLabel: 'Published // Branding & Social',
+    contextLabel: 'Published / Branding & Social',
     visualAssetType: 'Branding',
     description: 'Product Space promotional graphics series.',
     imageUrl: '/images/experiments/product-space-graphics.webp',
@@ -371,7 +371,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'cattlelog-graphics',
     title: 'Cattlelog Graphics',
-    contextLabel: 'Published // Promotional Campaign',
+    contextLabel: 'Published / Promotional Campaign',
     visualAssetType: 'Launch Graphic',
     description: 'Cattlelog Beta (02/04); Instagram Launch (02/25); Grade Distribution Launch (03/04).',
     imageUrl: '/images/experiments/cattlelog-graphics.webp',
@@ -390,9 +390,9 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'figma-campus-leader-graphics',
     title: 'Figma Campus Leader Graphics',
-    contextLabel: 'Published // Event Marketing',
+    contextLabel: 'Published / Event Marketing',
     visualAssetType: 'Event Banner',
-    description: 'Figma @ UCD event marketing assets promoting hands-on sessions where students can design custom items to take home.',
+    description: 'Event marketing assets for Figma @ UCD.',
     imageUrl: '/images/experiments/figma-cl-graphics.webp',
     year: 'Present',
     category: 'published',
@@ -409,7 +409,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'collection-52',
     title: 'Collection 52',
-    contextLabel: 'Conceptual // UI Exploration',
+    contextLabel: 'Conceptual / UI Exploration',
     visualAssetType: 'UI Exploration',
     description: 'A curated collection of daily UI design challenges and visual layouts.',
     imageUrl: '/images/experiments/collection-52.webp',
@@ -429,7 +429,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'linkedin-graphics',
     title: 'LinkedIn Graphics',
-    contextLabel: 'Published // Branding & Social',
+    contextLabel: 'Published / Branding & Social',
     visualAssetType: 'Social Media Asset',
     description: 'Social graphics for personal branding and internship announcements.',
     imageUrl: '/images/experiments/linkedin-graphics.webp',
@@ -448,7 +448,7 @@ export const EXPERIMENTS: Experiment[] = [
   {
     id: 'formula-ucd',
     title: 'Formula @ UCD',
-    contextLabel: 'Published // Event Marketing',
+    contextLabel: 'Published / Event Marketing',
     visualAssetType: 'Event Banner',
     description: 'Promotional banner designs and marketing assets for UC Davis Formula Racing.',
     imageUrl: '/images/experiments/formula-ucd.webp',

@@ -113,7 +113,7 @@ const allItems: ArchiveItem[] = [
     title: e.title,
     type: e.category.charAt(0).toUpperCase() + e.category.slice(1),
     role: e.role || '-',
-    contextTags: e.contextLabel.split(' // ').map(t => t.trim()),
+    contextTags: e.contextLabel.split(' / ').map(t => t.trim()),
     linkPath: `/studio/${e.id}`,
     isCaseStudy: false,
   }))

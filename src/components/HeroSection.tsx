@@ -232,6 +232,18 @@ export default function HeroSection() {
   const wheelPosRef = useRef<number | null>(null)
   const leftPanelRef = useRef<HTMLDivElement>(null)
 
+  const [mouseX, setMouseX] = useState(0)
+  const [mouseY, setMouseY] = useState(0)
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMouseX(e.clientX)
+      setMouseY(e.clientY)
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   const handleProjectChange = useCallback((index: number) => {
     if (index === activeIndex) return;
     setActiveIndex(index)
@@ -595,16 +607,16 @@ export default function HeroSection() {
             {showPhase2 && (
               <>
             {/* Corner coordinate labels */}
-            <div className={`hidden lg:block absolute top-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-              X:{Math.round(300 + Math.cos(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
+            <div className={`hidden lg:block absolute top-6 left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              X:{mouseX.toString().padStart(4, '0')}
             </div>
-            <div className={`hidden lg:block absolute top-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-              Y:{Math.round(300 + Math.sin(activeIndex * (SNAP_INTERVAL * Math.PI / 180)) * 200).toString().padStart(4, '0')}
+            <div className={`hidden lg:block absolute top-6 right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+              Y:{mouseY.toString().padStart(4, '0')}
             </div>
-            <div className={`hidden lg:block absolute bottom-6 left-6 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute bottom-6 left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°
             </div>
-            <div className={`hidden lg:block absolute bottom-6 right-6 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute bottom-6 right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               R:276
             </div>
             </>

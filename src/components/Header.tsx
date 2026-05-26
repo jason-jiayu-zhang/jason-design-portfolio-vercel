@@ -46,7 +46,7 @@ function StatusBar() {
         setAnimState('enter')
         setTimeout(() => setAnimState('idle'), 200)
       }, 350)
-    }, 6000)
+    }, 10000)
 
     return () => clearInterval(intervalRef.current)
   }, [isPhase3])
@@ -97,6 +97,15 @@ export default function Header() {
   const isPhase2 = hasLoaded || phase === 'phase02' || phase === 'phase03'
   const isPhase3 = hasLoaded || phase === 'phase03'
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', `#${id}`);
+    }
+  };
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 h-12 flex items-center"
@@ -145,21 +154,24 @@ export default function Header() {
 
         {/* ── Right: Nav links ── */}
         {isPhase3 && (
-        <nav className={`flex items-center gap-4 overflow-x-auto no-scrollbar flex-1 sm:flex-initial min-w-0 ml-4 sm:ml-0 justify-start sm:justify-end ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+        <nav className={`flex items-center gap-4 overflow-x-auto no-scrollbar justify-end min-w-0 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
           <a
             href="#work"
+            onClick={(e) => handleScroll(e, 'work')}
             className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Work
           </a>
           <a
             href="#studio"
+            onClick={(e) => handleScroll(e, 'studio')}
             className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Studio
           </a>
           <a
             href="#about"
+            onClick={(e) => handleScroll(e, 'about')}
             className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             About
