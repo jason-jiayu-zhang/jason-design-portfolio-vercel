@@ -101,17 +101,17 @@ export const PROJECTS: Project[] = [
         'Next: a personalized dashboard that aggregates a student\'s full course history, predicted GPA curves per major, and proactive scheduling conflict detection, moving Cattlelog from a discovery tool to an ongoing academic co-pilot.',
       images: [
         {
-          src: '/images/projects/cattlelog-landing.webp',
+          src: '/images/projects/cattlelog/landing.webp',
           label: 'Landing Page',
           description: 'Consolidated UC Davis course & professor catalog discovery portal.'
         },
         {
-          src: '/images/projects/cattlelog-about.webp',
+          src: '/images/projects/cattlelog/about.webp',
           label: 'Team & Mission',
           description: 'Meet the designers and engineers behind the platform.'
         },
         {
-          src: '/images/projects/cattlelog-cattleblog.webp',
+          src: '/images/projects/cattlelog/cattleblog.webp',
           label: 'Cattleblog',
           description: 'Academic planning resources, tips, and student announcements.'
         }
@@ -168,17 +168,17 @@ export const PROJECTS: Project[] = [
       roadmap: 'Next: Scaling the platform beyond a single-user tool by implementing robust user authentication, allowing any designer or team to connect their Figma accounts, generate their own activity heatmaps, and seamlessly track their collaborative contributions.',
       images: [
         {
-          src: '/images/projects/fimanu-landing.webp',
+          src: '/images/projects/fimanu/landing.webp',
           label: 'Dashboard',
           description: 'Unified dashboard visualizing design activity across multiple Figma files.'
         },
         {
-          src: '/images/projects/fimanu-dashboard.webp',
+          src: '/images/projects/fimanu/dashboard.webp',
           label: 'Activity Heatmap',
           description: 'Premium heatmap displaying daily Figma contributions.'
         },
         {
-          src: '/images/projects/fimanu-onboarding.webp',
+          src: '/images/projects/fimanu/onboarding.webp',
           label: 'Public Embed',
           description: 'Dynamic, public-facing activity widget for showcasing design stats.'
         }
@@ -228,17 +228,17 @@ export const PROJECTS: Project[] = [
         'The next evolution is a public-facing resource library: open-sourcing the Figma template system so any UC campus club can bootstrap a professional design practice.',
       images: [
         {
-          src: '/images/projects/product-space-landing.webp',
+          src: '/images/projects/product-space/landing.webp',
           label: 'Landing Page',
           description: 'The homepage for Product Space @ UCD.'
         },
         {
-          src: '/images/projects/product-space-about.webp',
+          src: '/images/projects/product-space/about.webp',
           label: 'About Us',
           description: 'Our mission and the people behind Product Space.'
         },
         {
-          src: '/images/projects/product-space-join.webp',
+          src: '/images/projects/product-space/join.webp',
           label: 'Join Us',
           description: 'Application and recruitment details for prospective members.'
         }
@@ -289,17 +289,17 @@ export const PROJECTS: Project[] = [
         'Scaling the product with a lightweight full-stack implementation to consume live location data and campus network connection density, plus introducing micro-reservations to optimize underutilized university real estate.',
       images: [
         {
-          src: '/images/projects/spot-onboarding.webp',
+          src: '/images/projects/spot/onboarding.webp',
           label: 'Onboarding Flow',
           description: 'A seamless onboarding experience that introduces users to core features.'
         },
         {
-          src: '/images/projects/spot-map-and-catalog.webp',
+          src: '/images/projects/spot/map-and-catalog.webp',
           label: 'Map & Catalog',
           description: 'Live occupancy heatmapping and detailed study space catalog.'
         },
         {
-          src: '/images/projects/spot-spot-creation.webp',
+          src: '/images/projects/spot/spot-creation.webp',
           label: 'Spot Creation',
           description: 'Interface for adding and configuring new study spots with environmental preferences.'
         }
