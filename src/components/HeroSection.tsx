@@ -27,7 +27,9 @@ function AnimatedElement({ delay, children, className = '' }: AnimatedElementPro
         style={{
           transform: show ? 'translateY(0)' : 'translateY(10px)',
           opacity: show ? 1 : 0,
-          transition: `transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease`,
+          // Expo-out: 70% of travel happens in first 15% of time — feels instant,
+          // but the curve coasts gently to rest over the full duration.
+          transition: `transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
           willChange: 'transform, opacity',
         }}
       >
@@ -68,7 +70,8 @@ function NarrativePanel({ project }: NarrativePanelProps) {
             style={{
               transform: lines[i] ? 'translateY(0)' : 'translateY(8px)',
               opacity: lines[i] ? 1 : 0,
-              transition: 'transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease',
+              // Expo-out: each paragraph snaps into place immediately, then flows to rest
+              transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
               willChange: 'transform, opacity',
             }}
           >
@@ -151,11 +154,13 @@ function ProjectPreviewCarousel({ project }: ProjectPreviewCarouselProps) {
               fetchPriority={i === 0 ? 'high' : 'low'}
               loading={i === 0 ? 'eager' : 'lazy'}
               decoding={i === 0 ? 'sync' : 'async'}
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="absolute inset-0 w-full h-full object-cover"
               style={{
                 opacity: i === activeImageIdx ? (isHovered ? 1 : 0.6) : 0,
                 transform: i === activeImageIdx ? (isHovered ? 'scale(1.05)' : 'scale(1)') : 'scale(1.025)',
                 visibility: i === activeImageIdx ? 'visible' : 'hidden',
+                // Expo-out: snaps to the new scale instantly, drifts to rest
+                transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             />
           ))}
@@ -232,15 +237,22 @@ export default function HeroSection() {
   const wheelPosRef = useRef<number | null>(null)
   const leftPanelRef = useRef<HTMLDivElement>(null)
 
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
+  // Mouse position: use refs to avoid React re-renders on every mousemove frame.
+  // The coordinate display is updated via direct DOM manipulation — same visual result, zero cost.
+  const mouseXRef = useRef(0)
+  const mouseYRef = useRef(0)
+  const coordXRef = useRef<HTMLSpanElement>(null)
+  const coordYRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMouseX(e.clientX)
-      setMouseY(e.clientY)
+      mouseXRef.current = e.clientX
+      mouseYRef.current = e.clientY
+      // Update the DOM directly — bypasses React reconciler entirely
+      if (coordXRef.current) coordXRef.current.textContent = `X:${String(e.clientX).padStart(4, '0')}`
+      if (coordYRef.current) coordYRef.current.textContent = `Y:${String(e.clientY).padStart(4, '0')}`
     }
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
@@ -608,10 +620,10 @@ export default function HeroSection() {
               <>
             {/* Corner coordinate labels */}
             <div className={`hidden lg:block absolute top-4 sm:top-6 left-4 sm:left-6 lg:left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-              X:{mouseX.toString().padStart(4, '0')}
+              <span ref={coordXRef}>X:{String(mouseXRef.current).padStart(4, '0')}</span>
             </div>
             <div className={`hidden lg:block absolute top-4 sm:top-6 right-4 sm:right-6 lg:right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
-              Y:{mouseY.toString().padStart(4, '0')}
+              <span ref={coordYRef}>Y:{String(mouseYRef.current).padStart(4, '0')}</span>
             </div>
             <div className={`hidden lg:block absolute bottom-4 sm:bottom-6 left-4 sm:left-6 lg:left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°

@@ -47,16 +47,16 @@ function AnchorLine({
       rel={external ? 'noopener noreferrer' : undefined}
       className="group relative inline-block"
     >
-      <span className="text-parchment/70 group-hover:text-parchment transition-colors duration-300">
+      <span className="text-parchment/70 group-hover:text-parchment transition-colors duration-200">
         {children}
       </span>
-      {/* Center-out underline */}
+      {/* Center-out underline — expo-out gives a whip-snap reveal */}
       <span
         className="absolute -bottom-px left-0 right-0 h-px bg-parchment/50"
         style={{
           transform: 'scaleX(0)',
           transformOrigin: 'center',
-          transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
+          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         data-underline
       />
@@ -109,8 +109,11 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
 
         {/* Right — expand toggle */}
         <span
-          className="font-mono text-xs text-parchment/60 flex-shrink-0 mt-0.5 transition-transform duration-300"
-          style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}
+          className="font-mono text-xs text-parchment/60 flex-shrink-0 mt-0.5"
+          style={{
+            transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
         >
           +
         </span>
@@ -121,7 +124,8 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
         className="grid"
         style={{
           gridTemplateRows: open ? '1fr' : '0fr',
-          transition: 'grid-template-rows 0.45s cubic-bezier(0.22,1,0.36,1)',
+          // Expo-out: the grid row snaps open then eases — feels like a physical drawer
+          transition: 'grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         <div className="overflow-hidden">
@@ -160,7 +164,8 @@ function BeliefBlock({ belief }: { belief: Belief }) {
         style={{
           background: 'linear-gradient(to bottom, transparent, #a39d7b, transparent)',
           opacity: hovered ? 0.6 : 0,
-          transition: 'opacity 0.35s cubic-bezier(0.22,1,0.36,1)',
+          // Expo-out: the bar whips in instantly, fades out quickly on leave
+          transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       />
 
@@ -173,7 +178,7 @@ function BeliefBlock({ belief }: { belief: Belief }) {
               background: 'linear-gradient(90deg, rgba(163,157,123,0.4), transparent)',
               width: hovered ? '100%' : '24px',
               maxWidth: hovered ? '80px' : '24px',
-              transition: 'max-width 0.4s cubic-bezier(0.22,1,0.36,1)',
+              transition: 'max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
         </div>
@@ -182,7 +187,7 @@ function BeliefBlock({ belief }: { belief: Belief }) {
           style={{
             letterSpacing: '-0.025em',
             color: hovered ? '#fff' : '#cfccbb',
-            transition: 'color 0.3s ease',
+            transition: 'color 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {belief.headline}
@@ -191,7 +196,7 @@ function BeliefBlock({ belief }: { belief: Belief }) {
           className="font-mono text-xs leading-relaxed"
           style={{
             color: hovered ? 'rgba(207,204,187,0.6)' : 'rgba(207,204,187,0.35)',
-            transition: 'color 0.35s ease',
+            transition: 'color 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {belief.body}
@@ -720,12 +725,13 @@ export default function AboutSection() {
 
           <div className="relative w-full max-w-[280px] aspect-[4/5] mx-auto flex items-center justify-center">
             {/* Image 1: Main portrait */}
-            <div className="group absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div className="group absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500" style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}>
               <div className="relative w-full h-full overflow-hidden">
                 <img
                   src="/images/jason-headshot-1.jpg"
                   alt="Jason Portrait"
-                  className="w-full h-full object-cover object-top grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
+                  className="w-full h-full object-cover object-top grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100"
+                  style={{ transition: 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}
                 />
                 {/* Scanline overlay */}
                 <div
@@ -739,12 +745,13 @@ export default function AboutSection() {
             </div>
 
             {/* Image 2: Secondary / Action shot */}
-            <div className="group absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30 transition-all duration-500">
+            <div className="group absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30" style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}>
               <div className="relative w-full h-full overflow-hidden">
                 <img
                   src="/images/jason-headshot-2.jpg"
                   alt="Jason at work"
-                  className="w-full h-full object-cover object-[center_30%] grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100 transition-all duration-700"
+                  className="w-full h-full object-cover object-[center_30%] grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100"
+                  style={{ transition: 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}
                 />
                 <div
                   className={`absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-0 ${scanlineActive ? 'opacity-100' : 'opacity-30'}`}

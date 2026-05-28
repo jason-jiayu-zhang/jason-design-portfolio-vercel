@@ -14,13 +14,13 @@ function SocialLink({ href, label, handle }: { href: string; label: string; hand
       </span>
       <span className="relative font-mono text-xs text-parchment/50 group-hover:text-parchment/50 transition-colors duration-300">
         {handle}
-        {/* Center-out underline */}
+        {/* Center-out underline — expo-out gives whip-snap reveal */}
         <span
           className="absolute -bottom-px left-0 right-0 h-px bg-parchment/40"
           style={{
             transform: 'scaleX(0)',
             transformOrigin: 'center',
-            transition: 'transform 0.38s cubic-bezier(0.22,1,0.36,1)',
+            transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
           data-social-underline
         />

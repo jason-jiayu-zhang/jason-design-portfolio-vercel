@@ -159,7 +159,7 @@ export default function ArchiveSection() {
           <Link
             key={item.id}
             to={item.linkPath}
-            className="group block relative border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors duration-300"
+            className="group block relative border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors duration-150"
           >
             {/* Mobile Layout */}
             <div className="flex flex-col gap-2 p-4 md:hidden">
@@ -198,7 +198,10 @@ export default function ArchiveSection() {
                 {item.type}
               </div>
               <div className="text-right flex justify-end pr-2">
-                <div className="opacity-40 text-parchment/60 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-white transition-all duration-300">
+                <div
+                  className="opacity-40 text-parchment/60 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-white"
+                  style={{ transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, color 0.2s ease' }}
+                >
                   →
                 </div>
               </div>
