@@ -57,9 +57,9 @@ function SectionRule({
         scrollMarginTop: '80px',
       }}
     >
-      <span className="font-mono text-2xs text-parchment/15 tabular-nums">{index}</span>
+      <span className="font-mono text-xs text-parchment/50 tabular-nums">{index}</span>
       <div className="w-4 h-px" style={{ backgroundColor: accentColor, opacity: 0.3 }} />
-      <span className="font-mono text-2xs tracking-label uppercase" style={{ color: `${accentColor}90` }}>
+      <span className="font-mono text-xs tracking-label uppercase" style={{ color: `${accentColor}90` }}>
         {label}
       </span>
       <button
@@ -69,7 +69,7 @@ function SectionRule({
         style={{ color: copied ? accentColor : 'rgba(207,204,187,0.35)' }}
       >
         {copied ? (
-          <span className="font-mono text-2xs whitespace-nowrap absolute left-0" style={{ color: accentColor }}>✓ Copied!</span>
+          <span className="font-mono text-xs whitespace-nowrap absolute left-0" style={{ color: accentColor }}>✓ Copied!</span>
         ) : (
           <svg viewBox="0 0 16 16" className="w-3 h-3 absolute left-0" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2-2a2.5 2.5 0 0 0-3.5-3.5L7.5 5" strokeLinecap="round" />
@@ -155,7 +155,7 @@ function SpecBox({
 
       {/* Stamp */}
       <div
-        className="absolute top-2 right-3 font-mono text-2xs tracking-label"
+        className="absolute top-2 right-3 font-mono text-xs tracking-label"
         style={{ color: '#a39d7b', opacity: 0.3 }}
       >
         {stamp}
@@ -181,7 +181,7 @@ function MetricBlock({
       className="flex flex-col gap-0.5 px-3 py-3 border"
       style={{ borderColor: `${accentColor}25`, backgroundColor: `${accentColor}05` }}
     >
-      <span className="font-mono text-2xs tracking-label text-parchment/25 uppercase">{label}</span>
+      <span className="font-mono text-xs tracking-label text-parchment/60 uppercase">{label}</span>
       <span
         className="font-mono font-semibold leading-none"
         style={{ color: accentColor, fontSize: 'clamp(1.2rem, 2vw, 1.6rem)', letterSpacing: '-0.03em' }}
@@ -196,7 +196,7 @@ function MetricBlock({
 function ToolChip({ label, accentColor }: { label: string; accentColor: string }) {
   return (
     <span
-      className="inline-flex items-center px-2 py-0.5 font-mono text-2xs tracking-label rounded-sm border transition-colors duration-200"
+      className="inline-flex items-center px-2 py-0.5 font-mono text-xs tracking-label rounded-sm border transition-colors duration-200"
       style={{ borderColor: `${accentColor}35`, color: `${accentColor}CC`, backgroundColor: `${accentColor}06` }}
     >
       {label}
@@ -215,11 +215,11 @@ function ProjectNav({ current }: { current: number }) {
     >
       {prev ? (
         <Link to={`/work/${prev.id}`} className="group flex items-center gap-3">
-          <span className="font-mono text-sm text-parchment/25 group-hover:text-parchment/60 transition-colors">
+          <span className="font-mono text-sm text-parchment/60 group-hover:text-parchment/60 transition-colors">
             ←
           </span>
           <div>
-            <p className="font-mono text-2xs tracking-label text-parchment/20 uppercase">Previous</p>
+            <p className="font-mono text-xs tracking-label text-parchment/50 uppercase">Previous</p>
             <p
               className="font-sans font-semibold text-parchment/45 group-hover:text-parchment transition-colors duration-200"
               style={{ letterSpacing: '-0.02em' }}
@@ -234,7 +234,7 @@ function ProjectNav({ current }: { current: number }) {
       {next ? (
         <Link to={`/work/${next.id}`} className="group flex items-center gap-3 text-right">
           <div>
-            <p className="font-mono text-2xs tracking-label text-parchment/20 uppercase">Next</p>
+            <p className="font-mono text-xs tracking-label text-parchment/50 uppercase">Next</p>
             <p
               className="font-sans font-semibold text-parchment/45 group-hover:text-parchment transition-colors duration-200"
               style={{ letterSpacing: '-0.02em' }}
@@ -242,7 +242,7 @@ function ProjectNav({ current }: { current: number }) {
               {next.title}
             </p>
           </div>
-          <span className="font-mono text-sm text-parchment/25 group-hover:text-parchment/60 transition-colors">
+          <span className="font-mono text-sm text-parchment/60 group-hover:text-parchment/60 transition-colors">
             →
           </span>
         </Link>
@@ -284,14 +284,14 @@ function MetadataSidebar({
           >
             {String(projectIndex + 1).padStart(2, '0')}
           </span>
-          <span className="font-mono text-xs text-parchment/20">/ {String(PROJECTS.length).padStart(2, '0')}</span>
+          <span className="font-mono text-xs text-parchment/50">/ {String(PROJECTS.length).padStart(2, '0')}</span>
         </div>
 
 
 
         {/* Tools */}
         <div>
-          <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-2.5">Stack</p>
+          <p className="font-mono text-xs tracking-label text-parchment/60 uppercase mb-2.5">Stack</p>
           <div className="flex flex-wrap gap-1.5">
             {project.tools.map((tool) => (
               <ToolChip key={tool} label={tool} accentColor={project.accentColor} />
@@ -302,7 +302,7 @@ function MetadataSidebar({
         {/* Metrics */}
         {project.metrics.length > 0 && (
           <div>
-            <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-2.5">Impact</p>
+            <p className="font-mono text-xs tracking-label text-parchment/60 uppercase mb-2.5">Impact</p>
             <div className="grid grid-cols-2 gap-1.5">
               {project.metrics.map((m) => (
                 <MetricBlock key={m.label} label={m.label} value={m.value} accentColor={project.accentColor} />
@@ -314,7 +314,7 @@ function MetadataSidebar({
         {/* Awards */}
         {project.awards && project.awards.length > 0 && (
           <div>
-            <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-2.5">Recognition</p>
+            <p className="font-mono text-xs tracking-label text-parchment/60 uppercase mb-2.5">Recognition</p>
             <div className="space-y-1.5">
               {project.awards.map((award) => (
                 <div
@@ -325,7 +325,7 @@ function MetadataSidebar({
                   <svg viewBox="0 0 10 10" className="w-3 h-3 flex-shrink-0" style={{ color: project.accentColor }}>
                     <polygon points="5,0 6.2,3.8 10,3.8 6.9,6.2 8.1,10 5,7.5 1.9,10 3.1,6.2 0,3.8 3.8,3.8" fill="currentColor" />
                   </svg>
-                  <span className="font-mono text-2xs tracking-label" style={{ color: project.accentColor }}>
+                  <span className="font-mono text-xs tracking-label" style={{ color: project.accentColor }}>
                     {award}
                   </span>
                 </div>
@@ -336,12 +336,12 @@ function MetadataSidebar({
 
         {/* Domains */}
         <div>
-          <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-2.5">Domains</p>
+          <p className="font-mono text-xs tracking-label text-parchment/60 uppercase mb-2.5">Domains</p>
           <div className="flex flex-wrap gap-1.5">
             {project.categories.map((cat) => (
               <span
                 key={cat}
-                className="font-mono text-2xs px-2 py-0.5 border rounded-sm"
+                className="font-mono text-xs px-2 py-0.5 border rounded-sm"
                 style={{ borderColor: 'rgba(56,64,106,0.45)', color: 'rgba(207,204,187,0.4)' }}
               >
                 {cat}
@@ -363,7 +363,7 @@ function MetadataSidebar({
                 boxShadow: project.status === 'live' ? '0 0 6px #4ade8088' : 'none',
               }}
             />
-            <span className="font-mono text-2xs tracking-label text-parchment/35 uppercase">
+            <span className="font-mono text-xs tracking-label text-parchment/70 uppercase">
               {project.status === 'live' ? 'Live' : project.status === 'offline' ? 'Offline' : 'Archived'}
             </span>
           </div>
@@ -385,12 +385,12 @@ function MetadataSidebar({
               }}
             >
               <span
-                className="font-mono text-2xs tracking-label uppercase"
+                className="font-mono text-xs tracking-label uppercase"
                 style={{ color: project.accentColor }}
               >
                 Visit {project.title}
               </span>
-              <span className="font-mono text-xs text-parchment/25 group-hover:text-parchment/60 transition-colors">
+              <span className="font-mono text-xs text-parchment/60 group-hover:text-parchment/60 transition-colors">
                 ↗
               </span>
             </a>
@@ -448,7 +448,7 @@ function Lightbox({
       </button>
 
       {/* Counter */}
-      <div className="absolute top-5 left-6 font-mono text-2xs text-parchment/30">
+      <div className="absolute top-5 left-6 font-mono text-xs text-parchment/60">
         {String(activeIndex + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
       </div>
 
@@ -572,7 +572,7 @@ function VisualShowcase({
 
           {/* Browser Address Bar */}
           <div
-            className="flex-1 max-w-md mx-4 py-1 px-3 text-2xs font-mono text-center rounded truncate"
+            className="flex-1 max-w-md mx-4 py-1 px-3 text-xs font-mono text-center rounded truncate"
             style={{
               backgroundColor: 'rgba(10,12,22,0.6)',
               color: 'rgba(207,204,187,0.35)',
@@ -659,13 +659,13 @@ function VisualShowcase({
 
               {/* Title & Description of current screen within canvas */}
               <div className="relative z-10 mt-6 space-y-2 max-w-sm">
-                <span className="font-mono text-2xs uppercase tracking-widest" style={{ color: `${accentColor}80` }}>
+                <span className="font-mono text-xs uppercase tracking-widest" style={{ color: `${accentColor}80` }}>
                   [Mockup Template Unit_{String(activeTab + 1).padStart(2, '0')}]
                 </span>
                 <h4 className="font-sans font-black text-parchment text-lg tracking-tight">
                   {items[activeTab].label}
                 </h4>
-                <p className="font-mono text-xs text-parchment/40 px-4">
+                <p className="font-mono text-xs text-parchment/70 px-4">
                   {items[activeTab].description}
                 </p>
               </div>
@@ -688,11 +688,11 @@ function VisualShowcase({
           >
             {/* Top row */}
             <div className="flex items-center justify-between w-full mb-1">
-              <span className="font-mono text-2xs text-parchment/20 group-hover:text-parchment/40">
+              <span className="font-mono text-xs text-parchment/50 group-hover:text-parchment/70">
                 0{idx + 1}
               </span>
               {!images && (
-                <span className="font-mono text-2xs" style={{ color: idx === activeTab ? accentColor : 'rgba(207,204,187,0.2)' }}>
+                <span className="font-mono text-xs" style={{ color: idx === activeTab ? accentColor : 'rgba(207,204,187,0.2)' }}>
                   {(item as any).symbol}
                 </span>
               )}
@@ -765,7 +765,7 @@ export default function ProjectCaseStudyPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="font-mono text-2xs tracking-label text-parchment/30">404 — PROJECT NOT FOUND</p>
+          <p className="font-mono text-xs tracking-label text-parchment/60">404 — PROJECT NOT FOUND</p>
           <Link to="/" className="font-mono text-xs text-gold/70 hover:text-gold transition-colors">
             ← Return Home
           </Link>
@@ -805,16 +805,16 @@ export default function ProjectCaseStudyPage() {
             onClick={() => navigate(-1)}
             className="group flex items-center gap-2.5"
           >
-            <svg viewBox="0 0 16 10" className="w-4 h-4 text-parchment/25 group-hover:text-parchment/60 transition-colors">
+            <svg viewBox="0 0 16 10" className="w-4 h-4 text-parchment/60 group-hover:text-parchment/60 transition-colors">
               <path d="M10 1 L2 5 L10 9" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               <line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
             </svg>
-            <span className="font-mono text-2xs tracking-label text-parchment/30 group-hover:text-parchment/60 uppercase transition-colors">
+            <span className="font-mono text-xs tracking-label text-parchment/60 group-hover:text-parchment/60 uppercase transition-colors">
               Work
             </span>
           </button>
 
-          <span className="font-mono text-2xs text-parchment/15 tabular-nums">
+          <span className="font-mono text-xs text-parchment/50 tabular-nums">
             {String(projectIndex + 1).padStart(2, '0')} — {String(PROJECTS.length).padStart(2, '0')}
           </span>
         </div>
@@ -824,7 +824,7 @@ export default function ProjectCaseStudyPage() {
           {project.categories.slice(0, 2).map((cat) => (
             <span
               key={cat}
-              className="font-mono text-2xs tracking-label uppercase"
+              className="font-mono text-xs tracking-label uppercase"
               style={{ color: acc, opacity: 0.75 }}
             >
               {cat}
@@ -835,7 +835,7 @@ export default function ProjectCaseStudyPage() {
               <div className="w-px h-3 bg-accent/40" />
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" style={{ boxShadow: '0 0 6px #34d399' }} />
-                <span className="font-mono text-2xs tracking-label text-parchment/30">Live</span>
+                <span className="font-mono text-xs tracking-label text-parchment/60">Live</span>
               </div>
             </>
           )}
@@ -865,14 +865,14 @@ export default function ProjectCaseStudyPage() {
         <div className="flex flex-wrap items-center gap-4 mt-5">
           <div className="flex items-center gap-2">
             <div className="w-3 h-px" style={{ backgroundColor: acc, opacity: 0.35 }} />
-            <span className="font-mono text-2xs tracking-label text-parchment/35 uppercase">{project.role}</span>
+            <span className="font-mono text-xs tracking-label text-parchment/70 uppercase">{project.role}</span>
           </div>
           {project.url && (
             <a
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-2xs tracking-label uppercase transition-colors duration-200"
+              className="font-mono text-xs tracking-label uppercase transition-colors duration-200"
               style={{ color: `${acc}70` }}
               onMouseEnter={(e) => (e.currentTarget.style.color = acc)}
               onMouseLeave={(e) => (e.currentTarget.style.color = `${acc}70`)}
@@ -1047,8 +1047,8 @@ export default function ProjectCaseStudyPage() {
               >
                 <span className="font-mono text-xl" style={{ color: `${acc}60` }}>◈</span>
               </div>
-              <p className="font-mono text-2xs tracking-label text-parchment/30 uppercase">Case Study In Progress</p>
-              <p className="font-mono text-xs text-parchment/20 max-w-xs leading-relaxed">
+              <p className="font-mono text-xs tracking-label text-parchment/60 uppercase">Case Study In Progress</p>
+              <p className="font-mono text-xs text-parchment/50 max-w-xs leading-relaxed">
                 {project.narrative[0]}
               </p>
             </div>

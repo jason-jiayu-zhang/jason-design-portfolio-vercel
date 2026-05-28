@@ -41,7 +41,7 @@ function TiltCard({ to, children, style, className }: TiltCardProps) {
     <Link
       ref={cardRef}
       to={to}
-      className={`group relative flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 md:p-5 border-0 bg-primary z-0 cursor-pointer ${className ?? ''}`}
+      className={`group relative flex flex-col gap-1.5 sm:gap-3 p-2 sm:p-4 md:p-5 border border-accent/20 -mt-px -ml-px bg-primary z-0 cursor-pointer ${className ?? ''}`}
       style={{
         ...style,
         // GPU-accelerated 3D transform
@@ -80,7 +80,7 @@ export default function StudioSection() {
         <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <span className="label-caps text-gold">STUDIO /</span>
           <div className="w-px h-4 bg-accent/50" />
-          <span className="font-mono text-2xs text-parchment/30 tracking-wide">
+          <span className="font-mono text-xs text-parchment/60 tracking-wide">
             OFF-A-WHIM EXPERIMENTS
           </span>
         </div>
@@ -88,7 +88,7 @@ export default function StudioSection() {
       </div>
 
       {/* Experiment grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px border border-accent/20 bg-accent/20">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 bg-primary pl-px pt-px border-b border-r border-accent/20">
         {[...EXPERIMENTS].sort((a, b) => {
           const yearA = a.year === 'Present' ? 9999 : Number(a.year);
           const yearB = b.year === 'Present' ? 9999 : Number(b.year);
@@ -134,7 +134,7 @@ export default function StudioSection() {
               <p className="font-sans font-medium text-sm text-parchment leading-tight tracking-tight">
                 {exp.title}
               </p>
-              <p className="font-mono text-2xs text-parchment/35 leading-relaxed">
+              <p className="font-mono text-xs text-parchment/70 leading-relaxed">
                 {exp.description}
               </p>
             </div>

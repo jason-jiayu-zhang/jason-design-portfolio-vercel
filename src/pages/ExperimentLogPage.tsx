@@ -185,9 +185,9 @@ function LogSectionHead({
         transition: `opacity 0.5s ease ${mountDelay}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${mountDelay}ms`,
       }}
     >
-      <span className="font-mono text-2xs text-parchment/15 pb-0.5">{index}</span>
+      <span className="font-mono text-xs text-parchment/50 pb-0.5">{index}</span>
       <div className="w-4 h-px bg-accent/40" />
-      <span className="font-mono text-2xs tracking-label uppercase text-gold/55">{label}</span>
+      <span className="font-mono text-xs tracking-label uppercase text-gold/55">{label}</span>
     </div>
   )
 }
@@ -213,7 +213,7 @@ export default function ExperimentLogPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="font-mono text-2xs tracking-label text-parchment/30">404 — EXPERIMENT NOT FOUND</p>
+          <p className="font-mono text-xs tracking-label text-parchment/60">404 — EXPERIMENT NOT FOUND</p>
           <Link to="/" className="font-mono text-xs text-gold/70 hover:text-gold transition-colors">
             ← Return Home
           </Link>
@@ -241,21 +241,21 @@ export default function ExperimentLogPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="group font-mono text-2xs tracking-label text-parchment/25 hover:text-parchment/60 uppercase transition-colors flex items-center gap-2"
+            className="group font-mono text-xs tracking-label text-parchment/60 hover:text-parchment/60 uppercase transition-colors flex items-center gap-2"
           >
-            <svg viewBox="0 0 12 8" className="w-3 h-3 text-parchment/25 group-hover:text-parchment/60 transition-colors">
+            <svg viewBox="0 0 12 8" className="w-3 h-3 text-parchment/60 group-hover:text-parchment/60 transition-colors">
               <path d="M8 1 L2 4 L8 7" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               <line x1="2" y1="4" x2="10" y2="4" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
             </svg>
             Studio
           </button>
-          <span className="font-mono text-2xs text-parchment/15">/</span>
-          <span className="font-mono text-2xs tracking-label text-parchment/20 uppercase">{exp.category}</span>
-          <span className="font-mono text-2xs text-parchment/15">/</span>
-          <span className="font-mono text-2xs text-parchment/35">{exp.title}</span>
+          <span className="font-mono text-xs text-parchment/50">/</span>
+          <span className="font-mono text-xs tracking-label text-parchment/50 uppercase">{exp.category}</span>
+          <span className="font-mono text-xs text-parchment/50">/</span>
+          <span className="font-mono text-xs text-parchment/70">{exp.title}</span>
         </div>
         <span
-          className="font-mono text-2xs tracking-label"
+          className="font-mono text-xs tracking-label"
           style={{ color: '#a39d7b', opacity: mounted ? 0.4 : 0, transition: 'opacity 0.6s ease 200ms' }}
         >
           [LOG // OFF_A_WHIM_{logNumber}]
@@ -273,7 +273,7 @@ export default function ExperimentLogPage() {
             transition: 'opacity 0.6s ease 120ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) 120ms',
           }}
         >
-          <p className="font-mono text-2xs tracking-label text-gold/55 uppercase mb-4">{exp.contextLabel}</p>
+          <p className="font-mono text-xs tracking-label text-gold/55 uppercase mb-4">{exp.contextLabel}</p>
           <h1
             className="font-sans font-black text-parchment leading-none"
             style={{ fontSize: 'clamp(2.5rem, 7vw, 5.5rem)', letterSpacing: '-0.05em' }}
@@ -335,7 +335,7 @@ export default function ExperimentLogPage() {
 
           {/* Visual type label — bottom left of frame */}
           <div className="absolute bottom-4 left-4">
-            <span className="font-mono text-2xs tracking-label" style={{ color: '#a39d7b', opacity: 0.5 }}>
+            <span className="font-mono text-xs tracking-label" style={{ color: '#a39d7b', opacity: 0.5 }}>
               [{exp.visualAssetType.toUpperCase().replace(/ /g, '_')}]
             </span>
           </div>
@@ -406,8 +406,8 @@ export default function ExperimentLogPage() {
               transition: 'opacity 0.5s ease 300ms',
             }}
           >
-            <p className="font-mono text-2xs tracking-label text-parchment/25 uppercase mb-3">Log Entry Pending</p>
-            <p className="font-mono text-xs text-parchment/20 max-w-xs mx-auto leading-relaxed">{exp.description}</p>
+            <p className="font-mono text-xs tracking-label text-parchment/60 uppercase mb-3">Log Entry Pending</p>
+            <p className="font-mono text-xs text-parchment/50 max-w-xs mx-auto leading-relaxed">{exp.description}</p>
           </div>
         )}
 
@@ -432,7 +432,7 @@ export default function ExperimentLogPage() {
               className="flex flex-col gap-1 px-4 py-4"
               style={{ borderRight: i < 2 ? '1px solid rgba(56,64,106,0.3)' : undefined }}
             >
-              <span className="font-mono text-2xs tracking-label text-parchment/22 uppercase">{item.label}</span>
+              <span className="font-mono text-xs tracking-label text-parchment/22 uppercase">{item.label}</span>
               <span className="font-mono text-xs text-parchment/50">{item.value}</span>
             </div>
           ))}
@@ -448,9 +448,9 @@ export default function ExperimentLogPage() {
         >
           {prev ? (
             <Link to={`/studio/${prev.id}`} className="group flex items-center gap-3">
-              <span className="font-mono text-sm text-parchment/25 group-hover:text-parchment/60 transition-colors">←</span>
+              <span className="font-mono text-sm text-parchment/60 group-hover:text-parchment/60 transition-colors">←</span>
               <div>
-                <p className="font-mono text-2xs tracking-label text-parchment/20 uppercase">Previous</p>
+                <p className="font-mono text-xs tracking-label text-parchment/50 uppercase">Previous</p>
                 <p
                   className="font-sans font-semibold text-parchment/45 group-hover:text-parchment transition-colors duration-200"
                   style={{ letterSpacing: '-0.02em' }}
@@ -465,7 +465,7 @@ export default function ExperimentLogPage() {
           {next ? (
             <Link to={`/studio/${next.id}`} className="group flex items-center gap-3 text-right">
               <div>
-                <p className="font-mono text-2xs tracking-label text-parchment/20 uppercase">Next</p>
+                <p className="font-mono text-xs tracking-label text-parchment/50 uppercase">Next</p>
                 <p
                   className="font-sans font-semibold text-parchment/45 group-hover:text-parchment transition-colors duration-200"
                   style={{ letterSpacing: '-0.02em' }}
@@ -473,7 +473,7 @@ export default function ExperimentLogPage() {
                   {next.title}
                 </p>
               </div>
-              <span className="font-mono text-sm text-parchment/25 group-hover:text-parchment/60 transition-colors">→</span>
+              <span className="font-mono text-sm text-parchment/60 group-hover:text-parchment/60 transition-colors">→</span>
             </Link>
           ) : (
             <div />

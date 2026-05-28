@@ -80,7 +80,7 @@
 @layer components {
   /* Label caps — Swiss editorial small caps */
   .label-caps {
-    @apply font-mono text-2xs tracking-label uppercase text-gold;
+    @apply font-mono text-xs tracking-label uppercase text-gold;
   }
 
   /* Hairline separator */
@@ -102,7 +102,7 @@
   .project-badge {
     @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm
            border border-accent/50 bg-surface/60
-           font-mono text-2xs tracking-label uppercase text-gold;
+           font-mono text-xs tracking-label uppercase text-gold;
   }
 
   /* Subtle glass panel */

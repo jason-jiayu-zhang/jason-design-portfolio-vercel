@@ -190,7 +190,7 @@ function ProjectPreviewCarousel({ project }: ProjectPreviewCarouselProps) {
           </div>
 
           <div className="absolute bottom-3 text-center w-full px-4">
-            <p className="font-mono text-3xs tracking-label uppercase text-parchment/20 group-hover/carousel:text-[#cfccbb90] transition-colors">
+            <p className="font-mono text-xs tracking-label uppercase text-parchment/50 group-hover/carousel:text-[#cfccbb90] transition-colors">
               [{project.title} Spec Template]
             </p>
           </div>
@@ -417,12 +417,12 @@ export default function HeroSection() {
                 {/* 1. Header Cluster (Tight Spacing) */}
                 <div className="flex flex-col gap-1 mb-4 sm:mb-8">
                   <AnimatedElement delay={0}>
-                    <div className="font-mono text-2xs tracking-label uppercase text-[#a39d7b]">
+                    <div className="font-mono text-xs tracking-label uppercase text-[#a39d7b]">
                       0{project.wheelIndex + 1} / 0{PROJECTS.length}
                     </div>
                   </AnimatedElement>
                   <AnimatedElement delay={60}>
-                    <div className="font-mono text-2xs tracking-label uppercase" style={{ color: project.accentColor }}>
+                    <div className="font-mono text-xs tracking-label uppercase" style={{ color: project.accentColor }}>
                       {project.categories[0]}
                     </div>
                   </AnimatedElement>
@@ -448,7 +448,7 @@ export default function HeroSection() {
                 {/* 2. Project Metadata Cluster (Tight Spacing) */}
                 <div className="flex flex-col gap-2 mb-6 sm:mb-10">
                   <AnimatedElement delay={240}>
-                    <div className="flex items-center gap-2 font-mono text-2xs tracking-label text-parchment/50 uppercase">
+                    <div className="flex items-center gap-2 font-mono text-xs tracking-label text-parchment/50 uppercase">
                       <div className="w-3 h-px" style={{ backgroundColor: project.accentColor, opacity: 0.4 }} />
                       <span>{project.role}</span>
                     </div>
@@ -460,7 +460,7 @@ export default function HeroSection() {
                       {project.tools.map((t, i) => (
                         <AnimatedElement key={t} delay={280 + i * 30} className="inline-block">
                           <span
-                            className="inline-flex items-center gap-1 px-2 py-0.5 text-2xs font-mono tracking-label rounded-sm border cursor-default transition-all duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] border-[#38406a80] text-[#cfccbb8c] bg-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--accent-bg)]"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono tracking-label rounded-sm border cursor-default transition-all duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] border-[#38406a80] text-[#cfccbb8c] bg-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--accent-bg)]"
                             style={{
                               '--accent': project.accentColor,
                               '--accent-bg': `${project.accentColor}10`,
@@ -478,7 +478,7 @@ export default function HeroSection() {
                       {project.tools.length >= 4 && (
                         <AnimatedElement delay={280 + project.tools.length * 30} className="inline-block">
                           <span
-                            className="font-mono text-2xs tracking-label px-2 py-0.5 border rounded-sm"
+                            className="font-mono text-xs tracking-label px-2 py-0.5 border rounded-sm"
                             style={{ borderColor: `${project.accentColor}40`, color: project.accentColor, textBox: 'trim-both cap alphabetic' } as React.CSSProperties}
                           >
                             [Design System Parity]
@@ -488,7 +488,7 @@ export default function HeroSection() {
                       {project.categories.includes('Full-Stack Engineering') && (
                         <AnimatedElement delay={280 + (project.tools.length + 1) * 30} className="inline-block">
                           <span
-                            className="font-mono text-2xs tracking-label px-2 py-0.5 border rounded-sm"
+                            className="font-mono text-xs tracking-label px-2 py-0.5 border rounded-sm"
                             style={{ borderColor: `${project.accentColor}40`, color: project.accentColor, textBox: 'trim-both cap alphabetic' } as React.CSSProperties}
                           >
                             [UI Engineering]
@@ -498,7 +498,7 @@ export default function HeroSection() {
                       {project.awards?.map((award, i) => (
                         <AnimatedElement key={award} delay={280 + (project.tools.length + 2 + i) * 30} className="inline-block">
                           <span
-                            className="font-mono text-2xs tracking-label px-2 py-0.5 border rounded-sm"
+                            className="font-mono text-xs tracking-label px-2 py-0.5 border rounded-sm"
                             style={{ borderColor: `${project.accentColor}40`, color: project.accentColor, textBox: 'trim-both cap alphabetic' } as React.CSSProperties}
                           >
                             ★ {award}
@@ -516,7 +516,7 @@ export default function HeroSection() {
                             className="flex flex-col gap-0.5 px-3 py-2 rounded-sm border border-[rgba(255,255,255,0.05)] bg-transparent hover:bg-[var(--accent-bg-hover)] transition-colors duration-400"
                             style={{ '--accent-bg-hover': `${project.accentColor}08` } as React.CSSProperties}
                           >
-                            <span className="font-mono text-2xs tracking-label text-[#cfccbb4d] uppercase">{m.label}</span>
+                            <span className="font-mono text-xs tracking-label text-[#cfccbb4d] uppercase">{m.label}</span>
                             <span
                               className="font-mono text-sm font-medium"
                               style={{ color: project.accentColor }}
@@ -607,16 +607,16 @@ export default function HeroSection() {
             {showPhase2 && (
               <>
             {/* Corner coordinate labels */}
-            <div className={`hidden lg:block absolute top-6 left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute top-4 sm:top-6 left-4 sm:left-6 lg:left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               X:{mouseX.toString().padStart(4, '0')}
             </div>
-            <div className={`hidden lg:block absolute top-6 right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute top-4 sm:top-6 right-4 sm:right-6 lg:right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               Y:{mouseY.toString().padStart(4, '0')}
             </div>
-            <div className={`hidden lg:block absolute bottom-6 left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute bottom-4 sm:bottom-6 left-4 sm:left-6 lg:left-12 label-caps opacity-40 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               θ:{(Math.round(activeIndex * SNAP_INTERVAL)).toString().padStart(3, '0')}°
             </div>
-            <div className={`hidden lg:block absolute bottom-6 right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
+            <div className={`hidden lg:block absolute bottom-4 sm:bottom-6 right-4 sm:right-6 lg:right-12 label-caps opacity-40 text-right ${!hasLoaded ? 'animate-fade-down' : ''}`}>
               R:276
             </div>
             </>

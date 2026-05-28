@@ -46,13 +46,13 @@ export const BIO: BioProfile = {
 // ─── STATUS CYCLE ─────────────────────────────────────────────────────────────
 
 export const STATUS_CYCLE: StatusCycle[] = [
-  { text: 'Figma Campus Leader' },
+  { text: 'Designing @ Cattlelog' },
   { text: 'Refining design tokens' },
-  { text: 'Pushing to production' },
-  { text: 'Drinking matcha' },
-  { text: 'Building keyboards' },
-  { text: 'Reading Thank You for Arguing' },
-  { text: 'Petting my cats' },
+  { text: 'Engineering full-stack products' },
+  { text: 'Drinking an iced matcha' },
+  { text: 'Building custom keyboards' },
+  { text: 'Figma Campus Leader' },
+  { text: 'Reading design system docs' },
   { text: 'Playing tennis' },
 ]
 
@@ -316,7 +316,7 @@ export const EXPERIMENTS: Experiment[] = [
     title: 'Campus Recreation Ad',
     contextLabel: 'Conceptual / Graphic Design',
     visualAssetType: 'Ad Poster Graphic',
-    description: 'A conceptual advertising poster designed to grab attention in high-foot-traffic campus environments.',
+    description: 'Conceptual advertising poster promoting the UC Davis ARC App in high-foot-traffic campus environments.',
     imageUrl: '/images/experiments/campus-rec-ad.webp',
     year: 2025,
     category: 'conceptual',
@@ -392,7 +392,7 @@ export const EXPERIMENTS: Experiment[] = [
     title: 'Figma Campus Leader Graphics',
     contextLabel: 'Published / Event Marketing',
     visualAssetType: 'Event Banner',
-    description: 'Promotional event banners and marketing assets for Figma community events.',
+    description: 'Promotional marketing assets for Figma community events.',
     imageUrl: '/images/experiments/figma-cl-graphics.webp',
     year: 'Present',
     category: 'published',

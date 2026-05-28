@@ -9,10 +9,10 @@ function SocialLink({ href, label, handle }: { href: string; label: string; hand
       rel="noopener noreferrer"
       className="group flex flex-col items-start gap-0.5"
     >
-      <span className="font-mono text-2xs tracking-label text-parchment/30 group-hover:text-parchment/70 uppercase transition-colors duration-300">
+      <span className="font-mono text-xs tracking-label text-parchment/60 group-hover:text-parchment/70 uppercase transition-colors duration-300">
         {label}
       </span>
-      <span className="relative font-mono text-2xs text-parchment/20 group-hover:text-parchment/50 transition-colors duration-300">
+      <span className="relative font-mono text-xs text-parchment/50 group-hover:text-parchment/50 transition-colors duration-300">
         {handle}
         {/* Center-out underline */}
         <span
@@ -40,7 +40,7 @@ export default function Footer() {
     >
       {/* Tagline strip */}
       <div className="flex items-center justify-center py-3 border-b border-accent/15">
-        <p className="font-mono text-2xs text-parchment/20 tracking-wide italic">
+        <p className="font-mono text-xs text-parchment/50 tracking-wide italic">
           "{BIO.tagline}"
         </p>
       </div>
@@ -54,11 +54,11 @@ export default function Footer() {
             className="w-[18px] h-[18px] object-contain"
             alt="Logo"
           />
-          <span className="font-mono text-2xs text-parchment/70 tracking-label uppercase">
+          <span className="font-mono text-xs text-parchment/70 tracking-label uppercase">
             {BIO.fullName}
           </span>
           <div className="hidden sm:block w-px h-3 bg-accent/50" />
-          <span className="hidden sm:block font-mono text-2xs text-parchment/25 tracking-label uppercase">
+          <span className="hidden sm:block font-mono text-xs text-parchment/60 tracking-label uppercase">
             {BIO.roles[0]}
           </span>
         </div>
@@ -76,7 +76,7 @@ export default function Footer() {
         </nav>
 
         {/* Right — copyright */}
-        <div className="font-mono text-2xs text-parchment/15 tracking-label">
+        <div className="font-mono text-xs text-parchment/50 tracking-label">
           © {year}
         </div>
       </div>
@@ -86,10 +86,10 @@ export default function Footer() {
         className="flex flex-col sm:flex-row items-center justify-between gap-2 px-8 lg:px-10 py-3 sm:py-2 text-center"
         style={{ borderTop: '1px solid rgba(56,64,106,0.15)' }}
       >
-        <span className="font-mono text-2xs text-parchment/15 tracking-label uppercase">
+        <span className="font-mono text-xs text-parchment/50 tracking-label uppercase">
           DESIGNED & ENGINEERED BY {BIO.fullName.split(' ')[0]}
         </span>
-        <span className="font-mono text-2xs text-parchment/15 tracking-label uppercase">
+        <span className="font-mono text-xs text-parchment/50 tracking-label uppercase">
           ALL SYSTEMS NOMINAL
         </span>
       </div>

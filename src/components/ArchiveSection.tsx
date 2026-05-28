@@ -73,7 +73,7 @@ const TagList = ({ tags }: { tags: string[] }) => {
         aria-hidden="true"
       >
         {tags.map((tag, i) => (
-          <span key={`measure-${i}`} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono whitespace-nowrap">
+          <span key={`measure-${i}`} className="px-2 py-0.5 rounded-sm border border-white/10 text-xs font-mono whitespace-nowrap">
             {tag}
           </span>
         ))}
@@ -81,12 +81,12 @@ const TagList = ({ tags }: { tags: string[] }) => {
       
       <div className="flex gap-1.5 items-center w-full">
         {tags.slice(0, visibleCount).map((tag, i) => (
-          <span key={i} className="px-2 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/60 whitespace-nowrap bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
+          <span key={i} className="px-2 py-0.5 rounded-sm border border-white/10 text-xs font-mono text-parchment/60 whitespace-nowrap bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
             {tag}
           </span>
         ))}
         {visibleCount < tags.length && (
-          <span className="shrink-0 px-1.5 py-0.5 rounded-sm border border-white/10 text-[10px] font-mono text-parchment/40 bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
+          <span className="shrink-0 px-1.5 py-0.5 rounded-sm border border-white/10 text-xs font-mono text-parchment/70 bg-white/[0.02] group-hover:border-white/20 transition-colors duration-300">
             +{tags.length - visibleCount}
           </span>
         )}
@@ -131,7 +131,7 @@ export default function ArchiveSection() {
         <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <span className="label-caps">INDEX</span>
           <div className="w-px h-4 bg-accent/40" />
-          <span className="font-mono text-2xs text-parchment/25">MASTERLIST OF MY WORK</span>
+          <span className="font-mono text-xs text-parchment/60">MASTERLIST OF MY WORK</span>
         </div>
         <span className="label-caps opacity-30">
           {allItems.length} TOTAL ITEMS
@@ -139,7 +139,7 @@ export default function ArchiveSection() {
       </div>
 
       {/* Table Header (Hidden on small screens) */}
-      <div className="hidden md:grid grid-cols-[80px_3fr_2fr_2fr_1fr_80px] gap-4 mb-4 px-4 font-mono text-xs text-parchment/30 uppercase tracking-widest border-b border-white/5 pb-2">
+      <div className="hidden md:grid grid-cols-[80px_3fr_2fr_2fr_1fr_80px] gap-4 mb-4 px-4 font-mono text-xs text-parchment/60 uppercase tracking-widest border-b border-white/5 pb-2">
         <div className="flex items-center gap-1 text-parchment/60">
           Year
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,8 +164,8 @@ export default function ArchiveSection() {
             {/* Mobile Layout */}
             <div className="flex flex-col gap-2 p-4 md:hidden">
               <div className="flex justify-between items-center">
-                <span className="font-mono text-2xs tracking-label text-parchment/30">{item.year}</span>
-                <span className="font-mono text-2xs px-2 py-0.5 rounded-sm border border-white/10 text-parchment/50 uppercase">
+                <span className="font-mono text-xs tracking-label text-parchment/60">{item.year}</span>
+                <span className="font-mono text-xs px-2 py-0.5 rounded-sm border border-white/10 text-parchment/50 uppercase">
                   {item.type}
                 </span>
               </div>
@@ -174,7 +174,7 @@ export default function ArchiveSection() {
               </h3>
               <div className="flex gap-1.5 items-center mt-1 overflow-hidden w-full">
                 {item.role !== '-' && (
-                  <span className="font-mono text-2xs text-gold/70 mr-1 shrink-0 mt-0.5">{item.role}</span>
+                  <span className="font-mono text-xs text-gold/70 mr-1 shrink-0 mt-0.5">{item.role}</span>
                 )}
                 <TagList tags={item.contextTags} />
               </div>
@@ -182,13 +182,13 @@ export default function ArchiveSection() {
 
             {/* Desktop Layout */}
             <div className="hidden md:grid grid-cols-[80px_3fr_2fr_2fr_1fr_80px] gap-4 p-4 items-center font-mono text-xs">
-              <div className="font-mono text-2xs tracking-label text-parchment/30 group-hover:text-parchment/80 transition-colors duration-300">
+              <div className="font-mono text-xs tracking-label text-parchment/60 group-hover:text-parchment/80 transition-colors duration-300">
                 {item.year}
               </div>
               <div className="font-sans font-semibold text-sm leading-snug text-parchment group-hover:text-white transition-colors duration-300" style={{ letterSpacing: '-0.02em' }}>
                 {item.title}
               </div>
-              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 truncate mt-0.5 font-mono text-2xs text-gold/70">
+              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 truncate mt-0.5 font-mono text-xs text-gold/70">
                 {item.role}
               </div>
               <div className="flex gap-1.5 items-center overflow-hidden w-full">

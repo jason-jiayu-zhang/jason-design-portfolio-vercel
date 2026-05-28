@@ -46,7 +46,7 @@ function StatusBar() {
         setAnimState('enter')
         setTimeout(() => setAnimState('idle'), 200)
       }, 350)
-    }, 10000)
+    }, 15000)
 
     return () => clearInterval(intervalRef.current)
   }, [isPhase3])
@@ -81,7 +81,7 @@ function StatusBar() {
       >
         <span
           ref={textRef}
-          className="font-mono text-2xs tracking-label text-parchment/70 whitespace-nowrap block"
+          className="font-mono text-xs tracking-label text-parchment/70 whitespace-nowrap block"
           style={textStyle}
         >
           {status.text}
@@ -99,6 +99,10 @@ export default function Header() {
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    if (window.location.pathname !== '/') {
+      window.location.href = `/#${id}`;
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -158,21 +162,21 @@ export default function Header() {
           <a
             href="#work"
             onClick={(e) => handleScroll(e, 'work')}
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
+            className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Work
           </a>
           <a
             href="#studio"
             onClick={(e) => handleScroll(e, 'studio')}
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
+            className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Studio
           </a>
           <a
             href="#about"
             onClick={(e) => handleScroll(e, 'about')}
-            className="font-mono text-2xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
+            className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             About
           </a>
@@ -182,7 +186,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1 border border-parchment/20 rounded-sm hover:border-parchment/60 hover:bg-parchment/5 transition-all duration-200 group flex-shrink-0"
           >
-            <span className="font-mono text-2xs tracking-label text-parchment/60 group-hover:text-parchment uppercase transition-colors duration-200">
+            <span className="font-mono text-xs tracking-label text-parchment/60 group-hover:text-parchment uppercase transition-colors duration-200">
               Resume
             </span>
             <svg viewBox="0 0 10 10" className="w-2 h-2 text-gold/60 group-hover:text-gold transition-colors">
