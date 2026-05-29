@@ -79,28 +79,28 @@ export const EDUCATION = {
 export const BELIEFS: Belief[] = [
   {
     index: '01',
-    headline: 'Design is a verb, not a noun.',
-    body: 'Design isn\'t a deliverable. It\'s a continuous act of listening, challenging assumptions, and rebuilding until the solution is invisible to the user. The artifact is secondary to the process.',
+    headline: 'Data informs, empathy decides.',
+    body: 'Design is only a hypothesis until validated by real human behaviors. By grounding my decisions in quantifiable metrics and qualitative research, I uncover what truly matters to users and build measurable outcomes, not just aesthetic templates.',
   },
   {
     index: '02',
-    headline: 'Empathy without action is decoration.',
-    body: 'Human-first means nothing if it stops at the research phase. I hold myself accountable to translating genuine empathy into functional decisions — in the interface, in the codebase, in the room.',
+    headline: 'Design in the open.',
+    body: 'Good ideas come from everywhere. By curating a transparent and ego-free environment, I ensure that the entire product team has the ability to critique and co-create.',
   },
   {
     index: '03',
-    headline: 'Community is the product.',
-    body: 'The best design work I\'ve done has happened alongside others — not in isolation. Environments where people feel safe to critique, build, and fail together produce the strongest outcomes.',
+    headline: 'Alignment > Agreement.',
+    body: 'Debate is a necessity for improvement. A team that challenges assumptions and commits to a unified direction will always outperform a team that merely nods along without conviction.',
   },
   {
     index: '04',
-    headline: 'Alignment > Agreement.',
-    body: 'I\'d rather have a team that disagrees but moves in the same direction than one that nods along without conviction. Productive friction is a feature, not a bug.',
+    headline: 'Solve for outcomes, not deadlines.',
+    body: 'Projects end when code is shipped; products continue to live and evolve. I design for scale, anticipating the future needs of both users and builders. The shipping date is merely the start.',
   },
   {
     index: '05',
-    headline: 'A product without users is merely a project.',
-    body: 'Distribution is part of the design. If it doesn\'t reach people, it doesn\'t exist. Every design decision must trace back to a human consequence.',
+    headline: 'Code is a design medium.',
+    body: 'To design is to master all constraints of the material. By bridging Figma to code and designers to engineers, I ensure that the art of design is translated into production software.',
   },
 ]
 
