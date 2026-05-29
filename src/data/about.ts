@@ -174,7 +174,7 @@ export const PLAYGROUND: GameEntry[] = [
       { label: 'Category', value: 'MMORPG' },
       { label: 'Classes', value: 'Archer / Mage / Kunai' },
       { label: 'Ranking', value: 'Top 1%', sublabel: 'Leaderboard Tier' },
-      { label: 'Sensitivity', value: '.2 x 800', sublabel: 'E-DPI: 160' },
+      { label: 'Access', value: 'Alpha Play-Tester', sublabel: 'Pre-Release Sandbox' },
       { label: 'Peripherals', value: 'Razer Basilisk v3 / MelGeek MADE68 Pro', sublabel: 'Keyboard & Mouse' },
     ],
   },
