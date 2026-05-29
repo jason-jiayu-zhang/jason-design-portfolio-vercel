@@ -728,7 +728,7 @@ export default function AboutSection() {
             <div className="group absolute top-0 right-4 w-[75%] aspect-[3/4] z-10 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500" style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}>
               <div className="relative w-full h-full overflow-hidden">
                 <img
-                  src="/images/jason-headshot-1.jpg"
+                  src="/images/jason-headshot-1.webp"
                   alt="Jason Portrait"
                   className="w-full h-full object-cover object-top grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100"
                   style={{ transition: 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}
@@ -748,7 +748,7 @@ export default function AboutSection() {
             <div className="group absolute bottom-6 left-0 w-[65%] aspect-square z-20 p-1 border border-accent/30 bg-[#0b0c10]/80 backdrop-blur-sm shadow-xl transform -rotate-3 hover:rotate-0 hover:z-30" style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}>
               <div className="relative w-full h-full overflow-hidden">
                 <img
-                  src="/images/jason-headshot-2.jpg"
+                  src="/images/jason-headshot-2.webp"
                   alt="Jason at work"
                   className="w-full h-full object-cover object-[center_30%] grayscale contrast-125 brightness-90 mix-blend-luminosity group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:brightness-100"
                   style={{ transition: 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}

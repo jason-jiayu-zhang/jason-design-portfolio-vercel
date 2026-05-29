@@ -1,13 +1,15 @@
 
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
-import ArchiveSection from './components/ArchiveSection'
-import StudioSection from './components/StudioSection'
-import AboutSection from './components/AboutSection'
-import Footer from './components/Footer'
 import { useIntro, IntroProvider } from './components/IntroContext'
 import { useScanline } from './components/ScanlineContext'
 import './index.css'
+import { lazy, Suspense } from 'react'
+
+const StudioSection = lazy(() => import('./components/StudioSection'))
+const ArchiveSection = lazy(() => import('./components/ArchiveSection'))
+const AboutSection = lazy(() => import('./components/AboutSection'))
+const Footer = lazy(() => import('./components/Footer'))
 
 function AppContent() {
   const { phase } = useIntro()
@@ -24,7 +26,7 @@ function AppContent() {
         <HeroSection />
 
         {isPhase3 && (
-          <>
+          <Suspense fallback={null}>
             {/* § 2 — Studio section: off-a-whim experiments */}
             <div className="contain-section">
               <StudioSection />
@@ -39,12 +41,16 @@ function AppContent() {
             <div className="contain-section">
               <AboutSection />
             </div>
-          </>
+          </Suspense>
         )}
       </main>
 
       {/* § 5 — Baseline footer */}
-      {isPhase3 && <Footer />}
+      {isPhase3 && (
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
+      )}
     </div>
   )
 }
