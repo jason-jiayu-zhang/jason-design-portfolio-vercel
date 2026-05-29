@@ -22,7 +22,7 @@ function AnimatedElement({ delay, children, className = '' }: AnimatedElementPro
   }, [delay])
 
   return (
-    <div className={`overflow-hidden pb-2 -mb-2 ${className}`}>
+    <div className={`${className}`}>
       <div
         style={{
           transform: show ? 'translateY(0)' : 'translateY(10px)',
@@ -64,7 +64,7 @@ function NarrativePanel({ project }: NarrativePanelProps) {
   return (
     <div className="space-y-4">
       {project.narrative.map((para, i) => (
-        <div key={i} className="overflow-hidden pb-2 -mb-2">
+        <div key={i} className="">
           <p
             className="font-mono text-sm text-parchment/60 leading-[1.65] tracking-tight"
             style={{

@@ -30,7 +30,7 @@ function RotatingStatusText() {
   }
 
   return (
-    <span className="font-mono text-xs text-parchment/70 overflow-hidden block h-[1.2em]">
+    <span className="font-mono text-xs text-parchment/70 overflow-hidden block min-h-[1.2em]">
       <span style={textStyle}>{STATUS_CYCLE[currentIdx].text}</span>
     </span>
   )
@@ -934,7 +934,7 @@ export default function AboutSection() {
                         {STATUS_ICONS[book.status]}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-mono text-xs text-parchment/70 leading-tight truncate">
+                        <p className="font-mono text-xs text-parchment/70 leading-tight">
                           {book.title}
                         </p>
                         <p className="font-mono text-xs text-parchment/60 mt-0.5">

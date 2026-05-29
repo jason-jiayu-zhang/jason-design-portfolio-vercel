@@ -188,7 +188,7 @@ export default function ArchiveSection() {
               <div className="font-sans font-semibold text-sm leading-snug text-parchment group-hover:text-white transition-colors duration-300" style={{ letterSpacing: '-0.02em' }}>
                 {item.title}
               </div>
-              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 truncate mt-0.5 font-mono text-xs text-gold/70">
+              <div className="text-parchment/50 group-hover:text-parchment/80 transition-colors duration-300 mt-0.5 font-mono text-xs text-gold/70">
                 {item.role}
               </div>
               <div className="flex gap-1.5 items-center overflow-hidden w-full">
