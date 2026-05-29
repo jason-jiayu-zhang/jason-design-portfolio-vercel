@@ -71,7 +71,7 @@ export const EDUCATION = {
   institution: 'UC Davis',
   degrees: ['B.A. Design', 'B.S. Computer Engineering'],
   note: 'Multi-discipline training anchoring decision making across all product domains: design, engineering, product, and more.',
-  tools: ['Figma', 'Figma Make', 'Google Stitch', 'React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase'],
+  tools: ['Figma', 'Figma Make', 'Google Stitch', 'React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase', 'Antigravity', 'Claude Code', 'Claude Design'],
 }
 
 // ─── CORE BELIEFS ────────────────────────────────────────────────────────────
