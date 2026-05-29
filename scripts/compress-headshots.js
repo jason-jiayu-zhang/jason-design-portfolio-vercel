@@ -22,6 +22,7 @@ async function compressHeadshot(fileName, maxWidth = 800, quality = 82) {
 
   try {
     const pipeline = sharp(filePath);
+    pipeline.rotate(); // Auto-orient based on EXIF metadata
     pipeline.resize({ width: maxWidth, withoutEnlargement: true });
 
     await pipeline
