@@ -163,18 +163,18 @@ export default function Header() {
         {isPhase3 && (
         <nav className={`flex items-center gap-4 overflow-x-auto no-scrollbar justify-end min-w-0 ${!hasLoaded ? 'animate-fade-down' : ''}`}>
           <a
-            href="#archive"
-            onClick={(e) => handleScroll(e, 'archive')}
-            className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
-          >
-            Index
-          </a>
-          <a
             href="#studio"
             onClick={(e) => handleScroll(e, 'studio')}
             className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
           >
             Studio
+          </a>
+          <a
+            href="#archive"
+            onClick={(e) => handleScroll(e, 'archive')}
+            className="font-mono text-xs tracking-label text-parchment/50 hover:text-parchment transition-colors duration-200 uppercase flex-shrink-0"
+          >
+            Index
           </a>
           <a
             href="#about"
