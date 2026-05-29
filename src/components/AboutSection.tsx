@@ -860,8 +860,7 @@ export default function AboutSection() {
               <span className="text-gold">Always.</span>
             </h2>
             <p className="font-mono text-xs text-parchment/70 leading-relaxed">
-              Servant leadership. Deep empathy. Authentic community.
-              The following principles aren't values on a slide — they're operating constraints.
+              Servant leadership. Authentic community. Real products. The following principles aren’t just values in a list. They’re operating constraints for my entire design journey.
             </p>
           </div>
 

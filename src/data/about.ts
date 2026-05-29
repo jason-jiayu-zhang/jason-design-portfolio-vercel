@@ -70,7 +70,7 @@ export const TIMELINE: TimelineEntry[] = [
 export const EDUCATION = {
   institution: 'UC Davis',
   degrees: ['B.A. Design', 'B.S. Computer Engineering'],
-  note: 'Dual-discipline training anchoring design decisions in both systems thinking and human cognition.',
+  note: 'Multi-discipline training anchoring decision making across all product domains: design, engineering, product, and more.',
   tools: ['Figma', 'Figma Make', 'Google Stitch', 'React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Supabase'],
 }
 
